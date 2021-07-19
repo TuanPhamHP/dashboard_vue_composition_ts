@@ -48,6 +48,7 @@
    });
 
    console.log(pairO);
+   console.log(filterTable);
 
    setTimeout(() => {
     console.log(pairO.identifySelf());
