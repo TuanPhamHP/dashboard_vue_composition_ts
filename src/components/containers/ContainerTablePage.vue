@@ -30,6 +30,7 @@
    const loadingTable = ref<boolean>(true);
    const currentRouteQuery = ref<string>(stringQueryRender);
    let tableData = reactive<Record<string, unknown>>({ value: [] });
+   let filterTable = reactive<Record<string, unknown>>({ value: {} });
    let pagination = ref<NormalPagination>({
     total: 1,
     per_page: 15,
