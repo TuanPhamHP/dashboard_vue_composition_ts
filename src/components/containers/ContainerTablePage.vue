@@ -17,6 +17,7 @@
  import TableMultiSort from "@/components/Table/TableMultiSort.vue";
  import { SharedPagination } from "@/components/Shared";
  import { NormalPagination } from "@/InterfaceModel/Pagination";
+ import { IdentifyObject } from "@/InterfaceModel/CustomObject";
  import useRouteQuery from "@/utils/uses/routerQuery/useRouteQuery";
  import route from "@/router/index";
  export default defineComponent({
@@ -35,6 +36,22 @@
     total_pages: 15,
     current_page: 1,
    });
+
+   let pairO = new IdentifyObject({
+    name: "",
+    age: 2,
+    gender: "male",
+    id: 1,
+    role: 4,
+    f: undefined,
+   });
+
+   console.log(pairO);
+
+   setTimeout(() => {
+    console.log(pairO.identifySelf());
+   }, 1000);
+
    let headers = [
     {
      text: "Dessert (100g serving)",
