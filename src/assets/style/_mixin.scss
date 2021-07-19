@@ -1,0 +1,24 @@
+@for $i from 10 through 30 {
+  .font-size-#{$i} {
+    font-size: #{$i}px !important;
+  }
+}
+@for $i from 0 through 22 {
+  .round-#{$i} {
+    border-radius: #{$i}px !important;
+  }
+}
+@mixin gradient($direction, $list) {
+  background: -webkit-linear-gradient($direction, $list);
+  background: -moz-linear-gradient($direction, $list);
+  background: -o-linear-gradient($direction, $list);
+  background: linear-gradient($direction, $list);
+}
+
+@mixin fontCt($size, $color, $weight, $style, $family: null) {
+  font-size: $size;
+  color: $color;
+  font-weight: $weight;
+  font-style: $style;
+  font-family: #{$family};
+}

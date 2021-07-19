@@ -1,0 +1,91 @@
+@import "./variables";
+@import "./button";
+@import "./display";
+@import "./flex";
+@import "./spacing";
+@import "./text";
+@import "./mixin";
+//  LAYOUT
+.container-t {
+ width: calc(100vw - 200px);
+ margin: auto;
+}
+.container-fluid-t {
+ width: 100%;
+}
+// ******--------
+
+// HELPERS
+.pointer {
+ cursor: pointer !important;
+}
+.bg-transparent {
+ background-color: transparent !important;
+}
+
+.header-sticky-table {
+ .v-data-table__wrapper {
+  height: 100%;
+  overflow-y: scroll;
+ }
+ thead {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+ }
+}
+.header-no-border-table {
+ th {
+  border-bottom: none !important;
+ }
+}
+.table-scroll-y {
+ .v-data-table__wrapper {
+  &::-webkit-scrollbar {
+   width: 5px;
+   height: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+   -webkit-box-shadow: inset 0 0 6px rgba(255, 255, 255, 0);
+   border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+   border-radius: 10px;
+   background: rgba(0, 0, 0, 0.48);
+  }
+ }
+}
+.grow-unset {
+ flex-grow: unset !important;
+}
+
+.snackbar-on-success {
+ .v-snack__wrapper {
+  background-color: $snackbarSuccess !important;
+  .snackbar-btn-close {
+   color: #fff !important;
+  }
+ }
+}
+.table-on-loading {
+ .v-data-table__wrapper {
+  position: relative;
+  &::after {
+   content: "";
+   position: absolute;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   background-color: rgba(170, 168, 166, 0.289);
+   z-index: 2;
+  }
+ }
+}
+// ******--------
+
+// REPONSIVE
+@import "./reponsive/reponsive_main.scss";
+// ******--------
