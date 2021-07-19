@@ -15,12 +15,17 @@
    listenChange: {
     type: Function,
    },
+   defaultValue:{
+     type:String,
+     default:''
+   }
   },
   setup: props => {
    let ownHeader: Record<string, any> | undefined = toRef(props, "ownHeader");
    let listenChange: Record<string, any> = toRef(props, "listenChange");
+   let defaultValue: Record<string, any> = toRef(props, "defaultValue");
    const { key, placeholder } = ownHeader.value.filters;
-   const queryString = ref<string>("");
+   const queryString = ref<string>(defaultValue);
    let refQuery = ref<number>(0);
    const setRefQuery = (val: number) => {
     refQuery.value = val;
@@ -35,7 +40,6 @@
    };
    return { placeholder, queryString, refQuery, setRefQuery, handleEmitFilter };
   },
-
   watch: {
    queryString() {
     clearTimeout(this.refQuery);

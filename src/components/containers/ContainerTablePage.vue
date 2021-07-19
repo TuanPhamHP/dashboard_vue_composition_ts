@@ -3,7 +3,7 @@
   <v-btn v-if="loadingTable" class="mb-3" v-click-outside="clearSetup">Add</v-btn>
   <v-btn @click="setupData" class="mb-3 mx-3">Setup Data</v-btn>
   <div class="px-3">
-   <TableMultiSort :table-data="tableData" :table-loading="loadingTable" :headers="headers" />
+   <TableMultiSort :table-data="tableData" :table-loading="loadingTable" :headers="headers" @handleFilterChange="filterTableChange" :current-binding-url="queryRoute" />
    <div class="pt-1">
     <SharedPagination :pagination-sync="pagination" @handlePageSizeChange="pagePaginationChange" @handlePageChange="pagePaginationChange" />
    </div>
@@ -30,28 +30,13 @@
    const loadingTable = ref<boolean>(true);
    const currentRouteQuery = ref<string>(stringQueryRender);
    let tableData = reactive<Record<string, unknown>>({ value: [] });
-   let filterTable = reactive<Record<string, unknown>>({ value: {} });
+   let filterTable = ref({})
    let pagination = ref<NormalPagination>({
     total: 1,
     per_page: 15,
     total_pages: 15,
     current_page: 1,
    });
-
-   let pairO = new IdentifyObject({
-    name: "",
-    age: 2,
-    gender: "male",
-    id: 1,
-    role: 4,
-    f: undefined,
-   });
-
-   console.log(pairO);
-
-   setTimeout(() => {
-    console.log(pairO.identifySelf());
-   }, 1000);
 
    let headers = [
     {
@@ -147,7 +132,9 @@
    const setCurrentRouteQuery = (payload: Record<string, unknown>): any => {
     currentRouteQuery.value = getQueryRoute(payload);
    };
-
+    const setCurrentFilterTable = (payload: Record<string, unknown>): any => {
+      filterTable.value = {...payload}
+    };
    const setLoadingTable = (payload: boolean) => {
     loadingTable.value = payload;
    };
@@ -157,8 +144,19 @@
    });
    watch(pagination, currentValue => {
     const { current_page, per_page } = currentValue;
-    setCurrentRouteQuery({ current_page, per_page });
+    setCurrentRouteQuery({ 
+      ...queryRoute,
+      current_page, 
+      per_page 
+      });
    });
+   
+   watch(filterTable,currentValue=>{
+     setCurrentRouteQuery({
+        ...queryRoute,
+        ...currentValue
+      });
+   })
 
    const getAllRoles = async (query: Record<string, unknown>) => {
     const res = await api.roles.getAll(query);
@@ -169,12 +167,12 @@
     try {
      const pagination = res.data.meta.pagination;
      setTableData(res.data.data);
-     setPagination({
-      total: pagination.total,
-      total_pages: pagination.total_pages,
-      per_page: pagination.per_page,
-      current_page: pagination.current_page,
-     });
+    //  setPagination({
+    //   total: pagination.total,
+    //   total_pages: pagination.total_pages,
+    //   per_page: pagination.per_page,
+    //   current_page: pagination.current_page,
+    //  });
     } catch (error) {
      console.log(error);
     }
@@ -185,25 +183,38 @@
     loadingTable,
     tableData,
     queryRoute,
+    filterTable,
     setTableData,
     setLoadingTable,
     setCurrentRouteQuery,
     setPagination,
     getAllRoles,
+    setCurrentFilterTable,
    };
   },
   watch: {},
   created() {
+    console.log('container-create',this.queryRoute);
+    
    if (this.queryRoute.per_page) {
     const refPagination = { ...this.pagination };
     refPagination.per_page = +this.queryRoute.per_page;
     refPagination.current_page = +this.queryRoute.current_page;
+    console.log(refPagination);
     this.setPagination(refPagination);
    }
-   const page = this.pagination.current_page;
-   const per_page = this.pagination.per_page;
+   if (this.queryRoute) {
+    let _obj:any =  {...this.queryRoute}
+    delete _obj.per_page,
+    delete _obj.current_page
+    this.setCurrentFilterTable(_obj)
 
-   this.getAllRoles({ page, per_page });
+    this.setCurrentRouteQuery(this.queryRoute)
+   }
+  //  const page = this.pagination.current_page;
+  //  const per_page = this.pagination.per_page;
+
+   this.getAllRoles({ ...this.queryRoute });
   },
   methods: {
    pagePaginationChange(_val: any) {
@@ -221,6 +232,12 @@
     console.log("clicked");
     this.setLoadingTable(false);
    },
+   filterTableChange(_val:any){
+    let pairO = new IdentifyObject({
+      ..._val
+    });
+    this.setCurrentFilterTable(pairO.identifySelf())
+   }
   },
  });
 </script>

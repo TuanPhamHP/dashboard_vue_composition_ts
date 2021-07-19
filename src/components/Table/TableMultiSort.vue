@@ -23,7 +23,7 @@
        v-if="header.filters && header.filters.type === 'string'"
        :own-header="header"
        :listen-change="listenChange"
-       :default-value="header.filters.defaultValue"
+       :default-value="header.filters.defaultValue||filtersTable[header.filters.key]"
       />
       <TableFiltersSelect
        v-if="header.filters && header.filters.type === 'select'"
@@ -71,9 +71,15 @@
    headers: {
     type: Array,
    },
+   handleFilterChange:{
+     type:Function
+   },
+   currentBindingUrl:{
+     type:Object
+   }
   },
   components: { TableFiltersInput, TableFiltersSelect, TableFiltersDateRange },
-  setup: props => {
+  setup: (props,ctx) => {
    const endedThead = ref<number>(40);
    const tableHeight = ref<number>(600);
    let filtersTable = ref<Record<string, unknown>>({});
@@ -88,7 +94,7 @@
    };
    watch(filtersTable, currentValue => {
     // reactive when filter change here
-    console.log(currentValue);
+    ctx.emit('handleFilterChange',currentValue)
    });
    return { filtersTable, tableHeight, endedThead, setEndedThead, setTableHeight, setFiltersTable };
   },
@@ -113,7 +119,15 @@
    }
   },
   created() {
-   console.log("re-create");
+    console.log('re-create',this.currentBindingUrl);
+    
+    if (this.currentBindingUrl) {
+      let _obj:any =  {...this.currentBindingUrl}
+      delete _obj.per_page,
+      delete _obj.current_page,
+      this.filtersTable= {..._obj}
+    }
+      
   },
   methods: {
    listenChange(value: NormalFilterObject) {
