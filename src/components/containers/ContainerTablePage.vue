@@ -1,6 +1,6 @@
 <template>
  <div>
-  <v-btn class="mb-3" @click="getAllRoles">Add</v-btn>
+  <v-btn v-if="loadingTable" class="mb-3" v-click-outside="clearSetup">Add</v-btn>
   <v-btn @click="setupData" class="mb-3 mx-3">Setup Data</v-btn>
   <div class="px-3">
    <TableMultiSort :table-data="tableData" :table-loading="loadingTable" :headers="headers" />
@@ -215,6 +215,10 @@
    },
    setupData() {
     this.setLoadingTable(true);
+   },
+   clearSetup() {
+    console.log("clicked");
+    this.setLoadingTable(false);
    },
   },
  });

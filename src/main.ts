@@ -5,6 +5,7 @@ import store from "./store";
 import vuetify from "./plugins/vuetify";
 import "./plugins/compositionApi";
 import "./assets/style/_variables.scss";
+import "./utils/directives/index";
 Vue.config.productionTip = false;
 new Vue({
  router,
