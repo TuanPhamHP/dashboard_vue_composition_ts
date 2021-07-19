@@ -1,6 +1,5 @@
 <template>
  <div>
-  <v-btn v-if="loadingTable" class="mb-3" v-click-outside="clearSetup">Add</v-btn>
   <v-btn @click="setupData" class="mb-3 mx-3">Setup Data</v-btn>
   <div class="px-3">
    <TableMultiSort :table-data="tableData" :table-loading="loadingTable" :headers="headers" />
@@ -20,6 +19,7 @@
  import { IdentifyObject } from "@/InterfaceModel/CustomObject";
  import useRouteQuery from "@/utils/uses/routerQuery/useRouteQuery";
  import route from "@/router/index";
+ import { mapState } from "vuex";
  export default defineComponent({
   components: {
    TableMultiSort,
@@ -192,7 +192,18 @@
    };
   },
   watch: {},
+  computed: {
+   ...mapState({
+    previousPagination: (state: any) => state.previousPagination,
+   }),
+  },
   created() {
+   if (this.previousPagination) {
+    const body = {
+     ...this.previousPagination,
+    };
+    this.setPagination(body);
+   }
    if (this.queryRoute.per_page) {
     const refPagination = { ...this.pagination };
     refPagination.per_page = +this.queryRoute.per_page;
@@ -206,6 +217,12 @@
   },
   methods: {
    pagePaginationChange(_val: any) {
+    this.$store.commit("CACHED_PAGINATION", {
+     total: this.pagination.total,
+     total_pages: this.pagination.total_pages,
+     per_page: _val.per_page,
+     current_page: _val.page,
+    });
     this.setPagination({
      total: this.pagination.total,
      total_pages: this.pagination.total_pages,
@@ -217,8 +234,7 @@
     this.setLoadingTable(true);
    },
    clearSetup() {
-    console.log("clicked");
-    this.setLoadingTable(false);
+    this.setLoadingTable(true);
    },
   },
  });

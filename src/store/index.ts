@@ -27,6 +27,12 @@ export default new Vuex.Store({
    title: "",
    content: "",
   },
+  previousPagination: {
+   total: 1,
+   per_page: 15,
+   total_pages: 15,
+   current_page: 1,
+  },
  },
  mutations: {
   SET_SNACKBAR(state, payload) {
@@ -38,6 +44,9 @@ export default new Vuex.Store({
      content: "",
     };
    }, 4000);
+  },
+  CACHED_PAGINATION(state, payload) {
+   state.previousPagination = payload;
   },
  },
  actions: {},

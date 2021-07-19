@@ -1,9 +1,7 @@
 <template>
  <v-app>
   <v-main>
-   <keep-alive>
-    <router-view :key="this.$route.fullPath" />
-   </keep-alive>
+   <router-view :key="this.$route.fullPath" />
   </v-main>
   <v-snackbar v-model="snackbarEnable" v-show="snackbarState.content" :class="snackBarClasViaType">
    <p class="snack-title mb-1">

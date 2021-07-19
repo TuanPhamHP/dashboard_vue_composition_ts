@@ -13,6 +13,7 @@
   "axios": "^0.21.1",
   "validation_t": "^1.2.3",
   "vue": "^2.6.11",
+  "vue-jest": "4.0.1",
   "vue-router": "^3.2.0",
   "vuetify": "^2.4.0",
   "vuex": "^3.4.0"
@@ -75,6 +76,21 @@
   "not dead"
  ],
  "jest": {
-  "preset": "@vue/cli-plugin-unit-jest/presets/typescript"
+  "preset": "@vue/cli-plugin-unit-jest/presets/typescript",
+  "setupFiles": [
+   "./tests/jest.config.js"
+  ],
+  "transformIgnorePatterns": [
+   "/node_modules/(?!name-of-lib-o-transform)"
+  ],
+  "moduleFileExtensions": [
+   "js",
+   "ts",
+   "json",
+   "vue"
+  ],
+  "transform": {
+   ".*\\.(vue)$": "vue-jest"
+  }
  }
 }

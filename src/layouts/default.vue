@@ -8,7 +8,9 @@
   <div class="rest-container">
    <TopMarker />
    <BreadCrumb />
-   <slot></slot>
+   <keep-alive>
+    <slot></slot>
+   </keep-alive>
   </div>
  </div>
 </template>
