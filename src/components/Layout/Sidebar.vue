@@ -99,7 +99,7 @@
         </div>
       </v-list>
     </v-navigation-drawer>
-    <ConfirmSignout></ConfirmSignout>
+    <!-- <ConfirmSignout></ConfirmSignout> -->
   </v-card>
 </template>
 
@@ -210,10 +210,10 @@ export default defineComponent({
           isGroup: false,
           matchToActive: ["none"],
           action: (): void => {
-            //  localStorage.removeItem("auth._token.local");
-            //  store.commit("SET_LOGOUT_USER");
-            //  this.$router.push("/login");
-            console.log("alaba trap");
+             localStorage.removeItem("auth._token.local");
+             store.commit("SET_LOGOUT_USER");
+             this.$router.push("/login");
+            // console.log("alaba trap");
           },
         },
         //  {
