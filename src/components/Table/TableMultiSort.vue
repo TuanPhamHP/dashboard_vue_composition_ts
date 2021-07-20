@@ -23,7 +23,7 @@
        v-if="header.filters && header.filters.type === 'string'"
        :own-header="header"
        :listen-change="listenChange"
-       :default-value="header.filters.defaultValue||filtersTable[header.filters.key]"
+       :default-value="header.filters.defaultValue"
       />
       <TableFiltersSelect
        v-if="header.filters && header.filters.type === 'select'"
@@ -94,6 +94,7 @@
    };
    watch(filtersTable, currentValue => {
     // reactive when filter change here
+    
     ctx.emit('handleFilterChange',currentValue)
    });
    return { filtersTable, tableHeight, endedThead, setEndedThead, setTableHeight, setFiltersTable };
@@ -118,19 +119,11 @@
     console.log(error);
    }
   },
-  created() {
-    console.log('re-create',this.currentBindingUrl);
-    
-    if (this.currentBindingUrl) {
-      let _obj:any =  {...this.currentBindingUrl}
-      delete _obj.per_page,
-      delete _obj.current_page,
-      this.filtersTable= {..._obj}
-    }
-      
-  },
+
   methods: {
    listenChange(value: NormalFilterObject) {
+     
+     
     const valObject = returnFilterObject(value);
     const body = {
      ...this.filtersTable,
@@ -138,6 +131,7 @@
     };
     this.setFiltersTable(body);
    },
+   
   },
  });
 </script>

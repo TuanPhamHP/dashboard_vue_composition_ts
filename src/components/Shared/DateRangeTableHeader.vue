@@ -197,17 +197,25 @@
   },
   methods: {
    updateValues(_val) {
+   let valNew = {
+      startDate: this.parseDate(_val.startDate),
+      endDate: this.parseDate(_val.endDate),
+   }
+    
     // console.log(_val, 'updateValues');
-    let objReturn = this.tableField ? { fieldUpdate: this.tableField, value: _val } : { value: _val };
+    let objReturn = this.tableField ? { fieldUpdate: this.tableField, value: valNew } : { value: valNew };
     this.pickedDate(objReturn);
    },
    checkOpen(_val) {
-    console.log(_val, "checkOpen");
+   //  console.log(_val, "checkOpen");
    },
    getDateObject(_date) {
     let date = tDate.formatDateCustomize(_date);
-    // console.log(date);
     return `${date.dd}/${date.MM}/${date.yyyy}`;
+   },
+   parseDate(_date) {
+    let date = tDate.formatDateCustomize(_date);
+    return `${date.dd}-${date.MM}-${date.yyyy}`;
    },
    checkInt(_val) {
     // null or undefine is unacceptable

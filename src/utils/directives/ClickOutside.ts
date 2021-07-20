@@ -14,3 +14,4 @@
 //   document.body.removeEventListener("click", el.clickOutsideEvent);
 //  },
 // };
+export default {};

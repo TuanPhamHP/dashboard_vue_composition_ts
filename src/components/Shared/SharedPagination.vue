@@ -11,6 +11,7 @@
  </v-layout>
 </template>
 <script>
+ import { mapState } from "vuex";
  export default {
   props: {
    //  totalPage: { type: Number, default: 0 },
@@ -37,6 +38,9 @@
    }
   },
   computed: {
+   ...mapState({
+    previousPagination: state => state.previousPagination,
+   }),
    totalPage() {
     return this.paginationSync ? this.paginationSync.total_pages : 1;
    },
@@ -66,7 +70,6 @@
     this.pagination.page = 1;
     this.$emit("handlePageSizeChange", { page: this.pagination.page, per_page: this.pagination.rowsPerPage });
    },
-
    pageChange() {
     this.$emit("handlePageChange", { page: this.pagination.page, per_page: this.pagination.rowsPerPage });
    },

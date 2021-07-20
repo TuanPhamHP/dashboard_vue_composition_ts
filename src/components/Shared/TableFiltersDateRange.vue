@@ -43,7 +43,7 @@
     listenChange.value(payload);
    };
    const pickedDate = (_val: any) => {
-    console.log(_val);
+    queryString.value = _val.value
    };
 
    return { filterDateKey, items, placeholder, queryString, refQuery, setRefQuery, handleEmitFilter, pickedDate };
