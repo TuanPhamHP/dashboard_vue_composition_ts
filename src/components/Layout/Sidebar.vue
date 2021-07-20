@@ -1,23 +1,21 @@
 <template>
- <v-card class="sidebar-card-body">
+ <v-card class="sidebar-card-body bg-white">
   <v-btn color="accent" x-small elevation="2" class="btn-toggle-mini" :class="mini ? 'goto-collapse' : 'goto-expand'" @click="toggleMini">
    <v-icon>mdi-chevron-left</v-icon>
   </v-btn>
   <v-navigation-drawer v-model="drawer" :mini-variant.sync="mini" permanent>
    <v-list-item class="px-2">
-    <v-list-item-avatar>
-     <v-img src="https://randomuser.me/api/portraits/men/85.jpg"></v-img>
-    </v-list-item-avatar>
-
-    <v-list-item-title>John Leider</v-list-item-title>
+    <router-link to="/" class="sidebar-logo-link">
+     <img src="../../assets/images/sidebar-icon/logo_type.png" class="sidebar-logo pointer" alt="" />
+    </router-link>
    </v-list-item>
 
-   <v-divider></v-divider>
+   <!-- <v-divider></v-divider> -->
 
    <v-list dense class="bg-transparent">
     <div v-for="side in navField" :key="side.groupText">
      <v-list-group
-      v-if="side.isGroup"
+      v-if="side.type !== 'divider' && side.isGroup"
       :value="false"
       prepend-icon="mdi-account-circle"
       class="each-items-group"
@@ -44,7 +42,7 @@
       </v-list-group>
      </v-list-group>
      <v-list-item
-      v-if="!side.isGroup"
+      v-if="side.type !== 'divider' && !side.isGroup"
       class="pointer each-items single-group"
       :class="side.matchToActive.includes(currentRouteName) ? 'sidechick-on-active' : ''"
       @click="side.action()"
@@ -55,6 +53,7 @@
 
       <v-list-item-title>{{ side.groupText }}</v-list-item-title>
      </v-list-item>
+     <v-divider v-if="side.type === 'divider'"></v-divider>
     </div>
    </v-list>
   </v-navigation-drawer>
@@ -82,7 +81,10 @@
    const setCurrentRouteName = (name: string): any => {
     currentRouteName.value = name;
    };
-   return { drawer, mini, currentRouteName, setMini, setDrawer, setCurrentRouteName };
+   const handleLogout = () => {
+    alert("Logout clicked");
+   };
+   return { drawer, mini, currentRouteName, setMini, setDrawer, setCurrentRouteName, handleLogout };
   },
   data() {
    return {
@@ -96,7 +98,7 @@
       },
      },
      {
-      groupText: "About",
+      groupText: "User Guide",
       isGroup: false,
       matchToActive: ["about"],
       action: () => {
@@ -104,26 +106,77 @@
       },
      },
      {
-      groupText: "Action",
-      isGroup: true,
-      matchToActive: ["table", "report"],
-      listChild: [
-       {
-        itemText: "Report",
-        matchToActive: ["report"],
-        action: () => {
-         this.$router.push("/report");
-        },
-       },
-       {
-        itemText: "Table",
-        matchToActive: ["table"],
-        action: () => {
-         this.$router.push("/table");
-        },
-       },
-      ],
+      groupText: "Order",
+      isGroup: false,
+      matchToActive: ["order"],
+      action: () => {
+       this.$router.push("/order");
+      },
      },
+     {
+      groupText: "Bag",
+      isGroup: false,
+      matchToActive: ["bag"],
+      action: () => {
+       this.$router.push("/bag");
+      },
+     },
+     {
+      groupText: "Manifest",
+      isGroup: false,
+      matchToActive: ["manifest"],
+      action: () => {
+       this.$router.push("/manifest");
+      },
+     },
+     {
+      groupText: "Invoice",
+      isGroup: false,
+      matchToActive: ["invoice"],
+      action: () => {
+       this.$router.push("/invoice");
+      },
+     },
+     {
+      groupText: "Reports",
+      isGroup: false,
+      matchToActive: ["reports"],
+      action: () => {
+       this.$router.push("/reports");
+      },
+     },
+     {
+      type: "divider",
+     },
+     {
+      groupText: "Sign Out",
+      isGroup: false,
+      matchToActive: ["none"],
+      action: (): void => {
+       //  this.handleLogout();
+      },
+     },
+     //  {
+     //   groupText: "Action",
+     //   isGroup: true,
+     //   matchToActive: ["table", "report"],
+     //   listChild: [
+     //    {
+     //     itemText: "Report",
+     //     matchToActive: ["report"],
+     //     action: () => {
+     //      this.$router.push("/report");
+     //     },
+     //    },
+     //    {
+     //     itemText: "Table",
+     //     matchToActive: ["table"],
+     //     action: () => {
+     //      this.$router.push("/table");
+     //     },
+     //    },
+     //   ],
+     //  },
     ],
    };
   },
@@ -155,7 +208,7 @@
   min-height: 100vh;
   .sidebar-card-body {
    .v-navigation-drawer__content {
-    background-color: $variantsColor !important;
+    background-color: #fff !important;
    }
    height: 100%;
    position: relative;
@@ -175,6 +228,21 @@
     }
    }
    .each-items {
+    width: calc(100% - 48px);
+    margin: auto;
+    border-radius: 6px;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 16px;
+    letter-spacing: 0.3px;
+    color: #444444;
+    height: 50px;
+    margin-bottom: 3px !important;
+    .v-list-item__icon {
+     margin-right: 19px !important;
+    }
     &:hover {
      background-color: $primaryColorLighterLv2;
     }
@@ -202,9 +270,26 @@
    }
    .sidechick-on-active {
     background-color: $primaryColorLighterLv1;
+    position: relative;
+    &::before {
+     position: absolute;
+     top: 0;
+     left: -24px;
+     content: "";
+     width: 6px;
+     height: 100%;
+     background-color: $primaryColorLighterLv1;
+     border-radius: 0 4px 4px 0;
+     z-index: 2;
+     opacity: 1;
+    }
+    &.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
+     color: $GPEblueText !important;
+    }
    }
    .onechild-on-active {
     background-color: $primaryColorLighterLv1;
+    color: $GPEblueText !important;
     &.v-list-group--active {
      background-color: transparent !important;
     }
@@ -213,5 +298,15 @@
     }
    }
   }
+ }
+ .sidebar-logo {
+  max-width: 200px;
+  display: block;
+  margin: auto;
+ }
+ .sidebar-logo-link {
+  margin-top: 20px;
+  display: block;
+  width: 100%;
  }
 </style>
