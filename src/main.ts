@@ -6,7 +6,9 @@ import vuetify from "./plugins/vuetify";
 import "./plugins/compositionApi";
 import "./assets/style/_variables.scss";
 import "./utils/directives/index";
+import Axios from "axios";
 Vue.config.productionTip = false;
+Axios.defaults.baseURL = process.env.VUE_APP_BASE_URL;
 new Vue({
  router,
  store,
