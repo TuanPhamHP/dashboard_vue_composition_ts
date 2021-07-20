@@ -7,7 +7,7 @@
   </div>
   <div class="rest-container">
    <TopMarker />
-   <BreadCrumb />
+   <BreadCrumb v-if="showBC" />
    <keep-alive>
     <slot></slot>
    </keep-alive>
@@ -25,10 +25,14 @@
    return {
     sidebarIsCollapse: false,
     viewWidth: 1920,
+    showBC: true,
    };
   },
   mounted() {
    this.viewWidth = window.outerWidth;
+   if (this.$route.fullPath.includes("/login")) {
+    this.showBC = false;
+   }
   },
   methods: {
    toggleColappse() {

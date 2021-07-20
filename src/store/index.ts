@@ -5,6 +5,10 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
  state: {
+  auth: {
+   isAuth: false,
+   user: null,
+  },
   currentBreadcrumb: [
    {
     text: "Dashboard",
