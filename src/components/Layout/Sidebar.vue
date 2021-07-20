@@ -210,9 +210,9 @@ export default defineComponent({
           isGroup: false,
           matchToActive: ["none"],
           action: (): void => {
-             localStorage.removeItem("auth._token.local");
-             store.commit("SET_LOGOUT_USER");
-             this.$router.push("/login");
+            localStorage.removeItem("auth._token.local");
+            store.commit("SET_LOGOUT_USER");
+            this.$router.push("/login");
             // console.log("alaba trap");
           },
         },
@@ -315,19 +315,6 @@ export default defineComponent({
           transform: rotateZ(180deg);
         }
       }
-      &-on-menu {
-        padding-left: 0 !important;
-        padding-right: 0 !important;
-        width: 100% !important;
-        .v-list-item__icon {
-          margin: auto !important;
-          margin-right: auto !important;
-        }
-      }
-    }
-    &:hover {
-      background-color: $primaryColorLighterLv2;
-      transform: translate(0, -2px);
     }
     .each-items {
       width: calc(100% - 48px);
@@ -345,6 +332,16 @@ export default defineComponent({
       .v-list-item__icon {
         margin-right: 19px !important;
       }
+      &-on-menu {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        width: 100% !important;
+        .v-list-item__icon {
+          margin: auto !important;
+          margin-right: auto !important;
+        }
+      }
+
       &:hover {
         background-color: $primaryColorLighterLv2;
         transform: translate(0, -2px);
