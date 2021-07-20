@@ -56,6 +56,9 @@ export default new Vuex.Store({
   SET_USER_LOGGEDIN(state, payload) {
    state.auth = { ...payload };
   },
+  SET_LOGOUT_USER(state) {
+   state.auth = { isAuth: false, user: null, token: null };
+  },
  },
  actions: {},
  modules: {},

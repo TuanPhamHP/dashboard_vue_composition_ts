@@ -62,6 +62,7 @@
 
 <script lang="ts">
  import { reactive, ref, defineComponent } from "@vue/composition-api";
+ import store from "@/store";
  export default defineComponent({
   name: "SideBar",
   props: {
@@ -153,6 +154,8 @@
       isGroup: false,
       matchToActive: ["none"],
       action: (): void => {
+       localStorage.removeItem("auth._token.local");
+       store.commit("SET_LOGOUT_USER");
        this.$router.push("/login");
       },
      },
