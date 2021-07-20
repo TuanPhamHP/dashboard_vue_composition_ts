@@ -1,13 +1,27 @@
+const localToken = localStorage.getItem("auth._token.local");
+
 const roleRepo = (axios: any) => {
  return {
-  getAll(filterOptions: Record<string, unknown> = {}) {
-   const body = {
-    ...filterOptions,
-    include: filterOptions.include ? `${filterOptions.include},parts,parts.warehouse,parts.warehouse_off_airport_terminal` : "parts",
-   };
+  loginUser(payload: Record<string, string>) {
    return axios
-    .get(`/api/merchandises`, {
-     params: body,
+    .post(`/api/auth/login`, payload, {
+     headers: {
+      Authorization: null,
+     },
+    })
+    .then((res: any) => {
+     return res;
+    })
+    .catch((err: any) => {
+     return err.response;
+    });
+  },
+  getUserInfo() {
+   return axios
+    .get(`/api/users/me?include=roles,permissions`, {
+     headers: {
+      Authorization: localToken,
+     },
     })
     .then((res: any) => {
      return res;
