@@ -10,7 +10,7 @@ import Axios from "axios";
 const localToken = localStorage.getItem("auth._token.local");
 Vue.config.productionTip = false;
 Axios.defaults.baseURL = process.env.VUE_APP_BASE_URL;
-Axios.defaults.headers = { Authorization: `Beaer ${localToken}` };
+Axios.defaults.headers = { Authorization: `Bearer ${localToken}` };
 new Vue({
  router,
  store,

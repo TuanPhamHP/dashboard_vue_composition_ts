@@ -16,6 +16,7 @@
             placeholder="nguyenvananh@gmail.com"
             class="input"
             :class="!username && clickedSubmit ? 'error-type' : ''"
+            @keyup.exact.enter="handleFocusPass"
           />
           <small v-if="!username && clickedSubmit" class="error-msg"
             >*Please fulfill username</small
@@ -33,6 +34,8 @@
             type="password"
             class="input-password"
             :class="!password && clickedSubmit ? 'error-type-password' : ''"
+            ref="passwordCl"
+            @keyup.exact.enter="submit"
           />
           <small v-if="!password && clickedSubmit" class="error-msg"
             >*Please fulfill password</small
@@ -47,6 +50,7 @@
             >Save password</label
           >
         </div>
+        <div style="margin-top: 24px" class="error-msg">{{ isMessage }}</div>
       </div>
       <div class="sign-in mx-auto" @click="submit">Sign in</div>
     </div>
@@ -54,27 +58,80 @@
 </template>
 
 <script lang="ts">
+import store from "@/store/index";
+import route from "@/router/index";
 import { defineComponent, reactive, ref, watch } from "@vue/composition-api";
 import api from "@/services";
+import Axios from "axios";
+import Vue from "Vue";
 export default defineComponent({
   components: {},
   setup: (props) => {
     let username = ref<string>("");
     let password = ref<string>("");
+    let isMessage = ref<string>("");
+    let loadingLogin = ref<boolean>(false);
+    let errorMsg = ref<string>("");
     let clickedSubmit = ref<boolean>(false);
+
+    const setLoadingLogin = (payload: boolean) => {
+      loadingLogin.value = payload;
+    };
+    const setErrorMsg = (payload: string) => {
+      errorMsg.value = payload;
+    };
+    const setClickedSubmit = (payload: boolean) => {
+      clickedSubmit.value = payload;
+    };
+    const setIsMessage = (payload: string) => {
+      isMessage.value = payload;
+    };
+    console.log(store);
     const authenticate = async (query: Record<string, string>) => {
       const res = await api.user.loginUser(query);
       if (!res) {
         return;
       }
+      if (res.status > 399) {
+        setIsMessage(res.data.meta.message);
+        return;
+      }
       try {
-        console.log(res);
-        //  setPagination({
-        //   total: pagination.total,
-        //   total_pages: pagination.total_pages,
-        //   per_page: pagination.per_page,
-        //   current_page: pagination.current_page,
-        //  });
+        localStorage.setItem("auth._token.local", res.data.data.token);
+        Axios.defaults.headers = {
+          Authorization: `Bearer ${res.data.data.token}`,
+        };
+        const current_token = res.data.data.token;
+        const resU = await api.user.getUserInfo();
+        setLoadingLogin(false);
+        route.push("/");
+        if (!resU) {
+          localStorage.removeItem("auth._token.local");
+          setErrorMsg("");
+          return;
+        }
+        try {
+          if (resU.status > 399) {
+            localStorage.removeItem("auth._token.local");
+            setErrorMsg("");
+            return;
+          }
+          if (resU.response && !resU.response.data.success) {
+            localStorage.removeItem("auth._token.local");
+            setErrorMsg("");
+            return;
+          }
+
+          const auth_set = {
+            isAuth: true,
+            user: resU.data.data,
+            token: `Bearer ${current_token}`,
+          };
+          store.commit("SET_USER_LOGGEDIN", auth_set);
+        } catch (error) {
+          console.log(error);
+          setErrorMsg("");
+        }
       } catch (error) {
         console.log(error);
       }
@@ -83,12 +140,19 @@ export default defineComponent({
       username,
       password,
       clickedSubmit,
+      loadingLogin,
+      errorMsg,
+      isMessage,
+      setLoadingLogin,
+      setErrorMsg,
       authenticate,
+      setClickedSubmit,
+      setIsMessage,
     };
   },
   methods: {
-    submit() {
-      this.clickedSubmit = true;
+    async submit() {
+      this.setClickedSubmit(true);
       if (!this.username || !this.password) {
         return;
       }
@@ -97,50 +161,18 @@ export default defineComponent({
         password: this.password,
       };
       this.authenticate({ ...body });
-      // const res = await api.user.getUserInfo();
-      // if (!res) {
-      //   localStorage.removeItem("auth._token.local");
-      //   next({
-      //     path: "/login",
-      //     query: { redirect: to.fullPath },
-      //   });
-      // }
-      // try {
-      //   if (res.status > 399) {
-      //     localStorage.removeItem("auth._token.local");
-      //     next({
-      //       path: "/login",
-      //       query: { redirect: to.fullPath },
-      //     });
-      //     return;
-      //   }
-      //   if (res.response && !res.response.data.success) {
-      //     localStorage.removeItem("auth._token.local");
-      //     next({
-      //       path: "/login",
-      //       query: { redirect: to.fullPath },
-      //     });
-      //     return;
-      //   }
-      //   const localToken = localStorage.getItem("auth._token.local");
-      //   const auth_set = {
-      //     isAuth: true,
-      //     user: res.data.data,
-      //     token: `Bearer ${localToken}`,
-      //   };
-      //   store.commit("SET_USER_LOGGEDIN", auth_set);
-      //   const nextStep =
-      //     to.query && to.query.redirect ? to.query.redirect : "/";
-      //   next({
-      //     path: String(nextStep),
-      //   });
-      // } catch (error) {
-      //   console.log(error);
-      //   next({
-      //     path: "/login",
-      //     query: { redirect: to.fullPath },
-      //   });
-      // }
+      this.setErrorMsg("");
+      this.setLoadingLogin(true);
+    },
+    handleFocusPass() {
+      console.log(this);
+      if (this.$refs.passwordCl) {
+        const inputPassword = this.$refs.passwordCl as HTMLElement;
+
+        if (inputPassword) {
+          inputPassword.focus();
+        }
+      }
     },
   },
 });

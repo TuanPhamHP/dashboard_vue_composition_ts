@@ -19,9 +19,7 @@ const roleRepo = (axios: any) => {
   getUserInfo() {
    return axios
     .get(`/api/users/me?include=roles,permissions`, {
-     headers: {
-      Authorization: localToken,
-     },
+     
     })
     .then((res: any) => {
      return res;
