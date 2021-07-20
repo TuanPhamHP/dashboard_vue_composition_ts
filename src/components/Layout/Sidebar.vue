@@ -270,15 +270,15 @@ export default defineComponent({
     overflow: hidden;
   }
   .body-sidebar-dense {
-   height: calc(100% - 40px);
-   overflow-y: scroll;
-   &-mini {
-    padding-left: 6px !important;
-   }
-   &::-webkit-scrollbar {
-    width: 5px;
-    height: 6px;
-   }
+    height: calc(100% - 40px);
+    overflow-y: scroll;
+    &-mini {
+      padding-left: 6px !important;
+    }
+    &::-webkit-scrollbar {
+      width: 5px;
+      height: 6px;
+    }
 
     &::-webkit-scrollbar-track {
       -webkit-box-shadow: none;
@@ -315,19 +315,19 @@ export default defineComponent({
           transform: rotateZ(180deg);
         }
       }
-    &-on-menu {
-     padding-left: 0 !important;
-     padding-right: 0 !important;
-     width: 100% !important;
-     .v-list-item__icon {
-      margin: auto !important;
-      margin-right: auto !important;
-     }
+      &-on-menu {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        width: 100% !important;
+        .v-list-item__icon {
+          margin: auto !important;
+          margin-right: auto !important;
+        }
+      }
     }
-
     &:hover {
-     background-color: $primaryColorLighterLv2;
-     transform: translate(0, -2px);
+      background-color: $primaryColorLighterLv2;
+      transform: translate(0, -2px);
     }
     .each-items {
       width: calc(100% - 48px);
