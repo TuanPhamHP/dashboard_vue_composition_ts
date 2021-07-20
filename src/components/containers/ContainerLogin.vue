@@ -50,9 +50,20 @@
             >Save password</label
           >
         </div>
-        <div style="margin-top: 24px" class="error-msg">{{ isMessage }}</div>
+        <div v-if="isMessage" style="margin-top: 24px" class="error-msg">
+          {{ isMessage }}
+        </div>
       </div>
-      <div class="sign-in mx-auto" @click="submit">Sign in</div>
+      <div class="sign-in mx-auto" @click="submit">
+        Sign in<img
+          v-show="loadingLogin"
+          class="ml-1 loading-btn-sc"
+          src="../../assets/images/loading.png"
+          style="filter: brightness(0) invert(1)"
+          alt=""
+          height="22px"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -86,14 +97,15 @@ export default defineComponent({
     const setIsMessage = (payload: string) => {
       isMessage.value = payload;
     };
-    console.log(store);
     const authenticate = async (query: Record<string, string>) => {
       const res = await api.user.loginUser(query);
       if (!res) {
+        setLoadingLogin(false);
         return;
       }
       if (res.status > 399) {
         setIsMessage(res.data.meta.message);
+        setLoadingLogin(false);
         return;
       }
       try {
@@ -133,6 +145,7 @@ export default defineComponent({
           setErrorMsg("");
         }
       } catch (error) {
+        setLoadingLogin(false);
         console.log(error);
       }
     };
@@ -153,7 +166,10 @@ export default defineComponent({
   methods: {
     async submit() {
       this.setClickedSubmit(true);
+      this.setErrorMsg("");
+      this.setLoadingLogin(true);
       if (!this.username || !this.password) {
+        this.setLoadingLogin(false);
         return;
       }
       let body = {
@@ -161,8 +177,6 @@ export default defineComponent({
         password: this.password,
       };
       this.authenticate({ ...body });
-      this.setErrorMsg("");
-      this.setLoadingLogin(true);
     },
     handleFocusPass() {
       console.log(this);
@@ -188,7 +202,11 @@ export default defineComponent({
   /* Internet Explorer */
   color: #a6a6a6;
 }
-
+.loading-btn-sc {
+  margin-bottom: -5px;
+  animation: spin 2s linear infinite;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+}
 ::placeholder {
   color: #a6a6a6;
 }
@@ -200,23 +218,24 @@ export default defineComponent({
   background-color: #ffffff;
   padding: 30px 59px 30px 59px;
   border-radius: 24px;
-  min-height: fit-content;
-  height: 830px;
+  height: calc(100vh - 100px);
+  max-height: 754px;
+  overflow-y: auto;
   width: 630px;
   .header {
     color: #202224;
     font-size: 32px;
     font-weight: bold;
-    margin-top: 27px;
+    margin-top: 18px;
   }
   .notice {
     color: #202224;
     font-size: 18px;
     font-weight: 400;
-    margin-top: 18px;
+    margin-top: 14px;
   }
   .login-field {
-    margin-top: 40px;
+    margin-top: 20px;
     text-align: left;
     .username {
       margin-bottom: 40px;
@@ -230,7 +249,7 @@ export default defineComponent({
       background: #f1f4f9;
       border-radius: 8px;
       font-size: 18px;
-      margin-top: 19px;
+      margin-top: 15px;
       color: #a6a6a6;
     }
     .error-type {
@@ -246,7 +265,7 @@ export default defineComponent({
       background: #f1f4f9;
       border-radius: 8px;
       font-size: 35px;
-      margin-top: 19px;
+      margin-top: 15px;
       color: #a6a6a6;
       letter-spacing: 16px;
     }
@@ -267,7 +286,7 @@ export default defineComponent({
     }
   }
   .sign-in {
-    margin-top: 53px;
+    margin-top: 39px;
     background-color: #4880ff;
     padding-top: 15px;
     padding-bottom: 18px;
