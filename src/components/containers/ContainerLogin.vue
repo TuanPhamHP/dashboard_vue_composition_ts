@@ -1,7 +1,11 @@
 <template>
   <div>
     <div class="form-login mx-auto">
-      <img src="../../assets/images/gpe_logo.png" width="172px" height="115px"/>
+      <img
+        src="../../assets/images/gpe_logo.png"
+        width="172px"
+        height="115px"
+      />
       <div class="header">Sign in</div>
       <div class="notice">Please enter username and password to continue</div>
       <div class="login-field">
@@ -20,7 +24,9 @@
         <div class="password">
           <div style="display: flex; justify-content: space-between">
             <div class="text">Password</div>
-            <div class="text" style="opacity: 0.6; cursor: pointer">Forgot password ?</div>
+            <div class="text" style="opacity: 0.6; cursor: pointer">
+              Forgot password ?
+            </div>
           </div>
           <input
             v-model="password"
@@ -34,7 +40,10 @@
         </div>
         <div class="remember-me">
           <input class="checkbox" type="checkbox" id="checkbox" />
-          <label for="checkbox" class="text" style="opacity: 0.6; cursor: pointer;"
+          <label
+            for="checkbox"
+            class="text"
+            style="opacity: 0.6; cursor: pointer"
             >Save password</label
           >
         </div>
@@ -53,20 +62,87 @@ export default defineComponent({
     let username = ref<string>("");
     let password = ref<string>("");
     let clickedSubmit = ref<boolean>(false);
+    const authenticate = async (query: Record<string, string>) => {
+      const res = await api.user.loginUser(query);
+      if (!res) {
+        return;
+      }
+      try {
+        console.log(res);
+        //  setPagination({
+        //   total: pagination.total,
+        //   total_pages: pagination.total_pages,
+        //   per_page: pagination.per_page,
+        //   current_page: pagination.current_page,
+        //  });
+      } catch (error) {
+        console.log(error);
+      }
+    };
     return {
       username,
       password,
-      clickedSubmit
+      clickedSubmit,
+      authenticate,
     };
   },
   methods: {
     submit() {
       this.clickedSubmit = true;
-      if (!this.username || !this.password){
-        return
+      if (!this.username || !this.password) {
+        return;
       }
-    }
-  }
+      let body = {
+        username: this.username,
+        password: this.password,
+      };
+      this.authenticate({ ...body });
+      // const res = await api.user.getUserInfo();
+      // if (!res) {
+      //   localStorage.removeItem("auth._token.local");
+      //   next({
+      //     path: "/login",
+      //     query: { redirect: to.fullPath },
+      //   });
+      // }
+      // try {
+      //   if (res.status > 399) {
+      //     localStorage.removeItem("auth._token.local");
+      //     next({
+      //       path: "/login",
+      //       query: { redirect: to.fullPath },
+      //     });
+      //     return;
+      //   }
+      //   if (res.response && !res.response.data.success) {
+      //     localStorage.removeItem("auth._token.local");
+      //     next({
+      //       path: "/login",
+      //       query: { redirect: to.fullPath },
+      //     });
+      //     return;
+      //   }
+      //   const localToken = localStorage.getItem("auth._token.local");
+      //   const auth_set = {
+      //     isAuth: true,
+      //     user: res.data.data,
+      //     token: `Bearer ${localToken}`,
+      //   };
+      //   store.commit("SET_USER_LOGGEDIN", auth_set);
+      //   const nextStep =
+      //     to.query && to.query.redirect ? to.query.redirect : "/";
+      //   next({
+      //     path: String(nextStep),
+      //   });
+      // } catch (error) {
+      //   console.log(error);
+      //   next({
+      //     path: "/login",
+      //     query: { redirect: to.fullPath },
+      //   });
+      // }
+    },
+  },
 });
 </script>
 
@@ -127,7 +203,7 @@ export default defineComponent({
     }
     .error-type {
       background-color: rgba(249, 60, 101, 0.15);
-      border: 1px solid #FF0000;
+      border: 1px solid #ff0000;
     }
     .input-password {
       border: 1px solid #d8d8d8;
@@ -144,7 +220,7 @@ export default defineComponent({
     }
     .error-type-password {
       background-color: rgba(249, 60, 101, 0.15);
-      border: 1px solid #FF0000;
+      border: 1px solid #ff0000;
     }
     .remember-me {
       display: flex;
