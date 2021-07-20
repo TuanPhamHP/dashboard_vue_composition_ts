@@ -71,9 +71,15 @@
    headers: {
     type: Array,
    },
+   handleFilterChange:{
+     type:Function
+   },
+   currentBindingUrl:{
+     type:Object
+   }
   },
   components: { TableFiltersInput, TableFiltersSelect, TableFiltersDateRange },
-  setup: props => {
+  setup: (props,ctx) => {
    const endedThead = ref<number>(40);
    const tableHeight = ref<number>(600);
    let filtersTable = ref<Record<string, unknown>>({});
@@ -88,7 +94,8 @@
    };
    watch(filtersTable, currentValue => {
     // reactive when filter change here
-    console.log(currentValue);
+    
+    ctx.emit('handleFilterChange',currentValue)
    });
    return { filtersTable, tableHeight, endedThead, setEndedThead, setTableHeight, setFiltersTable };
   },
@@ -112,11 +119,11 @@
     console.log(error);
    }
   },
-  created() {
-   console.log("re-create");
-  },
+
   methods: {
    listenChange(value: NormalFilterObject) {
+     
+     
     const valObject = returnFilterObject(value);
     const body = {
      ...this.filtersTable,
@@ -124,6 +131,7 @@
     };
     this.setFiltersTable(body);
    },
+   
   },
  });
 </script>

@@ -29,8 +29,8 @@
   setup: props => {
    let ownHeader: Record<string, any> | undefined = toRef(props, "ownHeader");
    let listenChange: Record<string, any> = toRef(props, "listenChange");
-   const { key, placeholder, items } = ownHeader.value.filters;
-   const queryString = ref<string>("");
+   const { key, placeholder, items,defaultValue } = ownHeader.value.filters;
+   const queryString = ref<string>(defaultValue);
    let refQuery = ref<number>(0);
    const setRefQuery = (val: number) => {
     refQuery.value = val;

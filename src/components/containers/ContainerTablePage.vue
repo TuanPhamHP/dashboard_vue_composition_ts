@@ -2,7 +2,7 @@
  <div>
   <v-btn @click="setupData" class="mb-3 mx-3">Setup Data</v-btn>
   <div class="px-3">
-   <TableMultiSort :table-data="tableData" :table-loading="loadingTable" :headers="headers" />
+   <TableMultiSort :table-data="tableData" :table-loading="loadingTable" :headers="headers" @handleFilterChange="filterTableChange" :current-binding-url="queryRoute" />
    <div class="pt-1">
     <SharedPagination :pagination-sync="pagination" @handlePageSizeChange="pagePaginationChange" @handlePageChange="pagePaginationChange" />
    </div>
@@ -16,10 +16,12 @@
  import TableMultiSort from "@/components/Table/TableMultiSort.vue";
  import { SharedPagination } from "@/components/Shared";
  import { NormalPagination } from "@/InterfaceModel/Pagination";
+ import { NormalHeaderItem } from "@/InterfaceModel/Header";
  import { IdentifyObject } from "@/InterfaceModel/CustomObject";
  import useRouteQuery from "@/utils/uses/routerQuery/useRouteQuery";
  import route from "@/router/index";
  import { mapState } from "vuex";
+import { filter } from "vue/types/umd";
  export default defineComponent({
   components: {
    TableMultiSort,
@@ -30,7 +32,7 @@
    const loadingTable = ref<boolean>(true);
    const currentRouteQuery = ref<string>(stringQueryRender);
    let tableData = reactive<Record<string, unknown>>({ value: [] });
-   let filterTable = reactive<Record<string, unknown>>({ value: {} });
+   let filterTable = ref({})
    let pagination = ref<NormalPagination>({
     total: 1,
     per_page: 15,
@@ -38,22 +40,7 @@
     current_page: 1,
    });
 
-   let pairO = new IdentifyObject({
-    name: "",
-    age: 2,
-    gender: "male",
-    id: 1,
-    role: 4,
-    f: undefined,
-   });
-
-   console.log(pairO);
-
-   setTimeout(() => {
-    console.log(pairO.identifySelf());
-   }, 1000);
-
-   let headers = [
+   const headers:NormalHeaderItem[] = [
     {
      text: "Dessert (100g serving)",
      align: "start",
@@ -136,8 +123,9 @@
       defaultValue: "",
      },
     },
-    { text: "Actions", value: "actions", sortable: false },
+    { text: "Actions", value: "actions", sortable: false,filters:{} },
    ];
+   Object.freeze(headers)
    const setTableData = (payload: Record<string, unknown>[]) => {
     tableData.value = payload;
    };
@@ -147,18 +135,31 @@
    const setCurrentRouteQuery = (payload: Record<string, unknown>): any => {
     currentRouteQuery.value = getQueryRoute(payload);
    };
-
+    const setCurrentFilterTable = (payload: Record<string, unknown>): any => {
+      filterTable.value = {...payload}
+    };
    const setLoadingTable = (payload: boolean) => {
     loadingTable.value = payload;
    };
-   // Watch
+
    watch(currentRouteQuery, currentValue => {
     route.push(`${currentValue}`);
    });
    watch(pagination, currentValue => {
     const { current_page, per_page } = currentValue;
-    setCurrentRouteQuery({ current_page, per_page });
+    setCurrentRouteQuery({ 
+      ...queryRoute,
+      current_page, 
+      per_page 
+      });
    });
+   
+   watch(filterTable,currentValue=>{
+     setCurrentRouteQuery({
+        ...queryRoute,
+        ...currentValue
+      });
+   })
 
    const getAllRoles = async (query: Record<string, unknown>) => {
     const res = await api.roles.getAll(query);
@@ -169,12 +170,12 @@
     try {
      const pagination = res.data.meta.pagination;
      setTableData(res.data.data);
-     setPagination({
-      total: pagination.total,
-      total_pages: pagination.total_pages,
-      per_page: pagination.per_page,
-      current_page: pagination.current_page,
-     });
+    //  setPagination({
+    //   total: pagination.total,
+    //   total_pages: pagination.total_pages,
+    //   per_page: pagination.per_page,
+    //   current_page: pagination.current_page,
+    //  });
     } catch (error) {
      console.log(error);
     }
@@ -185,11 +186,14 @@
     loadingTable,
     tableData,
     queryRoute,
+    filterTable,
     setTableData,
     setLoadingTable,
     setCurrentRouteQuery,
     setPagination,
     getAllRoles,
+    setCurrentFilterTable,
+    currentRouteQuery
    };
   },
   watch: {},
@@ -199,22 +203,30 @@
    }),
   },
   created() {
+    console.log('container-create',this.queryRoute);
+    
    if (this.previousPagination) {
     const body = {
      ...this.previousPagination,
     };
     this.setPagination(body);
    }
-   if (this.queryRoute.per_page) {
-    const refPagination = { ...this.pagination };
-    refPagination.per_page = +this.queryRoute.per_page;
-    refPagination.current_page = +this.queryRoute.current_page;
-    this.setPagination(refPagination);
+   if (this.queryRoute) {
+    if (this.queryRoute.per_page) {
+      const refPagination = { ...this.pagination };
+      refPagination.per_page = +this.queryRoute.per_page;
+      refPagination.current_page = +this.queryRoute.current_page;
+      this.setPagination(refPagination);
    }
-   const page = this.pagination.current_page;
-   const per_page = this.pagination.per_page;
+    let _obj:any =  {...this.queryRoute}
+    delete _obj.per_page,
+    delete _obj.current_page
+    // this.setCurrentFilterTable(_obj)
 
-   this.getAllRoles({ page, per_page });
+    // this.setCurrentRouteQuery(this.queryRoute)
+    this.bindingDefaultFilterHeader(_obj)
+   }
+   this.getAllRoles({ ...this.queryRoute });
   },
   methods: {
    pagePaginationChange(_val: any) {
@@ -237,6 +249,58 @@
    clearSetup() {
     this.setLoadingTable(true);
    },
+   filterTableChange(_val:any){
+     
+    let pairO = new IdentifyObject({
+      ..._val
+    });
+    this.setCurrentFilterTable(pairO.identifySelf())
+   },
+   bindingDefaultFilterHeader(_obj: Record<string, unknown>){
+     let _headers = this.headers.slice();
+     console.log('_obj',_obj);
+     
+     for(const _key in _obj){
+       let _keySplit = _key.split('.')
+       
+        if(_keySplit.length===1){
+          let n = _headers.findIndex(o => o.filters.key === _key )
+          if(n !== -1){
+          
+          //  const obj = {..._headers[n]}
+          //  const objF = {..._headers[n].filters}
+          //  objF.defaultValue = _obj[_key]
+          //  obj.filters = {...objF}
+          //  _headers.splice(n,1,obj)
+            if(_headers[n].filters.type === 'string'){
+              _headers[n].filters.defaultValue = `${_obj[_key]}`
+            }else if(_headers[n].filters.type === 'select'){
+              // _headers[n].filters.defaultValue = _headers[n].filters.items.find(o=>o.id === _obj[_key]);
+              _headers[n].filters.defaultValue =  parseInt(`${_obj[_key]}`);
+              
+            }
+          }
+        }
+        else{
+          let n = _headers.findIndex(o => o.filters.key === _keySplit[0])
+          if(n !== -1){
+          
+           const obj = {..._headers[n]}
+           const objF = {..._headers[n].filters}
+          //  let objDf = {
+          //    ..._headers[n].filters.
+          //  }
+           objF.defaultValue = {}
+           obj.filters = {...objF}
+           _headers.splice(n,1,obj)
+              
+           
+          }
+        }
+       
+      }
+       
+     }
   },
  });
 </script>
