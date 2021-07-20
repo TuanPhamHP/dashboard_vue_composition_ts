@@ -1,7 +1,7 @@
 const auth = (): any => {
- //  if (!localStorage.getItem("local_token")) {
- //   return false;
- //  }
+ if (!localStorage.getItem("auth._token.local")) {
+  return false;
+ }
 
  return true;
 };

@@ -8,6 +8,7 @@ export default new Vuex.Store({
   auth: {
    isAuth: false,
    user: null,
+   token: null,
   },
   currentBreadcrumb: [
    {
@@ -51,6 +52,9 @@ export default new Vuex.Store({
   },
   CACHED_PAGINATION(state, payload) {
    state.previousPagination = payload;
+  },
+  SET_USER_LOGGEDIN(state, payload) {
+   state.auth = { ...payload };
   },
  },
  actions: {},

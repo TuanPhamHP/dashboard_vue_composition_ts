@@ -1,5 +1,6 @@
 import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
+import store from "@/store";
 import Home from "../views/Home.vue";
 import Login from "../views/Login.vue";
 import Table from "../views/Table.vue";
@@ -39,31 +40,112 @@ const router = new VueRouter({
 });
 router.beforeEach(async (to, from, next) => {
  if (to.path.includes("/login")) {
-  console.log(to);
-  next();
+  if (auth()) {
+   const userAuth = store.state.auth;
+   if (userAuth.isAuth && userAuth.user) {
+    next();
+    return;
+   }
+   const res = await api.user.getUserInfo();
+   if (!res) {
+    localStorage.removeItem("auth._token.local");
+    next({
+     path: "/login",
+     query: { redirect: to.fullPath },
+    });
+   }
+   try {
+    if (res.status > 399) {
+     localStorage.removeItem("auth._token.local");
+     next({
+      path: "/login",
+      query: { redirect: to.fullPath },
+     });
+     return;
+    }
+    if (res.response && !res.response.data.success) {
+     localStorage.removeItem("auth._token.local");
+     next({
+      path: "/login",
+      query: { redirect: to.fullPath },
+     });
+     return;
+    }
+    const localToken = localStorage.getItem("auth._token.local");
+    const auth_set = {
+     isAuth: true,
+     user: res.data.data,
+     token: `Bearer ${localToken}`,
+    };
+    store.commit("SET_USER_LOGGEDIN", auth_set);
+    const nextStep = to.query && to.query.redirect ? to.query.redirect : "/";
+    next({
+     path: String(nextStep),
+    });
+   } catch (error) {
+    console.log(error);
+    next({
+     path: "/login",
+     query: { redirect: to.fullPath },
+    });
+   }
+  } else {
+   next();
+  }
   return;
  } else {
   if (auth()) {
-   //  const localToken = localStorage.getItem("local_token");
-   //  const res = await api.user.getUserInfo();
-   //  if (!res) {
-   //   localStorage.removeItem("local_token");
-   //   next({
-   //    path: "/login",
-   //    query: { redirect: to.fullPath },
-   //   });
-   //  }
-   //  try {
-   //   next();
-   //  } catch (error) {
-   //   console.log(error);
-   //   next({
-   //    path: "/login",
-   //    query: { redirect: to.fullPath },
-   //   });
-   //  }
-   next();
+   const userAuth = store.state.auth;
+   if (userAuth.isAuth && userAuth.user) {
+    next();
+    return;
+   }
+   const res = await api.user.getUserInfo();
+   if (!res) {
+    localStorage.removeItem("auth._token.local");
+    next({
+     path: "/login",
+     query: { redirect: to.fullPath },
+    });
+   }
+   try {
+    if (res.status > 399) {
+     localStorage.removeItem("auth._token.local");
+     next({
+      path: "/login",
+      query: { redirect: to.fullPath },
+     });
+     return;
+    }
+    if (res.response && !res.response.data.success) {
+     localStorage.removeItem("auth._token.local");
+     next({
+      path: "/login",
+      query: { redirect: to.fullPath },
+     });
+     return;
+    }
+    const localToken = localStorage.getItem("auth._token.local");
+    const auth_set = {
+     isAuth: true,
+     user: res.data.data,
+     token: `Bearer ${localToken}`,
+    };
+    store.commit("SET_USER_LOGGEDIN", auth_set);
+    // const nextStep = to.query && to.query.redirect ? to.query.redirect : "/";
+    const nextStep = to.fullPath;
+    next({
+     path: String(nextStep),
+    });
+   } catch (error) {
+    console.log(error);
+    next({
+     path: "/login",
+     query: { redirect: to.fullPath },
+    });
+   }
   } else {
+   localStorage.removeItem("auth._token.local");
    next({
     path: "/login",
     query: { redirect: to.fullPath },
