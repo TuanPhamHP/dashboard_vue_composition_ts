@@ -1,8 +1,8 @@
 <template>
  <v-card class="sidebar-card-body bg-white">
-  <v-btn color="accent" x-small elevation="2" class="btn-toggle-mini" :class="mini ? 'goto-collapse' : 'goto-expand'" @click="toggleMini">
+  <!-- <v-btn color="accent" x-small elevation="2" class="btn-toggle-mini" :class="mini ? 'goto-collapse' : 'goto-expand'" @click="toggleMini">
    <v-icon>mdi-chevron-left</v-icon>
-  </v-btn>
+  </v-btn> -->
   <v-navigation-drawer v-model="drawer" :mini-variant.sync="mini" permanent>
    <v-list-item class="px-2">
     <router-link to="/" class="sidebar-logo-link">
@@ -12,7 +12,7 @@
 
    <!-- <v-divider></v-divider> -->
 
-   <v-list dense class="bg-transparent">
+   <v-list dense class="bg-transparent body-sidebar-dense">
     <div v-for="side in navField" :key="side.groupText">
      <v-list-group
       v-if="side.type !== 'divider' && side.isGroup"
@@ -153,7 +153,7 @@
       isGroup: false,
       matchToActive: ["none"],
       action: (): void => {
-       //  this.handleLogout();
+       this.$router.push("/login");
       },
      },
      //  {
@@ -202,13 +202,39 @@
  });
 </script>
 
-<style lang="scss">
+<style lang="scss" scopped>
  @import "@/assets/style/_variables.scss";
  .sidebar-container {
-  min-height: 100vh;
+  height: 100vh;
+  .v-navigation-drawer__content {
+   overflow: hidden;
+  }
+  .body-sidebar-dense {
+   height: calc(100% - 40px);
+   overflow-y: scroll;
+   &::-webkit-scrollbar {
+    width: 5px;
+    height: 6px;
+   }
+
+   &::-webkit-scrollbar-track {
+    -webkit-box-shadow: none;
+    border-radius: 10px;
+   }
+
+   &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0);
+   }
+  }
+
   .sidebar-card-body {
+   box-shadow: none !important;
    .v-navigation-drawer__content {
     background-color: #fff !important;
+   }
+   .v-navigation-drawer__border {
+    display: none !important;
    }
    height: 100%;
    position: relative;
@@ -245,6 +271,7 @@
     }
     &:hover {
      background-color: $primaryColorLighterLv2;
+     transform: translate(0, -2px);
     }
     &-group {
      .v-list-group__header {

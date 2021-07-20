@@ -49,5 +49,6 @@
  .rest-container {
   padding: 0;
   width: 100%;
+  background-color: #f5f6fa;
  }
 </style>
