@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="form-login mx-auto">
-      <img src="../../assets/images/gpe_logo.png" />
+      <img src="../../assets/images/gpe_logo.png" width="172px" height="115px"/>
       <div class="header">Sign in</div>
       <div class="notice">Please enter username and password to continue</div>
       <div class="login-field">
