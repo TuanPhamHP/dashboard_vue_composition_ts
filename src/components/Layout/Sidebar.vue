@@ -1,13 +1,28 @@
 <template>
   <v-card class="sidebar-card-body bg-white">
-    <!-- <v-btn color="accent" x-small elevation="2" class="btn-toggle-mini" :class="mini ? 'goto-collapse' : 'goto-expand'" @click="toggleMini">
-   <v-icon>mdi-chevron-left</v-icon>
-  </v-btn> -->
+    <v-btn
+      color="accent"
+      x-small
+      elevation="2"
+      class="btn-toggle-mini"
+      :class="mini ? 'goto-collapse' : 'goto-expand'"
+      @click="toggleMini"
+    >
+      <v-icon>mdi-chevron-left</v-icon>
+    </v-btn>
     <v-navigation-drawer v-model="drawer" :mini-variant.sync="mini" permanent>
       <v-list-item class="px-2">
         <router-link to="/" class="sidebar-logo-link">
           <img
+            v-if="!mini"
             src="../../assets/images/sidebar-icon/logo_type.png"
+            class="sidebar-logo pointer"
+            alt=""
+          />
+
+          <img
+            v-if="mini"
+            src="../../assets/images/sidebar-icon/logo_type_mini.png"
             class="sidebar-logo pointer"
             alt=""
           />
@@ -16,7 +31,11 @@
 
       <!-- <v-divider></v-divider> -->
 
-      <v-list dense class="bg-transparent body-sidebar-dense">
+      <v-list
+        dense
+        class="bg-transparent body-sidebar-dense"
+        :class="mini ? 'body-sidebar-dense-mini' : ''"
+      >
         <div v-for="side in navField" :key="side.groupText">
           <v-list-group
             v-if="side.type !== 'divider' && side.isGroup"
@@ -56,15 +75,22 @@
           <v-list-item
             v-if="side.type !== 'divider' && !side.isGroup"
             class="pointer each-items single-group"
-            :class="
+            :class="[
               side.matchToActive.includes(currentRouteName)
                 ? 'sidechick-on-active'
-                : ''
-            "
+                : '',
+              mini ? 'each-items-on-menu' : '',
+            ]"
             @click="side.action()"
           >
             <v-list-item-icon>
-              <v-icon>mdi-home</v-icon>
+              <v-icon v-if="!mini">mdi-home</v-icon>
+              <v-tooltip v-if="mini" right>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-icon v-bind="attrs" v-on="on">mdi-home</v-icon>
+                </template>
+                <span>{{ side.groupText }}</span>
+              </v-tooltip>
             </v-list-item-icon>
 
             <v-list-item-title>{{ side.groupText }}</v-list-item-title>
@@ -244,12 +270,15 @@ export default defineComponent({
     overflow: hidden;
   }
   .body-sidebar-dense {
-    height: calc(100% - 40px);
-    overflow-y: scroll;
-    &::-webkit-scrollbar {
-      width: 5px;
-      height: 6px;
-    }
+   height: calc(100% - 40px);
+   overflow-y: scroll;
+   &-mini {
+    padding-left: 6px !important;
+   }
+   &::-webkit-scrollbar {
+    width: 5px;
+    height: 6px;
+   }
 
     &::-webkit-scrollbar-track {
       -webkit-box-shadow: none;
@@ -286,6 +315,19 @@ export default defineComponent({
           transform: rotateZ(180deg);
         }
       }
+    &-on-menu {
+     padding-left: 0 !important;
+     padding-right: 0 !important;
+     width: 100% !important;
+     .v-list-item__icon {
+      margin: auto !important;
+      margin-right: auto !important;
+     }
+    }
+
+    &:hover {
+     background-color: $primaryColorLighterLv2;
+     transform: translate(0, -2px);
     }
     .each-items {
       width: calc(100% - 48px);
