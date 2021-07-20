@@ -134,7 +134,7 @@ export default defineComponent({
       width: 100%;
       outline: none;
       height: 56px;
-      padding: 21px;
+      padding: 21px 16px 21px 16px;
       background: #f1f4f9;
       border-radius: 8px;
       font-size: 35px;
