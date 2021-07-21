@@ -8,7 +8,7 @@
   :height="tableHeight"
   multi-sort
   ref="tableMod"
-  class="table-multi-sort-model table-scroll-y header-sticky-table header-no-border-table"
+  class="table-modify-css table-multi-sort-model table-scroll-y header-sticky-table header-no-border-table"
   hide-default-footer
   :items-per-page="10000"
   :loading="tableLoading"
@@ -141,32 +141,32 @@
  });
 </script>
 <style lang="scss" scoped>
- .table-multi-sort-model {
-  width: 100% !important;
-  border: 1px solid #e6e6e6;
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-  border-collapse: collapse;
-  .date-header {
-   min-width: 200px;
-  }
-  .filter-prepend-body,
-  .v-data-table-header {
-   background-color: #dddddd !important;
-  }
- }
+//  .table-multi-sort-model {
+//   width: 100% !important;
+//   border: 1px solid #e6e6e6;
+//   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+//   border-collapse: collapse;
+//   .date-header {
+//    min-width: 200px;
+//   }
+//   .filter-prepend-body,
+//   .v-data-table-header {
+//    background-color: #dddddd;
+//   }
+//  }
 </style>
 <style lang="scss">
- .table-multi-sort-model {
-  .filter-prepend-body,
-  .v-data-table-header {
-   background-color: #dddddd !important;
-  }
- }
- .filter-prepend-body {
-  th,
-  td {
-   border-bottom: none !important;
-  }
-  border-bottom: none !important;
- }
+//  .table-multi-sort-model {
+//   .filter-prepend-body,
+//   .v-data-table-header {
+//    background-color: #dddddd !important;
+//   }
+//  }
+//  .filter-prepend-body {
+//   th,
+//   td {
+//    border-bottom: none !important;
+//   }
+//   border-bottom: none !important;
+//  }
 </style>

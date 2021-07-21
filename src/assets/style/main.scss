@@ -92,6 +92,58 @@ body {
  }
 }
 // ******--------
+// TABLE
+.v-data-table.table-modify-css{
+    box-shadow: unset ;
+    border:unset ;
+    table{
+        thead{
+            tr{
+                th{
+                    background-color: #E7EEFF;
+                    &:not(:last-child){
+                        border-right: 1px solid #ffffff;
+                    }
+                    span{
+                        color: #202224;
+                        font-size: 14px;
+                        font-weight: 700;
+                        display: inline-block;
+                        width: max-content;
+                    }
+                }
+            }
+        }
+        tbody{
+            tr{
+                &.filter-prepend-body{
+                    background-color: #ffffff ;
+                    height: 72px;
+                    .v-input__slot,
+                    .date-range-slot-wrapper-tb{
+                        border-color: #5484FA !important;
+                        font-size: 14px !important;
+                        color: #202224 !important;
+                        height: 40px;
+                        font-weight: 400;
+                        label{
+                            font-size:14px !important;
+                            color: #202224 ;
+                            font-weight: 400;
+                        }
+                    }
+                }
+                font-size: 14px !important;
+                color: #202224 !important;
+                height: 40px;
+                font-weight: 400;
+                td{
+                    border-bottom:1px solid #D5D5D5 !important;
+                }
+            }
+        }
+    }
+}
 
 // REPONSIVE
 @import "./reponsive/reponsive_main.scss";

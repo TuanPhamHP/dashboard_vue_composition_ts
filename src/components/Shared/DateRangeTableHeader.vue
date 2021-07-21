@@ -23,11 +23,11 @@
     v-if="picker.startDate && picker.endDate"
    >
     <div class="d-flex align-items-center">
-     <span class="font-size-12 fw-500 text-center">
+     <span class="fw-500 text-center">
       {{ picker.startDate ? getDateObject(picker.startDate) : "Ngày bắt đầu" }}
      </span>
-     <p class="font-size-12 pl-2 my-0 mb-0 mr-1">tới</p>
-     <span class="font-size-12 fw-500 text-center">
+     <p class="pl-2 my-0 mb-0 mr-1">tới</p>
+     <span class="fw-500 text-center">
       {{ picker.endDate ? getDateObject(picker.endDate) : "Ngày kết thúc" }}
      </span>
     </div>
@@ -35,10 +35,10 @@
    </div>
    <div
     v-if="!(picker.startDate && picker.endDate)"
-    class="pointer date-range-slot-wrapper-tb font-size-12"
+    class="pointer date-range-slot-wrapper-tb"
     :class="picker.startDate && picker.endDate ? 'hvll' : ''"
    >
-    <span class="pointer font-size-12 d-flex align-items-center">
+    <span class="pointer d-flex align-items-center">
      {{ placeholderPicker }}
      <v-icon class="font-size-15"> mdi-calendar </v-icon>
     </span>
@@ -312,7 +312,7 @@
   width: 100%;
   display: flex;
   justify-content: space-between;
-  height: 28px !important;
+  height: 28px ;
   margin-bottom: 4px;
   border: 1px solid rgb(236, 236, 236) !important;
   border-radius: 4px;
