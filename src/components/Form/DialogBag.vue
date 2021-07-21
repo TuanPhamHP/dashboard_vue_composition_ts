@@ -31,14 +31,14 @@
                 <v-btn
                 text
                 @click="btnCancelClick"
-                class="buton-secondary button-size"
+                class="buton-secondary button-size border-width-2px"
                 >
                 Cancel
                 </v-btn>
                 <v-btn
                 text
                 @click="btnSubmitClick"
-                class="buton-primary button-size"
+                class="buton-primary button-size "
                 >
                     {{Object.keys(selectedData).length?"Update":"Create"}}
                 </v-btn>
@@ -95,7 +95,7 @@ export default defineComponent({
             padding-bottom: 60px !important;
             font-size: 32px !important;
             color: #202224;
-            font-weight: 700;
+            font-weight: 700 !important;
         }
         .form-item{
             display: flex;
@@ -125,21 +125,10 @@ export default defineComponent({
                 }
             }
         }
+        .border-width-2px{
+            border-width: 2px !important;
+        }
         
-    }
-    .buton-primary{
-        background-color: #4880FF;
-        border:2px solid #4880FF; 
-        span{
-            color: #FFFFFF; 
-        }
-    }
-    .buton-secondary{
-        background-color: #FFFFFF;
-        border:2px solid #4880FF; 
-        span{
-            color: #4880FF; 
-        }
     }
     .button-size{
         height: 56px !important;
