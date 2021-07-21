@@ -93,6 +93,10 @@ body {
 }
 // ******--------
 // TABLE
+.w-max-content{
+    display: inline-block;
+    width: max-content;
+}
 .v-data-table.table-modify-css{
     box-shadow: unset ;
     border:unset ;
