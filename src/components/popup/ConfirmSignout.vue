@@ -21,6 +21,7 @@ export default defineComponent({
       localStorage.removeItem("auth._token.local");
       store.commit("SET_LOGOUT_USER");
       this.$router.push("/login");
+      this.$store.commit("CONFIRM_LOGOUT", false);
     },
     cancel() {
       this.$store.commit("CONFIRM_LOGOUT", false);
