@@ -38,6 +38,7 @@ export default new Vuex.Store({
    total_pages: 15,
    current_page: 1,
   },
+  logoutIsOpen: false,
  },
  mutations: {
   SET_SNACKBAR(state, payload) {
@@ -58,6 +59,9 @@ export default new Vuex.Store({
   },
   SET_LOGOUT_USER(state) {
    state.auth = { isAuth: false, user: null, token: null };
+  },
+  CONFIRM_LOGOUT(state, payload) {
+   state.logoutIsOpen = payload;
   },
  },
  actions: {},
