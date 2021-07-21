@@ -142,7 +142,7 @@
       isGroup: false,
       matchToActive: ["bag"],
       action: () => {
-       this.$router.push("/bag");
+       this.$router.push("/bag/list");
       },
      },
      {

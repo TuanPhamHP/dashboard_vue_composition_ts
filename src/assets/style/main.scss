@@ -165,7 +165,45 @@ body {
         color: #4880FF !important; 
     }
 }
-
+.buton-primary-header {
+    height: 40px !important;
+    border-radius: 8px !important;
+    font-size: 14px;
+    background-color: #2F6BFF !important;
+    border:1px solid #2F6BFF !important; 
+    box-shadow: unset !important;
+    span{
+        color: #FFFFFF !important; 
+    }
+}
+.buton-secondary-header {
+    height: 40px !important;
+    border-radius: 8px !important;
+    font-size: 14px;
+    background-color: #FFFFFF !important;
+    border:1px solid #2F6BFF !important; 
+    box-shadow: unset !important;
+    span{
+        color: #2F6BFF !important; 
+    }
+}
+.text-transform-unset{
+    text-transform: unset !important;
+}
+.display-flex{
+    display: flex;
+}
+.justify-center{
+    justify-content: center !important;
+}
+.align-center{
+    align-items: center !important;
+}
+.align-justify-center{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 // REPONSIVE
 @import "./reponsive/reponsive_main.scss";
 // ******--------

@@ -8,7 +8,7 @@
   :height="tableHeight"
   multi-sort
   ref="tableMod"
-  class="table-modify-css table-bag-model table-scroll-y header-sticky-table header-no-border-table"
+  class="table-modify-css table-bag-detail-model table-scroll-y header-sticky-table header-no-border-table"
   hide-default-footer
   :items-per-page="10000"
   :loading="tableLoading"
@@ -48,9 +48,7 @@
   </template> -->
   <template v-slot:item.actions="{ item }">
     <div class="w-max-content"> 
-        <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
         <v-icon small class="mr-2" @click="deleteItem(item)"> mdi-delete </v-icon>
-        <v-icon small @click="detailItem(item)"> mdi-eye </v-icon>
         </div>
    
   </template>
@@ -161,43 +159,12 @@
     };
     this.setFiltersTable(body);
    },
-   editItem(item:Record<string,string>){
-      this.setSelectedData(item)
-   },
-   detailItem(item:Record<string,string>){
-     const id:any = item.id
-     this.$router.push(`/bag/${id}`);
-   }
   },
  });
 </script>
 <style lang="scss" scoped>
-//  .table-bag-model {
-//   width: 100% !important;
-//   border: 1px solid #e6e6e6;
-//   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-//   border-collapse: collapse;
-//   .date-header {
-//    min-width: 200px;
-//   }
-//   .filter-prepend-body,
-//   .v-data-table-header {
-//    background-color: #dddddd;
-//   }
-//  }
+
 </style>
 <style lang="scss">
-//  .table-bag-model {
-//   .filter-prepend-body,
-//   .v-data-table-header {
-//    background-color: #dddddd !important;
-//   }
-//  }
-//  .filter-prepend-body {
-//   th,
-//   td {
-//    border-bottom: none !important;
-//   }
-//   border-bottom: none !important;
-//  }
+
 </style>

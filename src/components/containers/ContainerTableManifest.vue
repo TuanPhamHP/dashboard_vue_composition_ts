@@ -12,7 +12,7 @@
     >
     <v-btn @click="setupData" class="mb-3 mx-3 export-button"
       ><img
-        src="../../assets/images/vector.png"
+        src="../../assets/images/export-b.png"
         width="15px"
         height="15px"
         style="margin-right: 18px"

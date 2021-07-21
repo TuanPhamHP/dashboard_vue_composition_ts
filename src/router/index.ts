@@ -33,13 +33,21 @@ const routes: Array<RouteConfig> = [
   component: () => import(/* webpackChunkName: "about" */ "../views/About.vue"),
  },
  {
-  path: "/bag",
+  path: "/bag/list",
   name: "bag",
   // route level code-splitting
   // this generates a separate chunk (about.[hash].js) for this route
   // which is lazy-loaded when the route is visited.
-  component: () => import(/* webpackChunkName: "about" */ "../views/Bag.vue"),
+  component: () => import(/* webpackChunkName: "about" */ "../views/bag/Bag.vue"),
  },
+ {
+    path: "/bag/:id",
+    name: "bag detail",
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ "../views/bag/Detail.vue"),
+   },
  {
   path: "/manifest",
   name: "manifest",
