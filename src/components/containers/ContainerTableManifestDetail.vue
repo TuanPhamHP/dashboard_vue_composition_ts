@@ -1,24 +1,50 @@
 <template>
   <div>
     <!-- <v-btn @click="setupData" class="mb-3 mx-3">Setup Data</v-btn> -->
-    <v-btn color="#2F6BFF" @click="setupData" class="mb-3 mx-3 create-button"
-      ><img
-        src="../../assets/images/plus-composer.png"
-        width="15px"
-        height="15px"
-        style="margin-right: 18px"
-      />
-      Save</v-btn
-    >
-    <v-btn @click="setupData" class="mb-3 mx-3 export-button"
-      ><img
-        src="../../assets/images/vector.png"
-        width="15px"
-        height="15px"
-        style="margin-right: 18px"
-      />Export</v-btn
-    >
-    <div></div>>
+    <div style="display: flex">
+      <div class="mb-3 mx-3">
+        <div class="form-data">
+          <div class="header-input">Destination</div>
+          <input class="form-input margin-left-side" type="text" />
+          <div class="header-input">CD No.</div>
+          <input class="form-input" type="text" />
+        </div>
+        <div class="form-data">
+          <div class="header-input">Flight No</div>
+          <input class="form-input margin-left-side" type="text" />
+          <div class="header-input">Date</div>
+          <input class="form-input" type="date" />
+        </div>
+        <div class="form-data">
+          <div class="header-input">Remark</div>
+          <input class="form-input margin-left-side" type="text" />
+          <div class="header-input">Time</div>
+          <input class="form-input" type="time" />
+        </div>
+      </div>
+      <div class="buttons">
+        <v-btn
+          color="#2F6BFF"
+          @click="setupData"
+          class="mb-3 mx-3 create-button"
+          ><img
+            src="../../assets/images/plus-composer.png"
+            width="15px"
+            height="15px"
+            style="margin-right: 18px"
+          />
+          Save</v-btn
+        >
+        <v-btn @click="setupData" class="mb-3 mx-3 export-button"
+          ><img
+            src="../../assets/images/vector.png"
+            width="15px"
+            height="15px"
+            style="margin-right: 18px"
+          />Export</v-btn
+        >
+      </div>
+    </div>
     <div class="px-3">
       <TableMultiSort
         :table-data="tableData"
@@ -325,7 +351,12 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style lang="scss">
+.buttons {
+  display: flex;
+  justify-content: flex-end;
+  width: 50%;
+}
 .create-button {
   mix-blend-mode: normal;
   opacity: 0.9;
@@ -341,5 +372,33 @@ export default defineComponent({
   border-radius: 8px;
   color: #2f6bff !important;
   text-transform: none;
+}
+.form-data {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.header-input {
+  width: 120px;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 19px;
+  color: #404040;
+}
+.margin-left-side {
+  margin-right: 81px;
+}
+.form-input {
+  padding: 6px 0px 7px 13px;
+  font-size: 14px;
+  font-weight: 400;
+  background: #ffffff;
+  border: 0.6px solid #d5d5d5;
+  box-sizing: border-box;
+  border-radius: 4px;
+  height: 32px;
+  width: 157px;
 }
 </style>
