@@ -99,7 +99,7 @@
         </div>
       </v-list>
     </v-navigation-drawer>
-    <!-- <ConfirmSignout></ConfirmSignout> -->
+    <ConfirmSignout v-if="signOut"></ConfirmSignout>
   </v-card>
 </template>
 
@@ -122,6 +122,9 @@ export default defineComponent({
     const setMini = (type: boolean): any => {
       mini.value = type;
     };
+    const setSignOut = (payload: boolean) => {
+      signOut.value = payload;
+    };
     const setDrawer = (type: boolean) => {
       drawer.value = type;
     };
@@ -140,6 +143,7 @@ export default defineComponent({
       setDrawer,
       setCurrentRouteName,
       handleLogout,
+      setSignOut,
     };
   },
 
@@ -210,10 +214,13 @@ export default defineComponent({
           isGroup: false,
           matchToActive: ["none"],
           action: (): void => {
-            localStorage.removeItem("auth._token.local");
-            store.commit("SET_LOGOUT_USER");
-            this.$router.push("/login");
-            // console.log("alaba trap");
+            // let getSignOut = () => {
+            //   setSignOut(true)
+            // }
+            // getSignOut();
+            // localStorage.removeItem("auth._token.local");
+            // store.commit("SET_LOGOUT_USER");
+            // this.$router.push("/login");
           },
         },
         //  {
@@ -257,6 +264,9 @@ export default defineComponent({
   methods: {
     toggleMini() {
       this.setMini(!this.mini);
+    },
+    toggleSignOut() {
+      this.setSignOut(true);
     },
   },
 });
