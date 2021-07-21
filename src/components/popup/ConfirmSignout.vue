@@ -33,6 +33,9 @@ export default defineComponent({
   width: 400px;
   border: 1px solid #202224;
   padding: 24px;
+  background-color: #ffffff;
+  z-index: 14;
+  border-radius: 4px;
   .header {
     text-align: center;
   }
