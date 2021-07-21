@@ -6,6 +6,11 @@
 @import "./text";
 @import "./mixin";
 //  LAYOUT
+body {
+ * {
+  font-family: "Roboto";
+ }
+}
 .container-t {
  width: calc(100vw - 200px);
  margin: auto;
