@@ -34,7 +34,7 @@
       <TableFiltersDateRange
        v-if="header.filters && header.filters.type === 'daterange'"
        :own-header="header"
-       :listen-change="listenChange"
+       :listen-change="listenDateChange"
        :default-value="header.filters.defaultValue"
       />
      </div>
@@ -122,8 +122,6 @@
 
   methods: {
    listenChange(value: NormalFilterObject) {
-     
-     
     const valObject = returnFilterObject(value);
     const body = {
      ...this.filtersTable,
@@ -131,7 +129,14 @@
     };
     this.setFiltersTable(body);
    },
-   
+   listenDateChange(value: NormalFilterObject) {
+    const valObject = {...value};
+    const body = {
+     ...this.filtersTable,
+     ...valObject,
+    };
+    this.setFiltersTable(body);
+   },
   },
  });
 </script>

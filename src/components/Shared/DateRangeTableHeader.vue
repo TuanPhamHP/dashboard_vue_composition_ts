@@ -154,6 +154,32 @@
     };
    },
   },
+   mounted(){
+      if (this.defaultDate) {
+         this.defaultDate.startDate && this.defaultDate.endDate
+         ? (() => {
+            let arrFr = this.defaultDate.startDate.split("-");
+            let arrTo = this.defaultDate.endDate.split("-");
+
+            this.dateRange = {
+            startDate: `${arrFr[1]}-${arrFr[0]}-${arrFr[2]}`,
+            endDate: `${arrTo[1]}-${arrTo[0]}-${arrTo[2]}`,
+            };
+            })()
+         : (() => {
+            this.dateRange = {
+            startDate: null,
+            endDate: null,
+            };
+            })();
+      } else {
+         this.dateRange = {
+         startDate: null,
+         endDate: null,
+         };
+     }
+   },
+
   watch: {
    isClear() {
     if (this.isClear) {
@@ -171,10 +197,11 @@
     deep: true,
     handler() {
      if (this.defaultDate) {
-      this.defaultDate.from && this.defaultDate.to
+      this.defaultDate.startDate && this.defaultDate.startDate
        ? (() => {
-          let arrFr = this.defaultDate.from.split("-");
-          let arrTo = this.defaultDate.to.split("-");
+          let arrFr = this.defaultDate.startDate.split("-");
+          let arrTo = this.defaultDate.startDate.split("-");
+
           this.dateRange = {
            startDate: `${arrFr[1]}-${arrFr[0]}-${arrFr[2]}`,
            endDate: `${arrTo[1]}-${arrTo[0]}-${arrTo[2]}`,

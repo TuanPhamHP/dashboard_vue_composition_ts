@@ -87,7 +87,8 @@ import { filter } from "vue/types/umd";
       type: "daterange",
       key: "fat",
       placeholder: "Tên bộ lọc",
-      defaultValue: "",
+      defaultValue: {},
+      hasKey:true,
      },
     },
     {
@@ -133,12 +134,16 @@ import { filter } from "vue/types/umd";
     pagination.value = { ...payload };
    };
    const setCurrentRouteQuery = (payload: Record<string, unknown>): any => {
-    currentRouteQuery.value = getQueryRoute(payload);
+    let pairO = new IdentifyObject({
+      ...payload
+    });
+    currentRouteQuery.value = getQueryRoute(pairO.identifySelf());
    };
     const setCurrentFilterTable = (payload: Record<string, unknown>): any => {
       filterTable.value = {...payload}
     };
    const setLoadingTable = (payload: boolean) => {
+
     loadingTable.value = payload;
    };
 
@@ -155,6 +160,8 @@ import { filter } from "vue/types/umd";
    });
    
    watch(filterTable,currentValue=>{
+     console.log(currentValue);
+     
      setCurrentRouteQuery({
         ...queryRoute,
         ...currentValue
@@ -251,49 +258,48 @@ import { filter } from "vue/types/umd";
    },
    filterTableChange(_val:any){
      
-    let pairO = new IdentifyObject({
-      ..._val
-    });
-    this.setCurrentFilterTable(pairO.identifySelf())
+    this.setCurrentFilterTable(_val) 
    },
    bindingDefaultFilterHeader(_obj: Record<string, unknown>){
      let _headers = this.headers.slice();
+     const currentQuery:Record<string, unknown> = _obj
      console.log('_obj',_obj);
      
-     for(const _key in _obj){
-       let _keySplit = _key.split('.')
+     for(const _key in currentQuery){
+        let _keySplit = _key.split('.')
        
         if(_keySplit.length===1){
           let n = _headers.findIndex(o => o.filters.key === _key )
           if(n !== -1){
           
-          //  const obj = {..._headers[n]}
-          //  const objF = {..._headers[n].filters}
-          //  objF.defaultValue = _obj[_key]
-          //  obj.filters = {...objF}
-          //  _headers.splice(n,1,obj)
+          //  const currentQuery = {..._headers[n]}
+          //  const currentQueryF = {..._headers[n].filters}
+          //  currentQueryF.defaultValue = currentQuery[_key]
+          //  currentQuery.filters = {...currentQueryF}
+          //  _headers.splice(n,1,currentQuery)
             if(_headers[n].filters.type === 'string'){
-              _headers[n].filters.defaultValue = `${_obj[_key]}`
+              _headers[n].filters.defaultValue = `${currentQuery[_key]}`
             }else if(_headers[n].filters.type === 'select'){
-              // _headers[n].filters.defaultValue = _headers[n].filters.items.find(o=>o.id === _obj[_key]);
-              _headers[n].filters.defaultValue =  parseInt(`${_obj[_key]}`);
+              // _headers[n].filters.defaultValue = _headers[n].filters.items.find(o=>o.id === currentQuery[_key]);
+              _headers[n].filters.defaultValue =  parseInt(`${currentQuery[_key]}`);
               
             }
           }
         }
         else{
+          const _keyNew:string = _keySplit[1]
           let n = _headers.findIndex(o => o.filters.key === _keySplit[0])
           if(n !== -1){
           
-           const obj = {..._headers[n]}
-           const objF = {..._headers[n].filters}
-          //  let objDf = {
-          //    ..._headers[n].filters.
-          //  }
-           objF.defaultValue = {}
-           obj.filters = {...objF}
+           let obj = {..._headers[n]}
+           let objF = {..._headers[n].filters}
+           let defaultValue = typeof(objF.defaultValue)==="object"&&{...objF.defaultValue}
+            obj.filters.defaultValue = {
+              ...defaultValue,
+            }
+            obj.filters.defaultValue[`${_keyNew}`] = currentQuery[`${_key}`]
            _headers.splice(n,1,obj)
-              
+           console.log( _headers);
            
           }
         }

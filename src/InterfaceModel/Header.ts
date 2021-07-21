@@ -11,6 +11,7 @@ export interface filterDefaultHeader {
   key?: string,
   placeholder?: string,
   defaultValue?: number|string|Record<string, unknown>,
-  items?:string[]|Record<string, unknown>[]
+  items?:string[]|Record<string, unknown>[],
+  hasKey?:boolean,
 }
 

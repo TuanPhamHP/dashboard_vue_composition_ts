@@ -6,6 +6,7 @@
    :picked-date="pickedDate"
    :table-field="'date'"
    :opens="'right'"
+   :default-date="ownHeader.filters.defaultValue"
   />
  </div>
 </template>
@@ -27,8 +28,8 @@
   setup: props => {
    let ownHeader: Record<string, any> | undefined = toRef(props, "ownHeader");
    let listenChange: Record<string, any> = toRef(props, "listenChange");
-   const { key, placeholder, items } = ownHeader.value.filters;
-   const queryString = ref<string>("");
+   const { hasKey,key, placeholder, items } = ownHeader.value.filters;
+   const queryString = ref<Record<string, any>>({});
    let refQuery = ref<number>(0);
    let filterDateKey = ref<number>(0);
    const setRefQuery = (val: number) => {
@@ -36,11 +37,16 @@
    };
    const handleEmitFilter = () => {
     clearTimeout(refQuery.value);
-    let payload: SelectFilter = {
-     key,
-     value: queryString.value,
-    };
-    listenChange.value(payload);
+    let _obj : Record<string,string>={}
+    const _value = queryString.value
+    Object.keys(_value).forEach(o=>{
+      _obj[`${hasKey?key+'.':''}${o}`]= _value[o]
+    })
+    // let payload: Record<string,string> = {
+    //  key,
+    //  value: queryString.value,
+    // };
+    listenChange.value(_obj);
    };
    const pickedDate = (_val: any) => {
     queryString.value = _val.value
