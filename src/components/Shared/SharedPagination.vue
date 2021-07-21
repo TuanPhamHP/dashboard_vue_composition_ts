@@ -14,7 +14,8 @@
         total-visible="7"
         @input="pageChange"
       ></v-pagination>
-      <v-flex style="height: 41px" class="grow-unset">
+      <v-flex class="grow-unset paginate">
+        <p class="dot-page">/page</p>
         <v-select
           class="select-size pt-0"
           v-model="pagination.rowsPerPage"
@@ -132,7 +133,8 @@ export default {
   .select-size .v-select__slot {
     border: 1px solid #e5e7e8;
     border-radius: 4px;
-    width: 100px;
+    width: 85px;
+    margin-right: 12px;
     .v-select__selections {
       margin-left: 6px !important;
       width: 54px !important;
@@ -143,6 +145,26 @@ export default {
       flex-grow: unset;
       width: fit-content;
     }
+  }
+  .paginate {
+    height: 41px;
+    display: flex;
+    position: relative;
+    .v-select__selection--comma {
+      margin: 7px 4px 7px 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 14px;
+    }
+  }
+  .dot-page {
+    position: absolute;
+    right: 25px;
+    display: none;
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.85);
+    bottom: -6px;
   }
   .custom .v-pagination__navigation {
     box-shadow: none !important;
