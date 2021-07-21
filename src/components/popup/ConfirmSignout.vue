@@ -59,7 +59,7 @@ export default defineComponent({
       border-radius: 12px;
       padding: 0 8px;
       font-weight: bold;
-      font-size: 18px;
+      font-size: 14px;
       line-height: 21px;
       height: 36px;
       width: 126px;
@@ -82,7 +82,7 @@ export default defineComponent({
       opacity: 0.9;
       border-radius: 12px;
       font-weight: bold;
-      font-size: 18px;
+      font-size: 14px;
       line-height: 21px;
       padding-top: 6px;
       text-align: center;
