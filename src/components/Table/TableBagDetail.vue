@@ -15,7 +15,7 @@
   loading-text="Loading... Please wait"
   :class="tableLoading ? 'table-on-loading' : ''"
  >
-  <template v-slot:body.prepend="{ headers }">
+  <!-- <template v-slot:body.prepend="{ headers }">
    <tr class="filter-prepend-body" :style="`top:${endedThead}px;position:sticky;z-index:3`">
     <td v-for="header in headers" :key="header.text" class="pointer" :class="header.type === 'date' ? 'date-header' : ''">
      <div>
@@ -40,7 +40,7 @@
      </div>
     </td>
    </tr>
-  </template>
+  </template> -->
   <!-- <template v-if="tableLoading" v-slot:item>
    <tr>
     <td colspan="999">i'm loading</td>
@@ -72,6 +72,7 @@
    },
    headers: {
     type: Array,
+    default:[],
    },
    handleFilterChange:{
      type:Function
@@ -141,7 +142,7 @@
     console.log(error);
    }
   },
-
+ 
   methods: {
    listenChange(value: NormalFilterObject) {
     const valObject = returnFilterObject(value);

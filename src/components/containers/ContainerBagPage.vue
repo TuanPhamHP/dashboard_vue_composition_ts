@@ -70,7 +70,7 @@ import { filter } from "vue/types/umd";
 
    const headers:NormalHeaderItem[] = [
     {
-     text: "Dessert (100g serving)",
+     text: "Bag Number",
      align: "start",
      sortable: false,
      value: "mawb",
@@ -78,18 +78,36 @@ import { filter } from "vue/types/umd";
      filters: {
       type: "string",
       key: "mawb",
-      placeholder: "Tên bộ lọc",
+      placeholder: "Bag Number",
       defaultValue: "",
      },
     },
     {
-     text: "Calories",
+     text: "Create Date",
+     value: "fat",
+     type: "date",
+     filters: {
+      type: "daterange",
+      key: "fat",
+      placeholder: "Date",
+      defaultValue: {},
+      hasKey:true,
+     },
+    },
+    {
+     text: "Total Package",
+     value: "carbs",
+     type: "string",
+     filters: {},
+    },
+    {
+     text: "Status",
      value: "calories",
      type: "string",
      filters: {
       type: "select",
       key: "calories",
-      placeholder: "Lọc select",
+      placeholder: "Status",
       items: [
        {
         id: 1,
@@ -104,51 +122,6 @@ import { filter } from "vue/types/umd";
         name: "Lựa chọn 3",
        },
       ],
-      defaultValue: "",
-     },
-    },
-    {
-     text: "Fat (g)",
-     value: "fat",
-     type: "date",
-     filters: {
-      type: "daterange",
-      key: "fat",
-      placeholder: "Tên bộ lọc",
-      defaultValue: {},
-      hasKey:true,
-     },
-    },
-    {
-     text: "Carbs (g)",
-     value: "carbs",
-     type: "string",
-     filters: {
-      type: "string",
-      key: "carbs",
-      placeholder: "Tên bộ lọc",
-      defaultValue: "",
-     },
-    },
-    {
-     text: "Protein (g)",
-     value: "protein",
-     type: "string",
-     filters: {
-      type: "string",
-      key: "protein",
-      placeholder: "Tên bộ lọc",
-      defaultValue: "",
-     },
-    },
-    {
-     text: "Iron (%)",
-     value: "iron",
-     type: "string",
-     filters: {
-      type: "string",
-      key: "iron",
-      placeholder: "Tên bộ lọc",
       defaultValue: "",
      },
     },
