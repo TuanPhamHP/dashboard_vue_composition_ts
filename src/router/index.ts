@@ -34,7 +34,7 @@ const routes: Array<RouteConfig> = [
  },
  {
   path: "/bag/list",
-  name: "bag",
+  name: "Bag",
   // route level code-splitting
   // this generates a separate chunk (about.[hash].js) for this route
   // which is lazy-loaded when the route is visited.
@@ -42,7 +42,7 @@ const routes: Array<RouteConfig> = [
  },
  {
     path: "/bag/:id",
-    name: "bag detail",
+    name: "Bag Detail",
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
