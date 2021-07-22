@@ -1,36 +1,63 @@
 <template>
-  <div>
-    <!-- <v-btn @click="setupData" class="mb-3 mx-3">Setup Data</v-btn> -->
-    <v-btn color="#2F6BFF" @click="setupData" class="mb-3 mx-3 create-button"
-      ><img
-        src="../../assets/images/plus-composer.png"
-        width="15px"
-        height="15px"
-        style="margin-right: 18px"
-      />
-      Create</v-btn
-    >
-    <v-btn @click="setupData" class="mb-3 mx-3 export-button"
-      ><img
-        src="../../assets/images/export-b.png"
-        width="15px"
-        height="15px"
-        style="margin-right: 18px"
-      />Export</v-btn
-    >
-    <div class="px-3">
-      <TableMultiSort
-        :table-data="tableData"
-        :table-loading="loadingTable"
-        :headers="headers"
-        @handleFilterChange="filterTableChange"
-        :current-binding-url="queryRoute"
-      />
-      <div class="pt-1">
-        <SharedPagination
-          :pagination-sync="pagination"
-          @handlePageSizeChange="pagePaginationChange"
-          @handlePageChange="pagePaginationChange"
+  <div class="page-container">
+    <div class="mb-4 page-header">
+      <span
+        class="
+          title-page
+          font-size-32 font-weight-bold
+          text-uppercase
+          display-flex
+          align-center
+        "
+      >
+        <span class="align-justify-center mr-4 pointer btn-back-page">
+          <img src="@/assets/images/arrow-left.svg" alt="" />
+        </span>
+        Manifest
+      </span>
+    </div>
+    <div class="page-content">
+      <!-- <v-btn @click="setupData" class="mb-3 mx-3">Setup Data</v-btn> -->
+      <v-btn
+        color="#2F6BFF"
+        @click="handleOpenCreate"
+        class="mb-3 mx-3 create-button"
+        ><img
+          src="../../assets/images/plus-composer.png"
+          width="15px"
+          height="15px"
+          style="margin-right: 18px"
+        />
+        Create</v-btn
+      >
+      <v-btn @click="setupData" class="mb-3 mx-3 export-button"
+        ><img
+          src="../../assets/images/export-b.png"
+          width="15px"
+          height="15px"
+          style="margin-right: 18px"
+        />Export</v-btn
+      >
+      <div class="px-3">
+        <TableMultiSort
+          :table-data="tableData"
+          :table-loading="loadingTable"
+          :headers="headers"
+          @handleFilterChange="filterTableChange"
+          :current-binding-url="queryRoute"
+        />
+        <div class="pt-1">
+          <SharedPagination
+            :pagination-sync="pagination"
+            @handlePageSizeChange="pagePaginationChange"
+            @handlePageChange="pagePaginationChange"
+          />
+        </div>
+        <DialogCreateManifest
+          :is-visible="isVisible"
+          :handle-close-create="handleCloseCreate"
+          @handlerSubmit="handlerDialogSubmit"
+          :selected-data="selectedData"
         />
       </div>
     </div>
@@ -42,6 +69,7 @@ import { defineComponent, reactive, ref, watch } from "@vue/composition-api";
 import api from "@/services";
 import TableMultiSort from "@/components/Table/TableMultiSort.vue";
 import { SharedPagination } from "@/components/Shared";
+import DialogCreateManifest from "@/components/Form/DialogCreateManifest.vue";
 import { NormalPagination } from "@/InterfaceModel/Pagination";
 import { NormalHeaderItem } from "@/InterfaceModel/Header";
 import { IdentifyObject } from "@/InterfaceModel/CustomObject";
@@ -53,10 +81,17 @@ export default defineComponent({
   components: {
     TableMultiSort,
     SharedPagination,
+    DialogCreateManifest,
+  },
+  data() {
+    return {
+      isVisible: false,
+    };
   },
   setup: (props) => {
     const { queryRoute, stringQueryRender, getQueryRoute } = useRouteQuery();
     const loadingTable = ref<boolean>(true);
+    let selectedData = reactive<Record<string, unknown>>({});
     const currentRouteQuery = ref<string>(stringQueryRender);
     let tableData = reactive<Record<string, unknown>>({ value: [] });
     let filterTable = ref({});
@@ -223,13 +258,20 @@ export default defineComponent({
       setTableData,
       setLoadingTable,
       setCurrentRouteQuery,
+      selectedData,
       setPagination,
       getAllRoles,
       setCurrentFilterTable,
       currentRouteQuery,
     };
   },
-  watch: {},
+  watch: {
+    isVisible(_newVal) {
+      if (!_newVal) {
+        this.selectedData = {};
+      }
+    },
+  },
   computed: {
     ...mapState({
       previousPagination: (state: any) => state.previousPagination,
@@ -261,6 +303,19 @@ export default defineComponent({
     this.getAllRoles({ ...this.queryRoute });
   },
   methods: {
+    handlerDialogSubmit(value: any) {
+      console.log(value);
+    },
+    handleOpenCreate() {
+      this.isVisible = true;
+    },
+    handleCloseCreate() {
+      this.isVisible = false;
+    },
+    handleOpenEdit(item: Record<string, unknown>) {
+      this.isVisible = true;
+      this.selectedData = { ...item };
+    },
     pagePaginationChange(_val: any) {
       this.$store.commit("CACHED_PAGINATION", {
         total: this.pagination.total,
@@ -332,7 +387,23 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style lang="scss">
+.page-container {
+  padding: 18px 18px 0;
+  .page-content {
+    padding: 30px;
+    background: #ffffff;
+    border: 0.3px solid #b9b9b9;
+    box-sizing: border-box;
+    border-radius: 14px;
+  }
+  .btn-back-page {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #ffffff;
+  }
+}
 .create-button {
   mix-blend-mode: normal;
   opacity: 0.9;
@@ -346,7 +417,7 @@ export default defineComponent({
   opacity: 0.9;
   border: 1px solid #2f6bff;
   border-radius: 8px;
-  color: #2F6BFF !important;
+  color: #2f6bff !important;
   text-transform: none;
 }
 </style>
