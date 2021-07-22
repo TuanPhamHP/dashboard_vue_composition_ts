@@ -118,7 +118,7 @@ export default defineComponent({
 
     const headers: NormalHeaderItem[] = [
       {
-        text: "MAWB",
+        text: "Bag Number",
         align: "start",
         sortable: false,
         value: "mawb",
@@ -156,8 +156,8 @@ export default defineComponent({
       //  },
       // },
       {
-        text: "Flight",
-        value: "flight",
+        text: "Package Number",
+        value: "package",
         type: "string",
         filters: {
           type: "string",
@@ -167,9 +167,9 @@ export default defineComponent({
         },
       },
       {
-        text: "Date",
+        text: "Item Details",
         value: "date",
-        type: "date",
+        type: "string",
         filters: {
           type: "daterange",
           key: "fat",
@@ -179,7 +179,62 @@ export default defineComponent({
         },
       },
       {
-        text: "Destination",
+        text: "Weight (kg)",
+        value: "destination",
+        type: "string",
+        filters: {
+          type: "string",
+          key: "protein",
+          placeholder: "Tên bộ lọc",
+          defaultValue: "",
+        },
+      },
+      {
+        text: "Sender",
+        value: "destination",
+        type: "string",
+        filters: {
+          type: "string",
+          key: "protein",
+          placeholder: "Tên bộ lọc",
+          defaultValue: "",
+        },
+      },
+      {
+        text: "Consignee",
+        value: "destination",
+        type: "string",
+        filters: {
+          type: "string",
+          key: "protein",
+          placeholder: "Tên bộ lọc",
+          defaultValue: "",
+        },
+      },
+      {
+        text: "ID No.",
+        value: "destination",
+        type: "string",
+        filters: {
+          type: "string",
+          key: "protein",
+          placeholder: "Tên bộ lọc",
+          defaultValue: "",
+        },
+      },
+      {
+        text: "Address",
+        value: "destination",
+        type: "string",
+        filters: {
+          type: "string",
+          key: "protein",
+          placeholder: "Tên bộ lọc",
+          defaultValue: "",
+        },
+      },
+      {
+        text: "Tel No",
         value: "destination",
         type: "string",
         filters: {
