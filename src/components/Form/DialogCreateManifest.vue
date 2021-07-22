@@ -1,6 +1,6 @@
 <template>
   <v-dialog v-model="isVisible" persistent max-width="590">
-    <v-card class="dialog-bag">
+    <v-card class="dialog-bag-manifest">
       <v-card-title class="text-h5">
         Create new Manifest
       </v-card-title>
@@ -119,7 +119,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-.v-dialog .dialog-bag {
+.v-dialog .dialog-bag-manifest {
   border-radius: 14px;
   padding: 35px 35px;
   & > .v-card__title {
