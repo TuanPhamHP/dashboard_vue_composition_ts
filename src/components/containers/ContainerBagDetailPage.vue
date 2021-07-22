@@ -25,7 +25,8 @@
           <div class="col-xxl-6 mb-3">
             <div class="row my-0 detail-data display-flex align-center">
               <span class="col-xxl-5">
-                Creation Date:
+               
+                Total Package:
               </span>
               <span class="col-xxl-7">
                 <input type="text" class="w-100">
@@ -35,7 +36,7 @@
           <div class="col-xxl-6 mb-3">
             <div class="row my-0 detail-data display-flex align-center">
               <span class="col-xxl-5">
-                Total Package:
+                 Creation Date:
               </span>
               <span class="col-xxl-7">
                 <input type="text" disabled class="w-100">
@@ -404,6 +405,7 @@ import { filter } from "vue/types/umd";
     }
     .box-left{
       .detail-data{
+        color: #404040;
         input{
           border: 0.6px solid #D5D5D5;
           box-sizing: border-box;

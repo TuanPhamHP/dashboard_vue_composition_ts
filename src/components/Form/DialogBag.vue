@@ -31,14 +31,14 @@
                 <v-btn
                 text
                 @click="btnCancelClick"
-                class="buton-secondary button-size border-width-2px"
+                class="buton-secondary button-size border-width-2px text-transform-unset mr-4"
                 >
                 Cancel
                 </v-btn>
                 <v-btn
                 text
                 @click="btnSubmitClick"
-                class="buton-primary button-size "
+                class="buton-primary button-size text-transform-unset"
                 >
                     {{Object.keys(selectedData).length?"Update":"Create"}}
                 </v-btn>
