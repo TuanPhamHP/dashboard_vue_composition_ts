@@ -23,18 +23,6 @@
         </div>
       </div>
       <div class="buttons">
-        <v-btn
-          color="#2F6BFF"
-          @click="setupData"
-          class="mb-3 mx-3 create-button"
-          ><img
-            src="../../assets/images/plus-composer.png"
-            width="15px"
-            height="15px"
-            style="margin-right: 18px"
-          />
-          Save</v-btn
-        >
         <v-btn @click="setupData" class="mb-3 mx-3 export-button"
           ><img
             src="../../assets/images/vector.png"
@@ -42,6 +30,18 @@
             height="15px"
             style="margin-right: 18px"
           />Export</v-btn
+        >
+        <v-btn
+          color="#2F6BFF"
+          @click="setupData"
+          class="mb-3 mx-3 create-button"
+          ><img
+            src="../../assets/images/save-icon.png"
+            width="15px"
+            height="15px"
+            style="margin-right: 18px"
+          />
+          Save</v-btn
         >
       </div>
     </div>
@@ -355,7 +355,7 @@ export default defineComponent({
 .buttons {
   display: flex;
   justify-content: flex-end;
-  width: 50%;
+  width: 100%;
 }
 .create-button {
   mix-blend-mode: normal;
