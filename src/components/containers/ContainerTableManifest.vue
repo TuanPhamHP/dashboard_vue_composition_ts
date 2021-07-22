@@ -408,6 +408,7 @@ export default defineComponent({
   color: #ffffff !important;
   font-size: 14px !important;
   text-transform: none;
+  box-shadow: none;
 }
 .export-button {
   mix-blend-mode: normal;
@@ -416,5 +417,6 @@ export default defineComponent({
   border-radius: 8px;
   color: #2f6bff !important;
   text-transform: none;
+  box-shadow: none;
 }
 </style>
