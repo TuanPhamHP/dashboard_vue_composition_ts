@@ -48,8 +48,8 @@
   </template> -->
   <template v-slot:item.actions="{ item }">
     <div class="w-max-content"> 
-        <v-icon small class="mr-2" @click="deleteItem(item)"> mdi-delete </v-icon>
-        </div>
+      <img @click="deleteItem(item)" class="pointer mr-2" src="@/assets/images/icon-remove-r.svg" alt=""> 
+    </div>
    
   </template>
  </v-data-table>

@@ -29,14 +29,14 @@
                 <v-btn
                 text
                 @click="btnCancelClick"
-                class="buton-secondary button-size border-width-2px mr-4"
+                class="buton-secondary button-size border-width-2px mr-4 text-transform-unset"
                 >
                 Cancel
                 </v-btn>
                 <v-btn
                 text
                 @click="btnSubmitClick"
-                class="buton-primary button-size "
+                class="buton-primary button-size text-transform-unset"
                 >
                     Save
                 </v-btn>
@@ -94,7 +94,7 @@ export default defineComponent({
         padding: 35px 35px;
         &>.v-card__title{
             padding-top: 0 !important;
-            padding-bottom: 60px !important;
+            padding-bottom: 30px !important;
             font-size: 32px !important;
             color: #202224;
             font-weight: 700 !important;
@@ -114,6 +114,15 @@ export default defineComponent({
                         &::placeholder{
                             color: #444444;
                         }
+                    }
+                }
+            }
+            .v-input--radio-group__input{
+                .v-radio {
+                    label{
+                        font-weight: 400;
+                        font-size: 14px;
+                        color: #444444;
                     }
                 }
             }
