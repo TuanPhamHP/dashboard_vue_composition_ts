@@ -6,17 +6,23 @@
  </DefaultLayout>
 </template>
 <script lang="ts">
- import { defineComponent  } from "@vue/composition-api";
- import DefaultLayout from "@/layouts/default.vue"; 
+ import { defineComponent } from "@vue/composition-api";
+ import DefaultLayout from "@/layouts/default.vue";
  import ContainerBagPage from "@/components/containers/ContainerBagPage.vue";
  export default defineComponent({
-    components: {
-    DefaultLayout,
-    ContainerBagPage,
-    },
-    
-    methods:{
-       
-    }
+  components: {
+   DefaultLayout,
+   ContainerBagPage,
+  },
+  created() {
+   this.$store.commit("SET_BREADCRUMB", {
+    viewTxt: "BAG",
+    ableToBack: false,
+    rootRouter: "/",
+    hasStatus: false,
+    statusTxt: "",
+   });
+  },
+  methods: {},
  });
 </script>

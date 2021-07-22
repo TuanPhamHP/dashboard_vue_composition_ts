@@ -40,6 +40,13 @@ export default new Vuex.Store({
   },
   logoutIsOpen: false,
   isMini: false,
+  breadCrumb: {
+   viewTxt: "GP Express",
+   ableToBack: false,
+   rootRouter: "/",
+   hasStatus: false,
+   statusTxt: "Status",
+  },
  },
  mutations: {
   SET_SNACKBAR(state, payload) {
@@ -66,6 +73,9 @@ export default new Vuex.Store({
   },
   SET_MINI(state, payload) {
    state.isMini = payload;
+  },
+  SET_BREADCRUMB(state, payload) {
+   state.breadCrumb = payload;
   },
  },
  actions: {},
