@@ -207,6 +207,7 @@
   computed: {
    ...mapState({
     logoutIsOpen: (state: any): boolean => state.logoutIsOpen,
+    isMini: (state: any): boolean => state.isMini,
    }),
   },
   mounted() {
@@ -221,6 +222,9 @@
     if (currentName) {
      this.setCurrentRouteName(String(currentName).toLowerCase());
     }
+   },
+   isMini(newVal) {
+    this.setMini(newVal);
    },
   },
   methods: {

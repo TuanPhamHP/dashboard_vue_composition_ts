@@ -1,6 +1,6 @@
 <template>
  <div class="w-100 top-marker">
-  <h4 class="m-0 bread-header px-4 pt-2">Đây là TopMarker</h4>
+  <h4 class="m-0 bread-header px-4 pt-2 pointer" @click="toggleMini"><img src="../../assets/images/menu_black_24dp.svg" alt="" /></h4>
   <div class="header-user-btn">
    <v-row justify="space-around">
     <v-menu :rounded="'0'" offset-y :close-on-click="true">
@@ -9,7 +9,7 @@
        <img src="../../assets/images/gpe_logo.png" class="user-avatar-m" alt="" />
        <p class="user-info">
         <span class="user-info-name">{{ user.name }}</span>
-        <span class="user-info-pos">{{ "vị trí" }}</span>
+        <span class="user-info-pos">{{ "position" }}</span>
        </p>
        <img src="../../assets/images/sidebar-icon/more-expand-icon.svg" alt="" />
       </v-btn>
@@ -23,20 +23,23 @@
     </v-menu>
    </v-row>
   </div>
+  <ConfirmSignout v-if="logoutIsOpen"></ConfirmSignout>
  </div>
 </template>
 
 <script lang="ts">
  import Vue from "vue";
  import { mapState } from "vuex";
+ import ConfirmSignout from "@/components/popup/ConfirmSignout.vue";
  export default Vue.extend({
+  components: { ConfirmSignout },
   data() {
    return {
     items: [
      {
-      text: "Đăng xuất",
+      text: "Sign Out",
       action: () => {
-       console.log(this);
+       this.$store.commit("CONFIRM_LOGOUT", true);
       },
      },
     ],
@@ -45,7 +48,14 @@
   computed: {
    ...mapState({
     user: (state: any) => state.auth.user,
+    logoutIsOpen: (state: any): boolean => state.logoutIsOpen,
+    isMini: (state: any): boolean => state.isMini,
    }),
+  },
+  methods: {
+   toggleMini() {
+    this.$store.commit("SET_MINI", !this.isMini);
+   },
   },
  });
 </script>

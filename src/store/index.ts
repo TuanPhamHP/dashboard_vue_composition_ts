@@ -39,6 +39,7 @@ export default new Vuex.Store({
    current_page: 1,
   },
   logoutIsOpen: false,
+  isMini: false,
  },
  mutations: {
   SET_SNACKBAR(state, payload) {
@@ -62,6 +63,9 @@ export default new Vuex.Store({
   },
   CONFIRM_LOGOUT(state, payload) {
    state.logoutIsOpen = payload;
+  },
+  SET_MINI(state, payload) {
+   state.isMini = payload;
   },
  },
  actions: {},
