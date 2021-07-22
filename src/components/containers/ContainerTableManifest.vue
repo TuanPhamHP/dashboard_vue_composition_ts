@@ -10,9 +10,6 @@
           align-center
         "
       >
-        <span class="align-justify-center mr-4 pointer btn-back-page">
-          <img src="@/assets/images/arrow-left.svg" alt="" />
-        </span>
         Manifest
       </span>
     </div>
