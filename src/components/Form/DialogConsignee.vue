@@ -2,8 +2,7 @@
   <v-dialog v-model="isVisible" persistent max-width="590">
     <v-card class="dialog-bag-consignee">
       <v-card-title class="text-h5">
-        {{ Object.keys(selectedData).length ? "Update" : "Create" }} Sender
-        Information
+        {{ Object.keys(selectedData).length ? "Update Consignee Information" : "Create new Consignee" }}
       </v-card-title>
       <v-card-text class="form-list scrollbar-y">
         <div class="form-item mb-5">

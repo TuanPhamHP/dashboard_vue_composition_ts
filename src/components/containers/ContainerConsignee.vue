@@ -25,7 +25,7 @@
     <SharedPagination :pagination-sync="pagination" @handlePageSizeChange="pagePaginationChange" @handlePageChange="pagePaginationChange" />
    </div>
    <DialogConsignee :is-visible="isVisible" :selected-data="selectedData" @handlerCancel="handlerDialogCancel" @handlerSubmit="handlerDialogSubmit"/>
-   <DialogSenderDetail :is-visible="isVisibleDetail" :selected-data="selectedData" @handlerCancel="handlerDialogItemCancel" @handlerSubmit="handlerDialogSubmit"/>
+   <DialogConsigneeDetail :is-visible="isVisibleDetail" :selected-data="selectedData" @handlerCancel="handlerDialogItemCancel" @handlerSubmit="handlerDialogSubmit"/>
   </div>
  </div>
 </template>
@@ -35,7 +35,7 @@
  import api from "@/services";
  import TableConsignee from "@/components/Table/TableConsignee.vue";
  import DialogConsignee from "@/components/Form/DialogConsignee.vue";
- import DialogSenderDetail from "@/components/Form/DialogSenderDetail.vue";
+ import DialogConsigneeDetail from "@/components/Form/DialogConsigneeDetail.vue";
  import { SharedPagination } from "@/components/Shared";
  import { NormalPagination } from "@/InterfaceModel/Pagination";
  import { NormalHeaderItem } from "@/InterfaceModel/Header";
@@ -48,7 +48,7 @@ import { filter } from "vue/types/umd";
   components: {
    TableConsignee,
    SharedPagination,
-    DialogSenderDetail,
+    DialogConsigneeDetail,
     DialogConsignee
 
   },
