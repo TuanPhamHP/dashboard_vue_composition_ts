@@ -146,6 +146,14 @@
       },
      },
      {
+      groupText: "Sender",
+      isGroup: false,
+      matchToActive: ["sender"],
+      action: () => {
+       this.$router.push("/sender");
+      },
+     },
+     {
       groupText: "Manifest",
       isGroup: false,
       matchToActive: ["manifest"],
