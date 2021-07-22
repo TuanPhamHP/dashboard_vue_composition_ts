@@ -47,6 +47,14 @@ const routes: Array<RouteConfig> = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ "../views/bag/Detail.vue"),
+  },
+  {
+    path: "/sender",
+    name: "Sender",
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ "../views/sender/Sender.vue"),
    },
  {
   path: "/manifest",

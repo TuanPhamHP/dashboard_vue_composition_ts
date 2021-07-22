@@ -8,14 +8,14 @@
   :height="tableHeight"
   multi-sort
   ref="tableMod"
-  class="table-modify-css table-bag-model table-scroll-y header-sticky-table header-no-border-table"
+  class="table-modify-css table-bag-detail-model table-scroll-y header-sticky-table header-no-border-table"
   hide-default-footer
   :items-per-page="10000"
   :loading="tableLoading"
   loading-text="Loading... Please wait"
   :class="tableLoading ? 'table-on-loading' : ''"
  >
-  <template v-slot:body.prepend="{ headers }">
+  <!-- <template v-slot:body.prepend="{ headers }">
    <tr class="filter-prepend-body" :style="`top:${endedThead}px;position:sticky;z-index:3`">
     <td v-for="header in headers" :key="header.text" class="pointer" :class="header.type === 'date' ? 'date-header' : ''">
      <div>
@@ -40,7 +40,7 @@
      </div>
     </td>
    </tr>
-  </template>
+  </template> -->
   <!-- <template v-if="tableLoading" v-slot:item>
    <tr>
     <td colspan="999">i'm loading</td>
@@ -48,11 +48,10 @@
   </template> -->
   <template v-slot:item.actions="{ item }">
     <div class="w-max-content"> 
-        <!-- <v-icon small class="mr-2" > </v-icon> -->
-        <img @click="editItem(item)" class="pointer mr-2" src="@/assets/images/icon-edit.svg" alt=""> 
-        <img @click="deleteItem(item)" class="pointer mr-2" src="@/assets/images/icon-remove-r.svg" alt=""> 
-        <v-icon small @click="detailItem(item)"> mdi-eye </v-icon>
-        </div>
+      <img @click="editItem(item)" class="pointer mr-2" src="@/assets/images/icon-edit.svg" alt=""> 
+      <img @click="deleteItem(item)" class="pointer mr-2" src="@/assets/images/icon-remove-r.svg" alt=""> 
+      <v-icon small @click="detailItem(item)"> mdi-eye </v-icon>
+    </div>
    
   </template>
  </v-data-table>
@@ -75,6 +74,7 @@
    },
    headers: {
     type: Array,
+    default:[],
    },
    handleFilterChange:{
      type:Function
@@ -85,6 +85,9 @@
    handleSelectedItem:{
      type:Function
    },
+   handleSelectedItemDetail:{
+     type:Function
+   },
   },
   components: { TableFiltersInput, TableFiltersSelect, TableFiltersDateRange },
   setup: (props,ctx) => {
@@ -92,13 +95,19 @@
    const tableHeight = ref<number>(600);
    let filtersTable = ref<Record<string, unknown>>({});
    let selectedData = ref<Record<string, unknown>>({});
+   let selectedDataDetail = ref<Record<string, unknown>>({});
    
    const setEndedThead = (payload: number) => {
     endedThead.value = payload;
    };
    const setSelectedData = (payload: Record<string, unknown>) => {
       selectedData.value = payload;
-      ctx.emit('handleSelectedItem',selectedData.value)
+    ctx.emit('handleSelectedItem',selectedData.value)
+
+   };
+   const setSelectedDataDetail = (payload: Record<string, unknown>) => {
+      selectedDataDetail.value = payload;
+    ctx.emit('handleSelectedItemDetail',selectedDataDetail.value)
 
    };
    const setTableHeight = (payload: number) => {
@@ -114,15 +123,19 @@
   //  watch(selectedData, currentValue => {
   //   // reactive when filter change here
   //  });
+  //  watch(selectedDataDetail, currentValue => {
+  //  });
    return { 
       filtersTable, 
       tableHeight,
       endedThead,
       selectedData,
+      selectedDataDetail,
       setEndedThead, 
       setTableHeight, 
       setFiltersTable,
-      setSelectedData
+      setSelectedData,
+      setSelectedDataDetail
       };
   },
   data() {
@@ -145,7 +158,7 @@
     console.log(error);
    }
   },
-
+ 
   methods: {
    listenChange(value: NormalFilterObject) {
     const valObject = returnFilterObject(value);
@@ -163,43 +176,18 @@
     };
     this.setFiltersTable(body);
    },
-   editItem(item:Record<string,string>){
+  editItem(item:Record<string,string>){
       this.setSelectedData(item)
    },
    detailItem(item:Record<string,string>){
-     const id:any = item.id
-     this.$router.push(`/bag/${id}`);
+     this.setSelectedDataDetail(item)
    }
   },
  });
 </script>
 <style lang="scss" scoped>
-//  .table-bag-model {
-//   width: 100% !important;
-//   border: 1px solid #e6e6e6;
-//   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-//   border-collapse: collapse;
-//   .date-header {
-//    min-width: 200px;
-//   }
-//   .filter-prepend-body,
-//   .v-data-table-header {
-//    background-color: #dddddd;
-//   }
-//  }
+
 </style>
 <style lang="scss">
-//  .table-bag-model {
-//   .filter-prepend-body,
-//   .v-data-table-header {
-//    background-color: #dddddd !important;
-//   }
-//  }
-//  .filter-prepend-body {
-//   th,
-//   td {
-//    border-bottom: none !important;
-//   }
-//   border-bottom: none !important;
-//  }
+
 </style>
