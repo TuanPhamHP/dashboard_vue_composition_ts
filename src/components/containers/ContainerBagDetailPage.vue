@@ -10,15 +10,23 @@
   </div>
   <div class="page-content">
     <div class="mb-4">
-      <v-btn class="buton-secondary-header text-transform-unset mr-4 border-radius-8">
-        <img src="@/assets/images/export-b.png" class="mr-2"/>
-        Export
-      </v-btn>
-      <v-btn class=" buton-primary-header text-transform-unset border-radius-8">
-        <img src="@/assets/images/save-w.svg" class="mr-2"/>
-        Save
-      </v-btn>
+      <div class="box-left">
+        
+      </div>
+      <div class="box-right">
+        <v-btn class="buton-secondary-header text-transform-unset mr-4 border-radius-8">
+          <img src="@/assets/images/export-b.png" class="mr-2"/>
+          Export
+        </v-btn>
+        <v-btn class=" buton-primary-header text-transform-unset border-radius-8">
+          <img src="@/assets/images/save-w.svg" class="mr-2"/>
+          Save
+        </v-btn>
+      </div>
     </div>
+    <p class="font-size-16 add-package text-decoration-underline pointer">
+      Add a new Package
+    </p>
     <TableBagDetail :table-data="tableData" :table-loading="loadingTable" :headers="headers" @handleFilterChange="filterTableChange" @handleSelectedItem="handlerEdit" :current-binding-url="queryRoute" />
     <div class="pt-1">
       <SharedPagination :pagination-sync="pagination" @handlePageSizeChange="pagePaginationChange" @handlePageChange="pagePaginationChange" />
@@ -357,4 +365,8 @@ import { filter } from "vue/types/umd";
  });
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+  .add-package{
+    color: #1397E3;
+  }
+</style>

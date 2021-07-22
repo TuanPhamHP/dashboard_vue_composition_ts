@@ -11,7 +11,7 @@
   <div class=" page-content">
    <div class="mb-4">
     <!-- <v-btn @click="setupData" class="">Setup Data</v-btn> -->
-    <v-btn class=" buton-primary-header text-transform-unset mr-4 border-radius-8">
+    <v-btn @click="isVisible = true" class=" buton-primary-header text-transform-unset mr-4 border-radius-8">
         <img src="@/assets/images/plus-composer.png" class="mr-2"/>
         Create
       </v-btn>

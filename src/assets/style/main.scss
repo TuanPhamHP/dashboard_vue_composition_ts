@@ -204,6 +204,9 @@ body {
     align-items: center;
     justify-content: center;
 }
+.text-decoration-underline{
+    text-decoration: underline !important
+}
 // REPONSIVE
 @import "./reponsive/reponsive_main.scss";
 // ******--------
