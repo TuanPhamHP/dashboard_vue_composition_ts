@@ -10,7 +10,7 @@
           align-center
         "
       >
-        <span class="align-justify-center mr-4 pointer btn-back-page">
+        <span @click="getManifest" class="align-justify-center mr-4 pointer btn-back-page">
           <img src="@/assets/images/arrow-left.svg" alt="" />
         </span>
         Manifest Detail
@@ -365,6 +365,9 @@ export default defineComponent({
     this.getAllRoles({ ...this.queryRoute });
   },
   methods: {
+    getManifest() {
+      this.$router.push("/manifest");
+    },
     pagePaginationChange(_val: any) {
       this.$store.commit("CACHED_PAGINATION", {
         total: this.pagination.total,
