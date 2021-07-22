@@ -24,14 +24,16 @@
         </v-btn>
       </div>
     </div>
-    <p class="font-size-16 add-package text-decoration-underline pointer">
+    <p class="font-size-16 add-package text-decoration-underline pointer"
+      @click="isVisible = true"
+    >
       Add a new Package
     </p>
     <TableBagDetail :table-data="tableData" :table-loading="loadingTable" :headers="headers" @handleFilterChange="filterTableChange" @handleSelectedItem="handlerEdit" :current-binding-url="queryRoute" />
     <div class="pt-1">
       <SharedPagination :pagination-sync="pagination" @handlePageSizeChange="pagePaginationChange" @handlePageChange="pagePaginationChange" />
     </div>
-    <DialogBag :is-visible="isVisible" :selected-data="selectedData" @handlerCancel="handlerDialogCancel" @handlerSubmit="handlerDialogSubmit"/>
+    <DialogBagDetail :is-visible="isVisible" :selected-data="selectedData" @handlerCancel="handlerDialogCancel" @handlerSubmit="handlerDialogSubmit"/>
   </div>
  </div>
 </template>
@@ -40,7 +42,7 @@
  import { defineComponent, reactive, ref, watch } from "@vue/composition-api";
  import api from "@/services";
  import TableBagDetail from "@/components/Table/TableBagDetail.vue";
- import DialogBag from "@/components/Form/DialogBag.vue";
+ import DialogBagDetail from "@/components/Form/DialogBagDetail.vue";
  import { SharedPagination } from "@/components/Shared";
  import { NormalPagination } from "@/InterfaceModel/Pagination";
  import { NormalHeaderItem } from "@/InterfaceModel/Header";
@@ -53,7 +55,7 @@ import { filter } from "vue/types/umd";
   components: {
    TableBagDetail,
    SharedPagination,
-    DialogBag
+    DialogBagDetail
 
   },
   data(){
@@ -368,5 +370,21 @@ import { filter } from "vue/types/umd";
 <style lang="scss" scoped>
   .add-package{
     color: #1397E3;
+  }
+  .page-container{
+    padding: 18px 18px 0;
+    .page-content{
+      padding: 30px;
+      background: #FFFFFF;
+      border: 0.3px solid #B9B9B9;
+      box-sizing: border-box;
+      border-radius: 14px;
+    }
+    .btn-back-page{
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #FFFFFF;
+    }
   }
 </style>
