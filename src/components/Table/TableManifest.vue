@@ -8,7 +8,7 @@
   :height="tableHeight"
   multi-sort
   ref="tableMod"
-  class="table-modify-css table-multi-sort-model table-scroll-y header-sticky-table header-no-border-table"
+  class="table-modify-css table-manifest-model table-scroll-y header-sticky-table header-no-border-table"
   hide-default-footer
   :items-per-page="10000"
   :loading="tableLoading"
@@ -47,8 +47,8 @@
    </tr>
   </template> -->
   <template v-slot:item.actions="{ item }">
-   <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
-   <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
+   <img @click="editItem(item)" class="pointer mr-2" src="@/assets/images/icon-edit.svg" alt=""> 
+   <img @click="deleteItem(item)" class="pointer mr-2" src="@/assets/images/icon-remove-r.svg" alt=""> 
   </template>
  </v-data-table>
 </template>
@@ -144,11 +144,14 @@
     };
     this.setFiltersTable(body);
    },
+   editItem(item: any) {
+    this.$router.push(`/manifest/${item.id}`);
+   },
   },
  });
 </script>
 <style lang="scss" scoped>
- //  .table-multi-sort-model {
+ //  .table-manifest-model {
  //   width: 100% !important;
  //   border: 1px solid #e6e6e6;
  //   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
@@ -163,7 +166,7 @@
  //  }
 </style>
 <style lang="scss">
- //  .table-multi-sort-model {
+ //  .table-manifest-model {
  //   .filter-prepend-body,
  //   .v-data-table-header {
  //    background-color: #dddddd !important;

@@ -8,14 +8,14 @@
   :height="tableHeight"
   multi-sort
   ref="tableMod"
-  class="table-modify-css table-multi-sort-model table-scroll-y header-sticky-table header-no-border-table"
+  class="table-modify-css table-manifest-detail-model table-scroll-y header-sticky-table header-no-border-table"
   hide-default-footer
   :items-per-page="10000"
   :loading="tableLoading"
   loading-text="Loading... Please wait"
   :class="tableLoading ? 'table-on-loading' : ''"
  >
-  <template v-slot:body.prepend="{ headers }">
+  <!-- <template v-slot:body.prepend="{ headers }">
    <tr class="filter-prepend-body" :style="`top:${endedThead}px;position:sticky;z-index:3`">
     <td v-for="header in headers" :key="header.text" class="pointer" :class="header.type === 'date' ? 'date-header' : ''">
      <div>
@@ -40,7 +40,7 @@
      </div>
     </td>
    </tr>
-  </template>
+  </template> -->
   <!-- <template v-if="tableLoading" v-slot:item>
    <tr>
     <td colspan="999">i'm loading</td>
@@ -144,11 +144,14 @@
     };
     this.setFiltersTable(body);
    },
+   editItem(item: any) {
+    this.$router.push(`/manifest/${item.id}`);
+   },
   },
  });
 </script>
 <style lang="scss" scoped>
- //  .table-multi-sort-model {
+ //  .table-manifest-detail-model {
  //   width: 100% !important;
  //   border: 1px solid #e6e6e6;
  //   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
@@ -163,7 +166,7 @@
  //  }
 </style>
 <style lang="scss">
- //  .table-multi-sort-model {
+ //  .table-manifest-detail-model {
  //   .filter-prepend-body,
  //   .v-data-table-header {
  //    background-color: #dddddd !important;
