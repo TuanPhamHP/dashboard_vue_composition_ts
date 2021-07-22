@@ -1,13 +1,13 @@
 <template>
  <div class="page-container">
-  <div class=" mb-4 page-header">
+  <!-- <div class=" mb-4 page-header">
     <span class="title-page font-size-32 font-weight-bold text-uppercase display-flex align-center">
       <span class="align-justify-center mr-4 pointer btn-back-page">
         <img src="@/assets/images/arrow-left.svg" alt="">
       </span>
       Bag List
     </span>
-  </div>
+  </div> -->
   <div class=" page-content">
    <div class="mb-4">
     <!-- <v-btn @click="setupData" class="">Setup Data</v-btn> -->

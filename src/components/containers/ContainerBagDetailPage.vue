@@ -1,19 +1,50 @@
 <template>
- <div class="page-container">
-  <div class=" mb-4 page-header">
+ <div class="page-container page-bag-detail">
+  <!-- <div class=" mb-4 page-header">
     <span class="title-page font-size-32 font-weight-bold text-uppercase display-flex align-center">
       <span class="align-justify-center mr-4 pointer btn-back-page">
         <img src="@/assets/images/arrow-left.svg" alt="">
       </span>
       Bag List detail
     </span>
-  </div>
+  </div> -->
   <div class="page-content">
-    <div class="mb-4">
-      <div class="box-left">
-        
+    <div class="mb-4 row">
+      <div class="box-left col-xxl-8">
+        <div class="row my-0">
+          <div class="col-xxl-6 mb-3">
+            <div class="row my-0 detail-data display-flex align-center">
+              <span class="col-xxl-5">
+                Status
+              </span>
+              <span class="col-xxl-7">
+                <input type="text" class="w-100">
+              </span>
+            </div>
+          </div>
+          <div class="col-xxl-6 mb-3">
+            <div class="row my-0 detail-data display-flex align-center">
+              <span class="col-xxl-5">
+                Creation Date:
+              </span>
+              <span class="col-xxl-7">
+                <input type="text" class="w-100">
+              </span>
+            </div>
+          </div>
+          <div class="col-xxl-6 mb-3">
+            <div class="row my-0 detail-data display-flex align-center">
+              <span class="col-xxl-5">
+                Total Package:
+              </span>
+              <span class="col-xxl-7">
+                <input type="text" disabled class="w-100">
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="box-right">
+      <div class="box-right col-xxl-4 display-flex justify-flex-end">
         <v-btn class="buton-secondary-header text-transform-unset mr-4 border-radius-8">
           <img src="@/assets/images/export-b.png" class="mr-2"/>
           Export
@@ -24,7 +55,7 @@
         </v-btn>
       </div>
     </div>
-    <p class="font-size-16 add-package text-decoration-underline pointer"
+    <p class="font-size-16 add-package text-decoration-underline pointer display-inline-block"
       @click="isVisible = true"
     >
       Add a new Package
@@ -368,9 +399,33 @@ import { filter } from "vue/types/umd";
 </script>
 
 <style lang="scss" scoped>
-  .add-package{
-    color: #1397E3;
+  .page-bag-detail{
+    .add-package{
+      color: #1397E3;
+    }
+    .box-left{
+      .detail-data{
+        input{
+          border: 0.6px solid #D5D5D5;
+          box-sizing: border-box;
+          border-radius: 4px;
+          font-size: 14px;
+          color: #444444;
+          height: 32px;
+          outline: none;
+          padding: 0 15px;
+          &::placeholder{
+            font-size: 14px;
+            color: #444444;
+          }
+          &:disabled{
+            background-color: #FAFAFA;
+          }
+        }
+      }
+    }
   }
+  
   .page-container{
     padding: 18px 18px 0;
     .page-content{
