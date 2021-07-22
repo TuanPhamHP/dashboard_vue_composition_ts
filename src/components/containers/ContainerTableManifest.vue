@@ -218,7 +218,6 @@ export default defineComponent({
     });
 
     watch(filterTable, (currentValue) => {
-      console.log(currentValue);
 
       setCurrentRouteQuery({
         ...queryRoute,
@@ -275,7 +274,6 @@ export default defineComponent({
     }),
   },
   created() {
-    console.log("container-create", this.queryRoute);
 
     if (this.previousPagination) {
       const body = {
@@ -339,7 +337,6 @@ export default defineComponent({
     bindingDefaultFilterHeader(_obj: Record<string, unknown>) {
       let _headers = this.headers.slice();
       const currentQuery: Record<string, unknown> = _obj;
-      console.log("_obj", _obj);
 
       for (const _key in currentQuery) {
         let _keySplit = _key.split(".");

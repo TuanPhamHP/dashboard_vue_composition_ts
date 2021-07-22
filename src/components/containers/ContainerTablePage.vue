@@ -160,7 +160,6 @@ import { filter } from "vue/types/umd";
    });
    
    watch(filterTable,currentValue=>{
-     console.log(currentValue);
      
      setCurrentRouteQuery({
         ...queryRoute,
