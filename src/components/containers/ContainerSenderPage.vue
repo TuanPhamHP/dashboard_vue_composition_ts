@@ -1,72 +1,31 @@
 <template>
- <div class="page-container page-bag-detail">
+ <div class="page-container">
   <!-- <div class=" mb-4 page-header">
     <span class="title-page font-size-32 font-weight-bold text-uppercase display-flex align-center">
       <span class="align-justify-center mr-4 pointer btn-back-page">
         <img src="@/assets/images/arrow-left.svg" alt="">
       </span>
-      Bag List detail
+      Bag List
     </span>
   </div> -->
-  <div class="page-content">
-    <div class="mb-4 row">
-      <div class="box-left col-xxl-8">
-        <div class="row my-0">
-          <div class="col-xxl-6 mb-3">
-            <div class="row my-0 detail-data display-flex align-center">
-              <span class="col-xxl-5">
-                Status
-              </span>
-              <span class="col-xxl-7">
-                <input type="text" class="w-100">
-              </span>
-            </div>
-          </div>
-          <div class="col-xxl-6 mb-3">
-            <div class="row my-0 detail-data display-flex align-center">
-              <span class="col-xxl-5">
-               
-                Total Package:
-              </span>
-              <span class="col-xxl-7">
-                <input type="text" class="w-100">
-              </span>
-            </div>
-          </div>
-          <div class="col-xxl-6 mb-3">
-            <div class="row my-0 detail-data display-flex align-center">
-              <span class="col-xxl-5">
-                 Creation Date:
-              </span>
-              <span class="col-xxl-7">
-                <input type="text" disabled class="w-100">
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="box-right col-xxl-4 display-flex justify-flex-end">
-        <v-btn class="buton-secondary-header text-transform-unset mr-4 border-radius-8">
-          <img src="@/assets/images/export-b.png" class="mr-2"/>
-          Export
-        </v-btn>
-        <v-btn class=" buton-primary-header text-transform-unset border-radius-8">
-          <img src="@/assets/images/save-w.svg" class="mr-2"/>
-          Save
-        </v-btn>
-      </div>
-    </div>
-    <p class="font-size-16 add-package text-decoration-underline pointer display-inline-block"
-      @click="isVisible = true"
-    >
-      Add a new Package
-    </p>
-    <TableBagDetail :table-data="tableData" :table-loading="loadingTable" :headers="headers" @handleFilterChange="filterTableChange" @handleSelectedItem="handlerEdit" :current-binding-url="queryRoute" />
-    <div class="pt-1">
-      <SharedPagination :pagination-sync="pagination" @handlePageSizeChange="pagePaginationChange" @handlePageChange="pagePaginationChange" />
-    </div>
-    <DialogBagDetail :is-visible="isVisible" :selected-data="selectedData" @handlerCancel="handlerDialogCancel" @handlerSubmit="handlerDialogSubmit"/>
-    
+  <div class=" page-content">
+   <div class="mb-4">
+    <!-- <v-btn @click="setupData" class="">Setup Data</v-btn> -->
+    <v-btn @click="isVisible = true" class=" buton-primary-header text-transform-unset mr-4 border-radius-8">
+        <img src="@/assets/images/plus-composer.png" class="mr-2"/>
+        Create
+      </v-btn>
+    <v-btn class="buton-secondary-header text-transform-unset  border-radius-8">
+      <img src="@/assets/images/export-b.png" class="mr-2"/>
+      Export
+    </v-btn>
+  </div>
+   <TableSender :table-data="tableData" :table-loading="loadingTable" :headers="headers" @handleFilterChange="filterTableChange" @handleSelectedItem="handlerEdit" :current-binding-url="queryRoute" @handleSelectedItemDetail="handlerViewDetail" />
+   <div class="pt-1">
+    <SharedPagination :pagination-sync="pagination" @handlePageSizeChange="pagePaginationChange" @handlePageChange="pagePaginationChange" />
+   </div>
+   <DialogSender :is-visible="isVisible" :selected-data="selectedData" @handlerCancel="handlerDialogCancel" @handlerSubmit="handlerDialogSubmit"/>
+   <DialogSenderDetail :is-visible="isVisibleDetail" :selected-data="selectedData" @handlerCancel="handlerDialogItemCancel" @handlerSubmit="handlerDialogSubmit"/>
   </div>
  </div>
 </template>
@@ -74,8 +33,9 @@
 <script lang="ts">
  import { defineComponent, reactive, ref, watch } from "@vue/composition-api";
  import api from "@/services";
- import TableBagDetail from "@/components/Table/TableBagDetail.vue";
- import DialogBagDetail from "@/components/Form/DialogBagDetail.vue";
+ import TableSender from "@/components/Table/TableSender.vue";
+ import DialogSender from "@/components/Form/DialogSender.vue";
+ import DialogSenderDetail from "@/components/Form/DialogSenderDetail.vue";
  import { SharedPagination } from "@/components/Shared";
  import { NormalPagination } from "@/InterfaceModel/Pagination";
  import { NormalHeaderItem } from "@/InterfaceModel/Header";
@@ -86,14 +46,16 @@
 import { filter } from "vue/types/umd";
  export default defineComponent({
   components: {
-   TableBagDetail,
+   TableSender,
    SharedPagination,
-    DialogBagDetail
+    DialogSenderDetail,
+    DialogSender
 
   },
   data(){
       return{
           isVisible:false,
+          isVisibleDetail:false
       }
   },
   setup: props => {
@@ -112,108 +74,84 @@ import { filter } from "vue/types/umd";
 
    const headers:NormalHeaderItem[] = [
     {
-     text: "Package Number",
+     text: "No.",
      align: "start",
      sortable: false,
      value: "mawb",
      type: "string",
-     filters: {
-      // type: "string",
-      // key: "mawb",
-      // placeholder: "Tên bộ lọc",
-      // defaultValue: "",
-     },
+     filters: {},
     },
     {
-     text: "Item Details",
+     text: "Company",
      align: "start",
      sortable: false,
      value: "v-value",
      type: "string",
-     filters: {
-      // type: "string",
-      // key: "v-value",
-      // placeholder: "Tên bộ lọc",
-      // defaultValue: "",
-     },
+     filters: {},
     },
-    {
-     text: " Weight (kg)",
+      {
+     text: "Contact Person",
      align: "start",
      sortable: false,
      value: "v-value",
      type: "string",
-     filters: {
-      // type: "string",
-      // key: "v-value",
-      // placeholder: "Tên bộ lọc",
-      // defaultValue: "",
-     },
+     filters: {},
     },
-    {
-     text: "Sender",
+      {
+     text: "Reminiscent Name",
      align: "start",
      sortable: false,
      value: "v-value",
      type: "string",
-     filters: {
-      // type: "string",
-      // key: "v-value",
-      // placeholder: "Tên bộ lọc",
-      // defaultValue: "",
-     },
+     filters: {},
     },
-     {
-     text: "Consignee",
-     align: "start",
-     sortable: false,
-     value: "v-value",
-     type: "string",
-     filters: {
-      // type: "string",
-      // key: "v-value",
-      // placeholder: "Tên bộ lọc",
-      // defaultValue: "",
-     },
-    },
-     {
-     text: "I.D No",
-     align: "start",
-     sortable: false,
-     value: "v-value",
-     type: "string",
-     filters: {
-      // type: "string",
-      // key: "v-value",
-      // placeholder: "Tên bộ lọc",
-      // defaultValue: "",
-     },
-    },
-    {
+      {
      text: "Address",
      align: "start",
      sortable: false,
      value: "v-value",
      type: "string",
-     filters: {
-      // type: "string",
-      // key: "v-value",
-      // placeholder: "Tên bộ lọc",
-      // defaultValue: "",
-     },
+     filters: {},
     },
     {
-     text: "Tel No",
+     text: "State",
      align: "start",
      sortable: false,
      value: "v-value",
      type: "string",
-     filters: {
-      // type: "string",
-      // key: "v-value",
-      // placeholder: "Tên bộ lọc",
-      // defaultValue: "",
-     },
+     filters: {},
+    },
+    {
+     text: "Country",
+     align: "start",
+     sortable: false,
+     value: "v-value",
+     type: "string",
+     filters: {},
+    },
+    {
+     text: "Phone Number",
+     align: "start",
+     sortable: false,
+     value: "v-value",
+     type: "string",
+     filters: {},
+    },
+    {
+     text: "Email",
+     align: "start",
+     sortable: false,
+     value: "v-value",
+     type: "string",
+     filters: {},
+    },
+    {
+     text: "VAT",
+     align: "start",
+     sortable: false,
+     value: "v-value",
+     type: "string",
+     filters: {},
     },
     { text: "Actions", value: "actions", sortable: false,filters:{} },
    ];
@@ -300,6 +238,11 @@ import { filter } from "vue/types/umd";
       if(!_newVal){
         this.selectedData = {}
       }
+    },
+    isVisibleDetail(_newVal){
+      if(!_newVal){
+        this.selectedData = {}
+      }
     }
   },
   computed: {
@@ -337,8 +280,12 @@ import { filter } from "vue/types/umd";
     handlerDialogCancel(){
         this.isVisible = false;
     },
+    handlerDialogItemCancel(){
+        this.isVisibleDetail = false;
+    },
     handlerDialogSubmit(value:any){
         console.log(value);
+        
     },
    pagePaginationChange(_val: any) {
     this.$store.commit("CACHED_PAGINATION", {
@@ -366,6 +313,11 @@ import { filter } from "vue/types/umd";
    },
    handlerEdit(item:Record<string, unknown>){
      this.isVisible = true;
+     this.selectedData = {...item}
+     
+   },
+   handlerViewDetail(item:Record<string, unknown>){
+     this.isVisibleDetail = true;
      this.selectedData = {...item}
      
    },
@@ -420,35 +372,7 @@ import { filter } from "vue/types/umd";
  });
 </script>
 
-<style lang="scss" scoped>
-  .page-bag-detail{
-    .add-package{
-      color: #1397E3;
-    }
-    .box-left{
-      .detail-data{
-        color: #404040;
-        input{
-          border: 0.6px solid #D5D5D5;
-          box-sizing: border-box;
-          border-radius: 4px;
-          font-size: 14px;
-          color: #444444;
-          height: 32px;
-          outline: none;
-          padding: 0 15px;
-          &::placeholder{
-            font-size: 14px;
-            color: #444444;
-          }
-          &:disabled{
-            background-color: #FAFAFA;
-          }
-        }
-      }
-    }
-  }
-  
+<style lang="scss">
   .page-container{
     padding: 18px 18px 0;
     .page-content{

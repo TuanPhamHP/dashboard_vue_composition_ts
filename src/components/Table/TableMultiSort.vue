@@ -144,10 +144,6 @@
     };
     this.setFiltersTable(body);
    },
-   editItem(item: any) {
-    this.$router.push(`/manifest/${item.id}`);
-    console.log(item.id);
-   },
   },
  });
 </script>

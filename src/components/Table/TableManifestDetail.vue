@@ -8,7 +8,7 @@
   :height="tableHeight"
   multi-sort
   ref="tableMod"
-  class="table-modify-css table-bag-detail-model table-scroll-y header-sticky-table header-no-border-table"
+  class="table-modify-css table-manifest-detail-model table-scroll-y header-sticky-table header-no-border-table"
   hide-default-footer
   :items-per-page="10000"
   :loading="tableLoading"
@@ -47,10 +47,8 @@
    </tr>
   </template> -->
   <template v-slot:item.actions="{ item }">
-    <div class="w-max-content"> 
-      <img @click="deleteItem(item)" class="pointer mr-2" src="@/assets/images/icon-remove-r.svg" alt=""> 
-    </div>
-   
+   <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
+   <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
   </template>
  </v-data-table>
 </template>
@@ -72,30 +70,21 @@
    },
    headers: {
     type: Array,
-    default:[],
    },
-   handleFilterChange:{
-     type:Function
+   handleFilterChange: {
+    type: Function,
    },
-   currentBindingUrl:{
-     type:Object
-   },
-   handleSelectedItem:{
-     type:Function
+   currentBindingUrl: {
+    type: Object,
    },
   },
   components: { TableFiltersInput, TableFiltersSelect, TableFiltersDateRange },
-  setup: (props,ctx) => {
+  setup: (props, ctx) => {
    const endedThead = ref<number>(40);
    const tableHeight = ref<number>(600);
    let filtersTable = ref<Record<string, unknown>>({});
-   let selectedData = ref<Record<string, unknown>>({});
-   
    const setEndedThead = (payload: number) => {
     endedThead.value = payload;
-   };
-   const setSelectedData = (payload: Record<string, unknown>) => {
-      selectedData.value = payload;
    };
    const setTableHeight = (payload: number) => {
     tableHeight.value = payload;
@@ -105,22 +94,17 @@
    };
    watch(filtersTable, currentValue => {
     // reactive when filter change here
-    ctx.emit('handleFilterChange',currentValue)
+
+    ctx.emit("handleFilterChange", currentValue);
    });
-   watch(selectedData, currentValue => {
-    // reactive when filter change here
-    ctx.emit('handleSelectedItem',currentValue)
-   });
-   return { 
-      filtersTable, 
-      tableHeight,
-      endedThead,
-      selectedData,
-      setEndedThead, 
-      setTableHeight, 
-      setFiltersTable,
-      setSelectedData
-      };
+   return {
+    filtersTable,
+    tableHeight,
+    endedThead,
+    setEndedThead,
+    setTableHeight,
+    setFiltersTable,
+   };
   },
   data() {
    return {
@@ -142,7 +126,7 @@
     console.log(error);
    }
   },
- 
+
   methods: {
    listenChange(value: NormalFilterObject) {
     const valObject = returnFilterObject(value);
@@ -153,19 +137,46 @@
     this.setFiltersTable(body);
    },
    listenDateChange(value: NormalFilterObject) {
-    const valObject = {...value};
+    const valObject = { ...value };
     const body = {
      ...this.filtersTable,
      ...valObject,
     };
     this.setFiltersTable(body);
    },
+   editItem(item: any) {
+    this.$router.push(`/manifest/${item.id}`);
+   },
   },
  });
 </script>
 <style lang="scss" scoped>
-
+ //  .table-manifest-detail-model {
+ //   width: 100% !important;
+ //   border: 1px solid #e6e6e6;
+ //   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+ //   border-collapse: collapse;
+ //   .date-header {
+ //    min-width: 200px;
+ //   }
+ //   .filter-prepend-body,
+ //   .v-data-table-header {
+ //    background-color: #dddddd;
+ //   }
+ //  }
 </style>
 <style lang="scss">
-
+ //  .table-manifest-detail-model {
+ //   .filter-prepend-body,
+ //   .v-data-table-header {
+ //    background-color: #dddddd !important;
+ //   }
+ //  }
+ //  .filter-prepend-body {
+ //   th,
+ //   td {
+ //    border-bottom: none !important;
+ //   }
+ //   border-bottom: none !important;
+ //  }
 </style>

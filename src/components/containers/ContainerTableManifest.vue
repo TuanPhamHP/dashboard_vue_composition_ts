@@ -1,5 +1,5 @@
 <template>
-  <div class="page-container">
+  <div class="page-container-manifest">
     <div class="mb-4 page-header">
       <span
         class="
@@ -18,25 +18,25 @@
       <v-btn
         color="#2F6BFF"
         @click="handleOpenCreate"
-        class="mb-3 mx-3 create-button"
+        class="mb-3 create-button"
         ><img
           src="../../assets/images/plus-composer.png"
           width="15px"
           height="15px"
-          style="margin-right: 18px"
+          style="margin-right: 16px"
         />
         Create</v-btn
       >
       <v-btn @click="setupData" class="mb-3 mx-3 export-button"
         ><img
           src="../../assets/images/export-b.png"
-          width="15px"
-          height="15px"
-          style="margin-right: 18px"
+          width="21px"
+          height="21px"
+          style="margin-right: 16px"
         />Export</v-btn
       >
-      <div class="px-3">
-        <TableMultiSort
+      <div>
+        <TableManifest
           :table-data="tableData"
           :table-loading="loadingTable"
           :headers="headers"
@@ -64,7 +64,7 @@
 <script lang="ts">
 import { defineComponent, reactive, ref, watch } from "@vue/composition-api";
 import api from "@/services";
-import TableMultiSort from "@/components/Table/TableMultiSort.vue";
+import TableManifest from "@/components/Table/TableManifest.vue";
 import { SharedPagination } from "@/components/Shared";
 import DialogCreateManifest from "@/components/Form/DialogCreateManifest.vue";
 import { NormalPagination } from "@/InterfaceModel/Pagination";
@@ -76,7 +76,7 @@ import { mapState } from "vuex";
 import { filter } from "vue/types/umd";
 export default defineComponent({
   components: {
-    TableMultiSort,
+    TableManifest,
     SharedPagination,
     DialogCreateManifest,
   },
@@ -218,7 +218,6 @@ export default defineComponent({
     });
 
     watch(filterTable, (currentValue) => {
-      console.log(currentValue);
 
       setCurrentRouteQuery({
         ...queryRoute,
@@ -275,7 +274,6 @@ export default defineComponent({
     }),
   },
   created() {
-    console.log("container-create", this.queryRoute);
 
     if (this.previousPagination) {
       const body = {
@@ -339,7 +337,6 @@ export default defineComponent({
     bindingDefaultFilterHeader(_obj: Record<string, unknown>) {
       let _headers = this.headers.slice();
       const currentQuery: Record<string, unknown> = _obj;
-      console.log("_obj", _obj);
 
       for (const _key in currentQuery) {
         let _keySplit = _key.split(".");
@@ -385,7 +382,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-.page-container {
+.page-container-manifest {
   padding: 18px 18px 0;
   .page-content {
     padding: 30px;
@@ -404,6 +401,8 @@ export default defineComponent({
 .create-button {
   mix-blend-mode: normal;
   opacity: 0.9;
+  height: 40px !important;
+  font-weight: 700;
   border-radius: 8px;
   color: #ffffff !important;
   font-size: 14px !important;
@@ -413,10 +412,13 @@ export default defineComponent({
 .export-button {
   mix-blend-mode: normal;
   opacity: 0.9;
+  height: 40px !important;
   border: 1px solid #2f6bff;
   border-radius: 8px;
   color: #2f6bff !important;
   text-transform: none;
+  font-weight: 700;
   box-shadow: none;
+  background-color: #ffffff !important;
 }
 </style>

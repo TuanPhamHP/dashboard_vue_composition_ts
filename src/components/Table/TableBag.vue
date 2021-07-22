@@ -98,6 +98,8 @@
    };
    const setSelectedData = (payload: Record<string, unknown>) => {
       selectedData.value = payload;
+      ctx.emit('handleSelectedItem',selectedData.value)
+
    };
    const setTableHeight = (payload: number) => {
     tableHeight.value = payload;
@@ -109,10 +111,9 @@
     // reactive when filter change here
     ctx.emit('handleFilterChange',currentValue)
    });
-   watch(selectedData, currentValue => {
-    // reactive when filter change here
-    ctx.emit('handleSelectedItem',currentValue)
-   });
+  //  watch(selectedData, currentValue => {
+  //   // reactive when filter change here
+  //  });
    return { 
       filtersTable, 
       tableHeight,

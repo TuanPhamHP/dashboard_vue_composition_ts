@@ -1,5 +1,5 @@
 <template>
-  <div class="page-container">
+  <div class="page-container-manifest-detail">
     <div class="mb-4 page-header">
       <span
         class="
@@ -10,7 +10,7 @@
           align-center
         "
       >
-        <span class="align-justify-center mr-4 pointer btn-back-page">
+        <span @click="getManifest" class="align-justify-center mr-4 pointer btn-back-page">
           <img src="@/assets/images/arrow-left.svg" alt="" />
         </span>
         Manifest Detail
@@ -19,7 +19,7 @@
     <div class="page-content">
       <!-- <v-btn @click="setupData" class="mb-3 mx-3">Setup Data</v-btn> -->
       <div style="display: flex">
-        <div class="mb-3 mx-3">
+        <div class="mb-3">
           <div class="form-data">
             <div class="header-input">Destination</div>
             <input class="form-input-manifest margin-left-side" type="text" />
@@ -43,9 +43,9 @@
           <v-btn @click="setupData" class="mb-3 mx-3 export-button"
             ><img
               src="../../assets/images/vector.png"
-              width="15px"
-              height="15px"
-              style="margin-right: 18px"
+              width="21px"
+              height="21px"
+              style="margin-right: 16px"
             />Export</v-btn
           >
           <v-btn
@@ -54,16 +54,28 @@
             class="mb-3 mx-3 create-button"
             ><img
               src="../../assets/images/save-icon.png"
-              width="15px"
-              height="15px"
-              style="margin-right: 18px"
+              width="18px"
+              height="18px"
+              style="margin-right: 16px"
             />
             Save</v-btn
           >
         </div>
       </div>
-      <div class="px-3">
-        <TableMultiSort
+      <p
+        class="
+          font-size-16
+          add-bag
+          text-decoration-underline
+          pointer
+          display-inline-block
+        "
+        @click="isVisible = true"
+      >
+        Add a new bag
+      </p>
+      <div>
+        <TableManifestDetail
           :table-data="tableData"
           :table-loading="loadingTable"
           :headers="headers"
@@ -77,7 +89,7 @@
 <script lang="ts">
 import { defineComponent, reactive, ref, watch } from "@vue/composition-api";
 import api from "@/services";
-import TableMultiSort from "@/components/Table/TableMultiSort.vue";
+import TableManifestDetail from "@/components/Table/TableManifestDetail.vue";
 import { SharedPagination } from "@/components/Shared";
 import { NormalPagination } from "@/InterfaceModel/Pagination";
 import { NormalHeaderItem } from "@/InterfaceModel/Header";
@@ -88,7 +100,7 @@ import { mapState } from "vuex";
 import { filter } from "vue/types/umd";
 export default defineComponent({
   components: {
-    TableMultiSort,
+    TableManifestDetail,
     SharedPagination,
   },
   setup: (props) => {
@@ -106,7 +118,7 @@ export default defineComponent({
 
     const headers: NormalHeaderItem[] = [
       {
-        text: "MAWB",
+        text: "Bag Number",
         align: "start",
         sortable: false,
         value: "mawb",
@@ -144,8 +156,8 @@ export default defineComponent({
       //  },
       // },
       {
-        text: "Flight",
-        value: "flight",
+        text: "Package Number",
+        value: "package",
         type: "string",
         filters: {
           type: "string",
@@ -155,9 +167,9 @@ export default defineComponent({
         },
       },
       {
-        text: "Date",
+        text: "Item Details",
         value: "date",
-        type: "date",
+        type: "string",
         filters: {
           type: "daterange",
           key: "fat",
@@ -167,7 +179,62 @@ export default defineComponent({
         },
       },
       {
-        text: "Destination",
+        text: "Weight (kg)",
+        value: "destination",
+        type: "string",
+        filters: {
+          type: "string",
+          key: "protein",
+          placeholder: "Tên bộ lọc",
+          defaultValue: "",
+        },
+      },
+      {
+        text: "Sender",
+        value: "destination",
+        type: "string",
+        filters: {
+          type: "string",
+          key: "protein",
+          placeholder: "Tên bộ lọc",
+          defaultValue: "",
+        },
+      },
+      {
+        text: "Consignee",
+        value: "destination",
+        type: "string",
+        filters: {
+          type: "string",
+          key: "protein",
+          placeholder: "Tên bộ lọc",
+          defaultValue: "",
+        },
+      },
+      {
+        text: "ID No.",
+        value: "destination",
+        type: "string",
+        filters: {
+          type: "string",
+          key: "protein",
+          placeholder: "Tên bộ lọc",
+          defaultValue: "",
+        },
+      },
+      {
+        text: "Address",
+        value: "destination",
+        type: "string",
+        filters: {
+          type: "string",
+          key: "protein",
+          placeholder: "Tên bộ lọc",
+          defaultValue: "",
+        },
+      },
+      {
+        text: "Tel No",
         value: "destination",
         type: "string",
         filters: {
@@ -188,7 +255,7 @@ export default defineComponent({
       //   defaultValue: "",
       //  },
       // },
-      { text: "Actions", value: "actions", sortable: false, filters: {} },
+      // { text: "Actions", value: "actions", sortable: false, filters: {} },
     ];
     Object.freeze(headers);
     const setTableData = (payload: Record<string, unknown>[]) => {
@@ -223,7 +290,6 @@ export default defineComponent({
     });
 
     watch(filterTable, (currentValue) => {
-      console.log(currentValue);
 
       setCurrentRouteQuery({
         ...queryRoute,
@@ -273,7 +339,6 @@ export default defineComponent({
     }),
   },
   created() {
-    console.log("container-create", this.queryRoute);
 
     if (this.previousPagination) {
       const body = {
@@ -298,6 +363,9 @@ export default defineComponent({
     this.getAllRoles({ ...this.queryRoute });
   },
   methods: {
+    getManifest() {
+      this.$router.push("/manifest");
+    },
     pagePaginationChange(_val: any) {
       this.$store.commit("CACHED_PAGINATION", {
         total: this.pagination.total,
@@ -324,7 +392,6 @@ export default defineComponent({
     bindingDefaultFilterHeader(_obj: Record<string, unknown>) {
       let _headers = this.headers.slice();
       const currentQuery: Record<string, unknown> = _obj;
-      console.log("_obj", _obj);
 
       for (const _key in currentQuery) {
         let _keySplit = _key.split(".");
@@ -360,7 +427,6 @@ export default defineComponent({
             };
             obj.filters.defaultValue[`${_keyNew}`] = currentQuery[`${_key}`];
             _headers.splice(n, 1, obj);
-            console.log(_headers);
           }
         }
       }
@@ -370,7 +436,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-.page-container {
+.page-container-manifest-detail {
   padding: 18px 18px 0;
   .page-content {
     padding: 30px;
@@ -378,6 +444,9 @@ export default defineComponent({
     border: 0.3px solid #b9b9b9;
     box-sizing: border-box;
     border-radius: 14px;
+  }
+  .add-bag {
+    color: #1397e3;
   }
   .btn-back-page {
     width: 40px;
@@ -394,20 +463,25 @@ export default defineComponent({
 .create-button {
   mix-blend-mode: normal;
   opacity: 0.9;
+  height: 40px !important;
   border-radius: 8px;
   color: #ffffff !important;
   font-size: 14px !important;
   text-transform: none;
+  font-weight: 700;
   box-shadow: none;
 }
 .export-button {
   mix-blend-mode: normal;
+  height: 40px !important;
   opacity: 0.9;
   border: 1px solid #2f6bff;
   border-radius: 8px;
   color: #2f6bff !important;
   text-transform: none;
   box-shadow: none;
+  font-weight: 700;
+  background-color: #ffffff !important;
 }
 .form-data {
   display: flex;

@@ -48,7 +48,9 @@
   </template> -->
   <template v-slot:item.actions="{ item }">
     <div class="w-max-content"> 
+      <img @click="editItem(item)" class="pointer mr-2" src="@/assets/images/icon-edit.svg" alt=""> 
       <img @click="deleteItem(item)" class="pointer mr-2" src="@/assets/images/icon-remove-r.svg" alt=""> 
+      <v-icon small @click="detailItem(item)"> mdi-eye </v-icon>
     </div>
    
   </template>
@@ -83,6 +85,9 @@
    handleSelectedItem:{
      type:Function
    },
+   handleSelectedItemDetail:{
+     type:Function
+   },
   },
   components: { TableFiltersInput, TableFiltersSelect, TableFiltersDateRange },
   setup: (props,ctx) => {
@@ -90,12 +95,20 @@
    const tableHeight = ref<number>(600);
    let filtersTable = ref<Record<string, unknown>>({});
    let selectedData = ref<Record<string, unknown>>({});
+   let selectedDataDetail = ref<Record<string, unknown>>({});
    
    const setEndedThead = (payload: number) => {
     endedThead.value = payload;
    };
    const setSelectedData = (payload: Record<string, unknown>) => {
       selectedData.value = payload;
+    ctx.emit('handleSelectedItem',selectedData.value)
+
+   };
+   const setSelectedDataDetail = (payload: Record<string, unknown>) => {
+      selectedDataDetail.value = payload;
+    ctx.emit('handleSelectedItemDetail',selectedDataDetail.value)
+
    };
    const setTableHeight = (payload: number) => {
     tableHeight.value = payload;
@@ -107,19 +120,22 @@
     // reactive when filter change here
     ctx.emit('handleFilterChange',currentValue)
    });
-   watch(selectedData, currentValue => {
-    // reactive when filter change here
-    ctx.emit('handleSelectedItem',currentValue)
-   });
+  //  watch(selectedData, currentValue => {
+  //   // reactive when filter change here
+  //  });
+  //  watch(selectedDataDetail, currentValue => {
+  //  });
    return { 
       filtersTable, 
       tableHeight,
       endedThead,
       selectedData,
+      selectedDataDetail,
       setEndedThead, 
       setTableHeight, 
       setFiltersTable,
-      setSelectedData
+      setSelectedData,
+      setSelectedDataDetail
       };
   },
   data() {
@@ -160,6 +176,12 @@
     };
     this.setFiltersTable(body);
    },
+  editItem(item:Record<string,string>){
+      this.setSelectedData(item)
+   },
+   detailItem(item:Record<string,string>){
+     this.setSelectedDataDetail(item)
+   }
   },
  });
 </script>
