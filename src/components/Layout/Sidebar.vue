@@ -1,8 +1,8 @@
 <template>
  <v-card class="sidebar-card-body bg-white">
-  <v-btn color="accent" x-small elevation="2" class="btn-toggle-mini" :class="mini ? 'goto-collapse' : 'goto-expand'" @click="toggleMini">
+  <!-- <v-btn color="accent" x-small elevation="2" class="btn-toggle-mini" :class="mini ? 'goto-collapse' : 'goto-expand'" @click="toggleMini">
    <v-icon>mdi-chevron-left</v-icon>
-  </v-btn>
+  </v-btn> -->
   <v-navigation-drawer v-model="drawer" :mini-variant.sync="mini" permanent>
    <v-list-item class="px-2">
     <router-link to="/" class="sidebar-logo-link">

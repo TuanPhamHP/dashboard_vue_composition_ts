@@ -316,7 +316,6 @@ import { filter } from "vue/types/umd";
     },
     handlerDialogSubmit(value:any){
         console.log(value);
-        
     },
    pagePaginationChange(_val: any) {
     this.$store.commit("CACHED_PAGINATION", {

@@ -1,57 +1,75 @@
 <template>
-  <div>
-    <!-- <v-btn @click="setupData" class="mb-3 mx-3">Setup Data</v-btn> -->
-    <div style="display: flex">
-      <div class="mb-3 mx-3">
-        <div class="form-data">
-          <div class="header-input">Destination</div>
-          <input class="form-input margin-left-side" type="text" />
-          <div class="header-input">CD No.</div>
-          <input class="form-input" type="text" />
-        </div>
-        <div class="form-data">
-          <div class="header-input">Flight No</div>
-          <input class="form-input margin-left-side" type="text" />
-          <div class="header-input">Date</div>
-          <input class="form-input" type="date" />
-        </div>
-        <div class="form-data">
-          <div class="header-input">Remark</div>
-          <input class="form-input margin-left-side" type="text" />
-          <div class="header-input">Time</div>
-          <input class="form-input" type="time" />
-        </div>
-      </div>
-      <div class="buttons">
-        <v-btn @click="setupData" class="mb-3 mx-3 export-button"
-          ><img
-            src="../../assets/images/vector.png"
-            width="15px"
-            height="15px"
-            style="margin-right: 18px"
-          />Export</v-btn
-        >
-        <v-btn
-          color="#2F6BFF"
-          @click="setupData"
-          class="mb-3 mx-3 create-button"
-          ><img
-            src="../../assets/images/save-icon.png"
-            width="15px"
-            height="15px"
-            style="margin-right: 18px"
-          />
-          Save</v-btn
-        >
-      </div>
+  <div class="page-container">
+    <div class="mb-4 page-header">
+      <span
+        class="
+          title-page
+          font-size-32 font-weight-bold
+          text-uppercase
+          display-flex
+          align-center
+        "
+      >
+        <span class="align-justify-center mr-4 pointer btn-back-page">
+          <img src="@/assets/images/arrow-left.svg" alt="" />
+        </span>
+        Manifest Detail
+      </span>
     </div>
-    <div class="px-3">
-      <TableMultiSort
-        :table-data="tableData"
-        :table-loading="loadingTable"
-        :headers="headers"
-        @handleFilterChange="filterTableChange"
-      />
+    <div class="page-content">
+      <!-- <v-btn @click="setupData" class="mb-3 mx-3">Setup Data</v-btn> -->
+      <div style="display: flex">
+        <div class="mb-3 mx-3">
+          <div class="form-data">
+            <div class="header-input">Destination</div>
+            <input class="form-input-manifest margin-left-side" type="text" />
+            <div class="header-input">CD No.</div>
+            <input class="form-input-manifest" type="text" />
+          </div>
+          <div class="form-data">
+            <div class="header-input">Flight No</div>
+            <input class="form-input-manifest margin-left-side" type="text" />
+            <div class="header-input">Date</div>
+            <input class="form-input-manifest" type="date" />
+          </div>
+          <div class="form-data">
+            <div class="header-input">Remark</div>
+            <input class="form-input-manifest margin-left-side" type="text" />
+            <div class="header-input">Time</div>
+            <input class="form-input-manifest" type="time" />
+          </div>
+        </div>
+        <div class="buttons">
+          <v-btn @click="setupData" class="mb-3 mx-3 export-button"
+            ><img
+              src="../../assets/images/vector.png"
+              width="15px"
+              height="15px"
+              style="margin-right: 18px"
+            />Export</v-btn
+          >
+          <v-btn
+            color="#2F6BFF"
+            @click="setupData"
+            class="mb-3 mx-3 create-button"
+            ><img
+              src="../../assets/images/save-icon.png"
+              width="15px"
+              height="15px"
+              style="margin-right: 18px"
+            />
+            Save</v-btn
+          >
+        </div>
+      </div>
+      <div class="px-3">
+        <TableMultiSort
+          :table-data="tableData"
+          :table-loading="loadingTable"
+          :headers="headers"
+          @handleFilterChange="filterTableChange"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -352,6 +370,22 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+.page-container {
+  padding: 18px 18px 0;
+  .page-content {
+    padding: 30px;
+    background: #ffffff;
+    border: 0.3px solid #b9b9b9;
+    box-sizing: border-box;
+    border-radius: 14px;
+  }
+  .btn-back-page {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #ffffff;
+  }
+}
 .buttons {
   display: flex;
   justify-content: flex-end;
@@ -390,7 +424,7 @@ export default defineComponent({
 .margin-left-side {
   margin-right: 81px;
 }
-.form-input {
+.form-input-manifest {
   padding: 6px 0px 7px 13px;
   font-size: 14px;
   font-weight: 400;
