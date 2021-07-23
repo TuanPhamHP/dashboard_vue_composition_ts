@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="isVisible" persistent max-width="590">
+  <v-dialog v-model="isVisible" persistent max-width="740">
     <v-card class="dialog-bag-consignee">
       <v-card-title class="text-h5">
         {{ Object.keys(selectedData).length ? "Update Consignee Information" : "Create new Consignee" }}
