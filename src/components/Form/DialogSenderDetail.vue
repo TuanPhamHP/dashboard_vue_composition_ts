@@ -81,7 +81,7 @@
                 <v-btn
                 text
                 @click="btnCancelClick"
-                class="buton-secondary button-size border-width-2px text-transform-unset mr-4"
+                class="buton-secondary button-size border-width-2px text-transform-unset mr-4 font-size-18"
                 >
                 Cancel
                 </v-btn>
