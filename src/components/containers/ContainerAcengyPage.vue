@@ -361,21 +361,4 @@
  });
 </script>
 
-<style lang="scss">
- .page-container {
-  padding: 18px 18px 0;
-  .page-content {
-   padding: 30px;
-   background: #ffffff;
-   border: 0.3px solid #b9b9b9;
-   box-sizing: border-box;
-   border-radius: 14px;
-  }
-  .btn-back-page {
-   width: 40px;
-   height: 40px;
-   border-radius: 50%;
-   background: #ffffff;
-  }
- }
-</style>
+<style lang="scss"></style>
