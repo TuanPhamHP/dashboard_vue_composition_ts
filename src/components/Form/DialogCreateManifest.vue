@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="isVisible" persistent max-width="590">
+  <v-dialog v-model="isVisible" persistent max-width="750">
     <v-card class="dialog-bag-manifest">
       <v-card-title class="text-h5">
         Create new Manifest

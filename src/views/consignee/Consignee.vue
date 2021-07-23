@@ -17,6 +17,15 @@
     
     methods:{
        
-    }
+    },
+    created(){
+      this.$store.commit("SET_BREADCRUMB", {
+         viewTxt: "CONSIGNEE LIST",
+         ableToBack: false,
+         rootRouter: "/",
+         hasStatus: false,
+         statusTxt: "",
+      });
+    },
  });
 </script>

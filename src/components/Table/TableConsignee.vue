@@ -62,7 +62,7 @@
               alt=""
             />
           </template>
-          <span>Sửa</span>
+          <span>Edit</span>
         </v-tooltip>
         <v-tooltip bottom content-class="top text-white">
           <template v-slot:activator="{ on, attrs }">
@@ -75,7 +75,7 @@
               alt=""
             />
           </template>
-          <span>Xóa</span>
+          <span>Delete</span>
         </v-tooltip>
         <v-tooltip bottom content-class="top text-white">
           <template v-slot:activator="{ on, attrs }">
@@ -83,7 +83,7 @@
               mdi-eye
             </v-icon>
           </template>
-          <span>Xem chi tiết</span>
+          <span>View Detail</span>
         </v-tooltip>
       </div>
     </template>
