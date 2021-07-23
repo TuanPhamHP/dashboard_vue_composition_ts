@@ -261,7 +261,11 @@
    });
 
    const getAllRoles = async (query: Record<string, unknown>) => {
-    const res = await api.roles.getAll(query);
+    if(!query) return;
+    let _parrams  = {...query}
+    delete _parrams.r_route
+    if(!Object.keys(_parrams).length) return;
+    const res = await api.roles.getAll(_parrams);
     setLoadingTable(false);
     if (!res) {
      return;
@@ -269,12 +273,12 @@
     try {
      const pagination = res.data.meta.pagination;
      setTableData(res.data.data);
-     setPagination({
-      total: pagination.total,
-      total_pages: pagination.total_pages,
-      per_page: pagination.per_page,
-      current_page: pagination.current_page,
-     });
+    //  setPagination({
+    //   total: pagination.total,
+    //   total_pages: pagination.total_pages,
+    //   per_page: pagination.per_page,
+    //   current_page: pagination.current_page,
+    //  });
     } catch (error) {
      console.log(error);
     }

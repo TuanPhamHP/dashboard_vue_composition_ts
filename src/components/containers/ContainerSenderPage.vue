@@ -209,6 +209,7 @@
    });
 
    const getAllRoles = async (query: Record<string, unknown>) => {
+    if(!Object.keys(query).length) return;
     const res = await api.roles.getAll(query);
     setLoadingTable(false);
     if (!res) {

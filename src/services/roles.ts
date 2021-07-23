@@ -3,7 +3,7 @@ const roleRepo = (axios: any) => {
   getAll(filterOptions: Record<string, unknown> = {}) {
    const body = {
     ...filterOptions,
-    include: filterOptions.include ? `${filterOptions.include},parts,parts.warehouse,parts.warehouse_off_airport_terminal` : "parts",
+    // include: filterOptions.include ? `${filterOptions.include},parts,parts.warehouse,parts.warehouse_off_airport_terminal` : "parts",
    };
    return axios
     .get(`/api/merchandises`, {
