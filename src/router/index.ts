@@ -5,6 +5,7 @@ import Home from "../views/Home.vue";
 import Login from "../views/Login.vue";
 import Table from "../views/Table.vue";
 import AgencyList from "../views/agency/List.vue";
+import ShippingList from "../views/shipping/Shipping.vue";
 import Detail from "../views/agency/Detail.vue";
 import auth from "../middleware/auth";
 import api from "@/services";
@@ -95,6 +96,11 @@ const routes: Array<RouteConfig> = [
   path: "/agency",
   name: "Agency",
   component: AgencyList,
+ },
+ {
+  path: "/shipping-partner",
+  name: "Shipping-Partner",
+  component: ShippingList,
  },
 ];
 
