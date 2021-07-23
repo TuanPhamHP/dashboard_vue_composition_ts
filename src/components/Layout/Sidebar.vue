@@ -170,6 +170,14 @@
       },
      },
      {
+      groupText: "Agency",
+      isGroup: false,
+      matchToActive: ["agency"],
+      action: () => {
+       this.$router.push("/agency");
+      },
+     },
+     {
       groupText: "Invoice",
       isGroup: false,
       matchToActive: ["invoice"],
