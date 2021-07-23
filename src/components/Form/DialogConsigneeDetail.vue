@@ -279,6 +279,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+@import "@/assets/style/_variables.scss";
 .v-dialog .dialog-consignee-detail {
   border-radius: 14px;
   padding: 35px 35px;
@@ -286,24 +287,24 @@ export default defineComponent({
     padding-top: 0 !important;
     padding-bottom: 40px !important;
     font-size: 32px !important;
-    color: #202224;
+    color: $primaryBlack;
     font-weight: 700 !important;
   }
   .box-top {
     .detail-data {
-      color: #404040;
+      color: $GPEdarkText;
       input {
         border: 0.6px solid #d5d5d5;
         box-sizing: border-box;
         border-radius: 4px;
         font-size: 14px;
-        color: #444444;
+        color: $GPEdetailData;
         height: 32px;
         outline: none;
         padding: 0 15px;
         &::placeholder {
           font-size: 14px;
-          color: #444444;
+          color: $GPEdetailData;
         }
         &:disabled {
           background-color: #fafafa;

@@ -433,6 +433,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+@import "@/assets/style/_variables.scss";
 .page-container-manifest-detail {
   padding: 18px 18px 0;
   .page-content {
@@ -442,7 +443,7 @@ export default defineComponent({
     border-radius: 14px;
   }
   .add-bag {
-    color: #1397e3;
+    color: $GPEaddLink;
   }
   .btn-back-page {
     width: 40px;
@@ -471,9 +472,9 @@ export default defineComponent({
   mix-blend-mode: normal;
   height: 40px !important;
   opacity: 0.9;
-  border: 1px solid #2f6bff;
+  border: 1px solid $GPEblueText;
   border-radius: 8px;
-  color: #2f6bff !important;
+  color: $GPEblueText !important;
   text-transform: none;
   box-shadow: none;
   font-weight: 700;
@@ -491,7 +492,7 @@ export default defineComponent({
   font-weight: normal;
   font-size: 16px;
   line-height: 19px;
-  color: #404040;
+  color: $GPEdarkText;
 }
 .margin-left-side {
   margin-right: 81px;

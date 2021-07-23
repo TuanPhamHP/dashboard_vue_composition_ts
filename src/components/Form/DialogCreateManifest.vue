@@ -129,6 +129,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+@import "@/assets/style/_variables.scss";
 .v-dialog .dialog-bag-manifest {
   border-radius: 14px;
   padding: 35px 35px;
@@ -136,7 +137,7 @@ export default defineComponent({
     padding-top: 0 !important;
     padding-bottom: 60px !important;
     font-size: 32px !important;
-    color: #202224;
+    color: $primaryBlack;
     font-weight: 700 !important;
   }
   .form-item {
@@ -144,7 +145,7 @@ export default defineComponent({
     align-items: center;
     .form-lable {
       width: 35%;
-      color: #606060;
+      color: $primaryLabel;
       font-size: 14px;
     }
     .form-input {
@@ -158,11 +159,11 @@ export default defineComponent({
         height: 52px;
         font-size: 16px;
         font-weight: 400;
-        color: #2e2e2e;
+        color: $GPEinputText;
         outline: unset;
         padding: 0 20px;
         &::placeholder {
-          color: #2e2e2e;
+          color: $GPEinputText;
         }
       }
     }

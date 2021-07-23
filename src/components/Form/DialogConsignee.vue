@@ -2,7 +2,11 @@
   <v-dialog v-model="isVisible" persistent max-width="750">
     <v-card class="dialog-bag-consignee">
       <v-card-title class="text-h5">
-        {{ Object.keys(selectedData).length ? "Update Consignee Information" : "Create new Consignee" }}
+        {{
+          Object.keys(selectedData).length
+            ? "Update Consignee Information"
+            : "Create new Consignee"
+        }}
       </v-card-title>
       <v-card-text class="form-list scrollbar-y">
         <div class="form-item mb-5">
@@ -44,11 +48,7 @@
         <div class="form-item mb-5">
           <span class="form-lable"> ID No.</span>
           <span class="form-input">
-            <input
-              type="text"
-              placeholder="ID No."
-              v-model="formData.id"
-            />
+            <input type="text" placeholder="ID No." v-model="formData.id" />
           </span>
         </div>
         <div class="form-item mb-5">
@@ -184,6 +184,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+@import "@/assets/style/_variables.scss";
 .v-dialog .dialog-bag-consignee {
   border-radius: 14px;
   padding: 35px 35px;
@@ -191,7 +192,7 @@ export default defineComponent({
     padding-top: 0 !important;
     padding-bottom: 60px !important;
     font-size: 32px !important;
-    color: #202224;
+    color: $primaryBlack;
     font-weight: 700 !important;
   }
   .form-list {
@@ -205,7 +206,7 @@ export default defineComponent({
       align-items: center;
       .form-lable {
         width: 35%;
-        color: #606060;
+        color: $primaryLabel;
         font-size: 14px;
       }
       .form-input {
@@ -219,11 +220,11 @@ export default defineComponent({
           height: 52px;
           font-size: 16px;
           font-weight: 400;
-          color: #2e2e2e;
+          color: $GPEinputText;
           outline: unset;
           padding: 0 20px;
           &::placeholder {
-            color: #2e2e2e;
+            color: $GPEinputText;
           }
         }
       }

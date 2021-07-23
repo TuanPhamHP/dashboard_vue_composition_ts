@@ -393,11 +393,12 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+@import "@/assets/style/_variables.scss";
 .page-container-order {
   padding: 18px 18px 0;
   .page-content {
     padding: 30px;
-    background: #ffffff;
+    background: $primaryWhite;
     box-sizing: border-box;
     border-radius: 14px;
   }
@@ -405,7 +406,7 @@ export default defineComponent({
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: #ffffff;
+    background: $primaryWhite;
   }
 }
 </style>

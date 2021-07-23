@@ -346,7 +346,7 @@
     font-size: 14px;
     line-height: 16px;
     letter-spacing: 0.3px;
-    color: #444444;
+    color: $GPEdetailData;
     height: 50px;
     margin-bottom: 3px !important;
 
