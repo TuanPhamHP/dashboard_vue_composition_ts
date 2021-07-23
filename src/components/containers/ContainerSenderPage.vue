@@ -8,24 +8,37 @@
       Bag List
     </span>
   </div> -->
-  <div class=" page-content">
+  <div class="page-content">
    <div class="mb-4">
     <!-- <v-btn @click="setupData" class="">Setup Data</v-btn> -->
-    <v-btn @click="isVisible = true" class=" buton-primary-header text-transform-unset mr-4 border-radius-8">
-        <img src="@/assets/images/plus-composer.png" class="mr-2"/>
-        Create
-      </v-btn>
-    <v-btn class="buton-secondary-header text-transform-unset  border-radius-8">
-      <img src="@/assets/images/export-b.png" class="mr-2"/>
-      Export
+    <v-btn @click="isVisible = true" class="buton-primary-header text-transform-unset mr-4 border-radius-8">
+     <img src="@/assets/images/plus-composer.png" class="mr-2" />
+     Create
     </v-btn>
-  </div>
-   <TableSender :table-data="tableData" :table-loading="loadingTable" :headers="headers" @handleFilterChange="filterTableChange" @handleSelectedItem="handlerEdit" :current-binding-url="queryRoute" @handleSelectedItemDetail="handlerViewDetail" />
+    <v-btn class="buton-secondary-header text-transform-unset border-radius-8">
+     <img src="@/assets/images/export-b.png" class="mr-2" />
+     Export
+    </v-btn>
+   </div>
+   <TableSender
+    :table-data="tableData"
+    :table-loading="loadingTable"
+    :headers="headers"
+    @handleFilterChange="filterTableChange"
+    @handleSelectedItem="handlerEdit"
+    :current-binding-url="queryRoute"
+    @handleSelectedItemDetail="handlerViewDetail"
+   />
    <div class="pt-1">
     <SharedPagination :pagination-sync="pagination" @handlePageSizeChange="pagePaginationChange" @handlePageChange="pagePaginationChange" />
    </div>
-   <DialogSender :is-visible="isVisible" :selected-data="selectedData" @handlerCancel="handlerDialogCancel" @handlerSubmit="handlerDialogSubmit"/>
-   <DialogSenderDetail :is-visible="isVisibleDetail" :selected-data="selectedData" @handlerCancel="handlerDialogItemCancel" @handlerSubmit="handlerDialogSubmit"/>
+   <DialogSender :is-visible="isVisible" :selected-data="selectedData" @handlerCancel="handlerDialogCancel" @handlerSubmit="handlerDialogSubmit" />
+   <DialogSenderDetail
+    :is-visible="isVisibleDetail"
+    :selected-data="selectedData"
+    @handlerCancel="handlerDialogItemCancel"
+    @handlerSubmit="handlerDialogSubmit"
+   />
   </div>
  </div>
 </template>
@@ -43,20 +56,19 @@
  import useRouteQuery from "@/utils/uses/routerQuery/useRouteQuery";
  import route from "@/router/index";
  import { mapState } from "vuex";
-import { filter } from "vue/types/umd";
+ import { filter } from "vue/types/umd";
  export default defineComponent({
   components: {
    TableSender,
    SharedPagination,
-    DialogSenderDetail,
-    DialogSender
-
+   DialogSenderDetail,
+   DialogSender,
   },
-  data(){
-      return{
-          isVisible:false,
-          isVisibleDetail:false
-      }
+  data() {
+   return {
+    isVisible: false,
+    isVisibleDetail: false,
+   };
   },
   setup: props => {
    const { queryRoute, stringQueryRender, getQueryRoute } = useRouteQuery();
@@ -64,7 +76,7 @@ import { filter } from "vue/types/umd";
    const loadingTable = ref<boolean>(true);
    const currentRouteQuery = ref<string>(stringQueryRender);
    let tableData = reactive<Record<string, unknown>>({ value: [] });
-   let filterTable = ref({})
+   let filterTable = ref({});
    let pagination = ref<NormalPagination>({
     total: 1,
     per_page: 15,
@@ -72,7 +84,7 @@ import { filter } from "vue/types/umd";
     current_page: 1,
    });
 
-   const headers:NormalHeaderItem[] = [
+   const headers: NormalHeaderItem[] = [
     {
      text: "No.",
      align: "start",
@@ -89,7 +101,7 @@ import { filter } from "vue/types/umd";
      type: "string",
      filters: {},
     },
-      {
+    {
      text: "Contact Person",
      align: "start",
      sortable: false,
@@ -97,7 +109,7 @@ import { filter } from "vue/types/umd";
      type: "string",
      filters: {},
     },
-      {
+    {
      text: "Reminiscent Name",
      align: "start",
      sortable: false,
@@ -105,7 +117,7 @@ import { filter } from "vue/types/umd";
      type: "string",
      filters: {},
     },
-      {
+    {
      text: "Address",
      align: "start",
      sortable: false,
@@ -153,9 +165,9 @@ import { filter } from "vue/types/umd";
      type: "string",
      filters: {},
     },
-    { text: "Actions", value: "actions", sortable: false,filters:{} },
+    { text: "Actions", value: "actions", sortable: false, filters: {} },
    ];
-   Object.freeze(headers)
+   Object.freeze(headers);
    const setTableData = (payload: Record<string, unknown>[]) => {
     tableData.value = payload;
    };
@@ -164,15 +176,14 @@ import { filter } from "vue/types/umd";
    };
    const setCurrentRouteQuery = (payload: Record<string, unknown>): any => {
     let pairO = new IdentifyObject({
-      ...payload
+     ...payload,
     });
     currentRouteQuery.value = getQueryRoute(pairO.identifySelf());
    };
-    const setCurrentFilterTable = (payload: Record<string, unknown>): any => {
-      filterTable.value = {...payload}
-    };
+   const setCurrentFilterTable = (payload: Record<string, unknown>): any => {
+    filterTable.value = { ...payload };
+   };
    const setLoadingTable = (payload: boolean) => {
-
     loadingTable.value = payload;
    };
 
@@ -181,21 +192,21 @@ import { filter } from "vue/types/umd";
    });
    watch(pagination, currentValue => {
     const { current_page, per_page } = currentValue;
-    setCurrentRouteQuery({ 
-      ...queryRoute,
-      current_page, 
-      per_page 
-      });
+    setCurrentRouteQuery({
+     ...queryRoute,
+     current_page,
+     per_page,
+    });
    });
-   
-   watch(filterTable,currentValue=>{
-     console.log(currentValue);
-     
-     setCurrentRouteQuery({
-        ...queryRoute,
-        ...currentValue
-      });
-   })
+
+   watch(filterTable, currentValue => {
+    console.log(currentValue);
+
+    setCurrentRouteQuery({
+     ...queryRoute,
+     ...currentValue,
+    });
+   });
 
    const getAllRoles = async (query: Record<string, unknown>) => {
     const res = await api.roles.getAll(query);
@@ -206,12 +217,12 @@ import { filter } from "vue/types/umd";
     try {
      const pagination = res.data.meta.pagination;
      setTableData(res.data.data);
-    //  setPagination({
-    //   total: pagination.total,
-    //   total_pages: pagination.total_pages,
-    //   per_page: pagination.per_page,
-    //   current_page: pagination.current_page,
-    //  });
+     //  setPagination({
+     //   total: pagination.total,
+     //   total_pages: pagination.total_pages,
+     //   per_page: pagination.per_page,
+     //   current_page: pagination.current_page,
+     //  });
     } catch (error) {
      console.log(error);
     }
@@ -230,20 +241,20 @@ import { filter } from "vue/types/umd";
     setPagination,
     getAllRoles,
     setCurrentFilterTable,
-    currentRouteQuery
+    currentRouteQuery,
    };
   },
   watch: {
-    isVisible(_newVal){
-      if(!_newVal){
-        this.selectedData = {}
-      }
-    },
-    isVisibleDetail(_newVal){
-      if(!_newVal){
-        this.selectedData = {}
-      }
+   isVisible(_newVal) {
+    if (!_newVal) {
+     this.selectedData = {};
     }
+   },
+   isVisibleDetail(_newVal) {
+    if (!_newVal) {
+     this.selectedData = {};
+    }
+   },
   },
   computed: {
    ...mapState({
@@ -251,8 +262,8 @@ import { filter } from "vue/types/umd";
    }),
   },
   created() {
-    console.log('container-create',this.queryRoute);
-    
+   console.log("container-create", this.queryRoute);
+
    if (this.previousPagination) {
     const body = {
      ...this.previousPagination,
@@ -261,32 +272,30 @@ import { filter } from "vue/types/umd";
    }
    if (this.queryRoute) {
     if (this.queryRoute.per_page) {
-      const refPagination = { ...this.pagination };
-      refPagination.per_page = +this.queryRoute.per_page;
-      refPagination.current_page = +this.queryRoute.current_page;
-      this.setPagination(refPagination);
-   }
-    let _obj:any =  {...this.queryRoute}
-    delete _obj.per_page,
-    delete _obj.current_page
+     const refPagination = { ...this.pagination };
+     refPagination.per_page = +this.queryRoute.per_page;
+     refPagination.current_page = +this.queryRoute.current_page;
+     this.setPagination(refPagination);
+    }
+    let _obj: any = { ...this.queryRoute };
+    delete _obj.per_page, delete _obj.current_page;
     // this.setCurrentFilterTable(_obj)
 
     // this.setCurrentRouteQuery(this.queryRoute)
-    this.bindingDefaultFilterHeader(_obj)
+    this.bindingDefaultFilterHeader(_obj);
    }
    this.getAllRoles({ ...this.queryRoute });
   },
   methods: {
-    handlerDialogCancel(){
-        this.isVisible = false;
-    },
-    handlerDialogItemCancel(){
-        this.isVisibleDetail = false;
-    },
-    handlerDialogSubmit(value:any){
-        console.log(value);
-        
-    },
+   handlerDialogCancel() {
+    this.isVisible = false;
+   },
+   handlerDialogItemCancel() {
+    this.isVisibleDetail = false;
+   },
+   handlerDialogSubmit(value: any) {
+    console.log(value);
+   },
    pagePaginationChange(_val: any) {
     this.$store.commit("CACHED_PAGINATION", {
      total: this.pagination.total,
@@ -307,86 +316,59 @@ import { filter } from "vue/types/umd";
    clearSetup() {
     this.setLoadingTable(true);
    },
-   filterTableChange(_val:any){
-     
-    this.setCurrentFilterTable(_val) 
+   filterTableChange(_val: any) {
+    this.setCurrentFilterTable(_val);
    },
-   handlerEdit(item:Record<string, unknown>){
-     this.isVisible = true;
-     this.selectedData = {...item}
-     
+   handlerEdit(item: Record<string, unknown>) {
+    this.isVisible = true;
+    this.selectedData = { ...item };
    },
-   handlerViewDetail(item:Record<string, unknown>){
-     this.isVisibleDetail = true;
-     this.selectedData = {...item}
-     
+   handlerViewDetail(item: Record<string, unknown>) {
+    this.isVisibleDetail = true;
+    this.selectedData = { ...item };
    },
-   bindingDefaultFilterHeader(_obj: Record<string, unknown>){
-     let _headers = this.headers.slice();
-     const currentQuery:Record<string, unknown> = _obj
-     console.log('_obj',_obj);
-     
-     for(const _key in currentQuery){
-        let _keySplit = _key.split('.')
-       
-        if(_keySplit.length===1){
-          let n = _headers.findIndex(o => o.filters.key === _key )
-          if(n !== -1){
-          
-          //  const currentQuery = {..._headers[n]}
-          //  const currentQueryF = {..._headers[n].filters}
-          //  currentQueryF.defaultValue = currentQuery[_key]
-          //  currentQuery.filters = {...currentQueryF}
-          //  _headers.splice(n,1,currentQuery)
-            if(_headers[n].filters.type === 'string'){
-              _headers[n].filters.defaultValue = `${currentQuery[_key]}`
-            }else if(_headers[n].filters.type === 'select'){
-              // _headers[n].filters.defaultValue = _headers[n].filters.items.find(o=>o.id === currentQuery[_key]);
-              _headers[n].filters.defaultValue =  parseInt(`${currentQuery[_key]}`);
-              
-            }
-          }
-        }
-        else{
-          const _keyNew:string = _keySplit[1]
-          let n = _headers.findIndex(o => o.filters.key === _keySplit[0])
-          if(n !== -1){
-          
-           let obj = {..._headers[n]}
-           let objF = {..._headers[n].filters}
-           let defaultValue = typeof(objF.defaultValue)==="object"&&{...objF.defaultValue}
-            obj.filters.defaultValue = {
-              ...defaultValue,
-            }
-            obj.filters.defaultValue[`${_keyNew}`] = currentQuery[`${_key}`]
-           _headers.splice(n,1,obj)
-           console.log( _headers);
-           
-          }
-        }
-       
+   bindingDefaultFilterHeader(_obj: Record<string, unknown>) {
+    let _headers = this.headers.slice();
+    const currentQuery: Record<string, unknown> = _obj;
+    console.log("_obj", _obj);
+
+    for (const _key in currentQuery) {
+     let _keySplit = _key.split(".");
+
+     if (_keySplit.length === 1) {
+      let n = _headers.findIndex(o => o.filters.key === _key);
+      if (n !== -1) {
+       //  const currentQuery = {..._headers[n]}
+       //  const currentQueryF = {..._headers[n].filters}
+       //  currentQueryF.defaultValue = currentQuery[_key]
+       //  currentQuery.filters = {...currentQueryF}
+       //  _headers.splice(n,1,currentQuery)
+       if (_headers[n].filters.type === "string") {
+        _headers[n].filters.defaultValue = `${currentQuery[_key]}`;
+       } else if (_headers[n].filters.type === "select") {
+        // _headers[n].filters.defaultValue = _headers[n].filters.items.find(o=>o.id === currentQuery[_key]);
+        _headers[n].filters.defaultValue = parseInt(`${currentQuery[_key]}`);
+       }
       }
-       
+     } else {
+      const _keyNew: string = _keySplit[1];
+      let n = _headers.findIndex(o => o.filters.key === _keySplit[0]);
+      if (n !== -1) {
+       let obj = { ..._headers[n] };
+       let objF = { ..._headers[n].filters };
+       let defaultValue = typeof objF.defaultValue === "object" && { ...objF.defaultValue };
+       obj.filters.defaultValue = {
+        ...defaultValue,
+       };
+       obj.filters.defaultValue[`${_keyNew}`] = currentQuery[`${_key}`];
+       _headers.splice(n, 1, obj);
+       console.log(_headers);
+      }
      }
+    }
+   },
   },
  });
 </script>
 
-<style lang="scss">
-  .page-container{
-    padding: 18px 18px 0;
-    .page-content{
-      padding: 30px;
-      background: #FFFFFF;
-      border: 0.3px solid #B9B9B9;
-      box-sizing: border-box;
-      border-radius: 14px;
-    }
-    .btn-back-page{
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: #FFFFFF;
-    }
-  }
-</style>
+<style lang="scss"></style>

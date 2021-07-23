@@ -9,64 +9,59 @@
     </span>
   </div> -->
   <div class="page-content">
-    <div class="mb-4 row">
-      <div class="box-left col-xxl-8">
-        <div class="row my-0">
-          <div class="col-xxl-6 mb-3">
-            <div class="row my-0 detail-data display-flex align-center">
-              <span class="col-xxl-5">
-                Status
-              </span>
-              <span class="col-xxl-7">
-                <input type="text" class="w-100">
-              </span>
-            </div>
-          </div>
-          <div class="col-xxl-6 mb-3">
-            <div class="row my-0 detail-data display-flex align-center">
-              <span class="col-xxl-5">
-               
-                Total Package:
-              </span>
-              <span class="col-xxl-7">
-                <input type="text" class="w-100">
-              </span>
-            </div>
-          </div>
-          <div class="col-xxl-6 mb-3">
-            <div class="row my-0 detail-data display-flex align-center">
-              <span class="col-xxl-5">
-                 Creation Date:
-              </span>
-              <span class="col-xxl-7">
-                <input type="text" disabled class="w-100">
-              </span>
-            </div>
-          </div>
-        </div>
+   <div class="mb-4 row">
+    <div class="box-left col-xxl-8">
+     <div class="row my-0">
+      <div class="col-xxl-6 mb-3">
+       <div class="row my-0 detail-data display-flex align-center">
+        <span class="col-xxl-5"> Status </span>
+        <span class="col-xxl-7">
+         <input type="text" class="w-100" />
+        </span>
+       </div>
       </div>
-      <div class="box-right col-xxl-4 display-flex justify-flex-end">
-        <v-btn class="buton-secondary-header text-transform-unset mr-4 border-radius-8">
-          <img src="@/assets/images/export-b.png" class="mr-2"/>
-          Export
-        </v-btn>
-        <v-btn class=" buton-primary-header text-transform-unset border-radius-8">
-          <img src="@/assets/images/save-w.svg" class="mr-2"/>
-          Save
-        </v-btn>
+      <div class="col-xxl-6 mb-3">
+       <div class="row my-0 detail-data display-flex align-center">
+        <span class="col-xxl-5"> Total Package: </span>
+        <span class="col-xxl-7">
+         <input type="text" class="w-100" />
+        </span>
+       </div>
       </div>
+      <div class="col-xxl-6 mb-3">
+       <div class="row my-0 detail-data display-flex align-center">
+        <span class="col-xxl-5"> Creation Date: </span>
+        <span class="col-xxl-7">
+         <input type="text" disabled class="w-100" />
+        </span>
+       </div>
+      </div>
+     </div>
     </div>
-    <p class="font-size-16 add-package text-decoration-underline pointer display-inline-block"
-      @click="isVisible = true"
-    >
-      Add a new Package
-    </p>
-    <TableBagDetail :table-data="tableData" :table-loading="loadingTable" :headers="headers" @handleFilterChange="filterTableChange" @handleSelectedItem="handlerEdit" :current-binding-url="queryRoute" />
-    <div class="pt-1">
-      <SharedPagination :pagination-sync="pagination" @handlePageSizeChange="pagePaginationChange" @handlePageChange="pagePaginationChange" />
+    <div class="box-right col-xxl-4 display-flex justify-flex-end">
+     <v-btn class="buton-secondary-header text-transform-unset mr-4 border-radius-8">
+      <img src="@/assets/images/export-b.png" class="mr-2" />
+      Export
+     </v-btn>
+     <v-btn class="buton-primary-header text-transform-unset border-radius-8">
+      <img src="@/assets/images/save-w.svg" class="mr-2" />
+      Save
+     </v-btn>
     </div>
-    <DialogBagDetail :is-visible="isVisible" :selected-data="selectedData" @handlerCancel="handlerDialogCancel" @handlerSubmit="handlerDialogSubmit"/>
-    
+   </div>
+   <p class="font-size-16 add-package text-decoration-underline pointer display-inline-block" @click="isVisible = true">Add a new Package</p>
+   <TableBagDetail
+    :table-data="tableData"
+    :table-loading="loadingTable"
+    :headers="headers"
+    @handleFilterChange="filterTableChange"
+    @handleSelectedItem="handlerEdit"
+    :current-binding-url="queryRoute"
+   />
+   <div class="pt-1">
+    <SharedPagination :pagination-sync="pagination" @handlePageSizeChange="pagePaginationChange" @handlePageChange="pagePaginationChange" />
+   </div>
+   <DialogBagDetail :is-visible="isVisible" :selected-data="selectedData" @handlerCancel="handlerDialogCancel" @handlerSubmit="handlerDialogSubmit" />
   </div>
  </div>
 </template>
@@ -83,18 +78,17 @@
  import useRouteQuery from "@/utils/uses/routerQuery/useRouteQuery";
  import route from "@/router/index";
  import { mapState } from "vuex";
-import { filter } from "vue/types/umd";
+ import { filter } from "vue/types/umd";
  export default defineComponent({
   components: {
    TableBagDetail,
    SharedPagination,
-    DialogBagDetail
-
+   DialogBagDetail,
   },
-  data(){
-      return{
-          isVisible:false,
-      }
+  data() {
+   return {
+    isVisible: false,
+   };
   },
   setup: props => {
    const { queryRoute, stringQueryRender, getQueryRoute } = useRouteQuery();
@@ -102,7 +96,7 @@ import { filter } from "vue/types/umd";
    const loadingTable = ref<boolean>(true);
    const currentRouteQuery = ref<string>(stringQueryRender);
    let tableData = reactive<Record<string, unknown>>({ value: [] });
-   let filterTable = ref({})
+   let filterTable = ref({});
    let pagination = ref<NormalPagination>({
     total: 1,
     per_page: 15,
@@ -110,7 +104,7 @@ import { filter } from "vue/types/umd";
     current_page: 1,
    });
 
-   const headers:NormalHeaderItem[] = [
+   const headers: NormalHeaderItem[] = [
     {
      text: "Package Number",
      align: "start",
@@ -163,7 +157,7 @@ import { filter } from "vue/types/umd";
       // defaultValue: "",
      },
     },
-     {
+    {
      text: "Consignee",
      align: "start",
      sortable: false,
@@ -176,7 +170,7 @@ import { filter } from "vue/types/umd";
       // defaultValue: "",
      },
     },
-     {
+    {
      text: "I.D No",
      align: "start",
      sortable: false,
@@ -215,9 +209,9 @@ import { filter } from "vue/types/umd";
       // defaultValue: "",
      },
     },
-    { text: "Actions", value: "actions", sortable: false,filters:{} },
+    { text: "Actions", value: "actions", sortable: false, filters: {} },
    ];
-   Object.freeze(headers)
+   Object.freeze(headers);
    const setTableData = (payload: Record<string, unknown>[]) => {
     tableData.value = payload;
    };
@@ -226,15 +220,14 @@ import { filter } from "vue/types/umd";
    };
    const setCurrentRouteQuery = (payload: Record<string, unknown>): any => {
     let pairO = new IdentifyObject({
-      ...payload
+     ...payload,
     });
     currentRouteQuery.value = getQueryRoute(pairO.identifySelf());
    };
-    const setCurrentFilterTable = (payload: Record<string, unknown>): any => {
-      filterTable.value = {...payload}
-    };
+   const setCurrentFilterTable = (payload: Record<string, unknown>): any => {
+    filterTable.value = { ...payload };
+   };
    const setLoadingTable = (payload: boolean) => {
-
     loadingTable.value = payload;
    };
 
@@ -243,21 +236,21 @@ import { filter } from "vue/types/umd";
    });
    watch(pagination, currentValue => {
     const { current_page, per_page } = currentValue;
-    setCurrentRouteQuery({ 
-      ...queryRoute,
-      current_page, 
-      per_page 
-      });
+    setCurrentRouteQuery({
+     ...queryRoute,
+     current_page,
+     per_page,
+    });
    });
-   
-   watch(filterTable,currentValue=>{
-     console.log(currentValue);
-     
-     setCurrentRouteQuery({
-        ...queryRoute,
-        ...currentValue
-      });
-   })
+
+   watch(filterTable, currentValue => {
+    console.log(currentValue);
+
+    setCurrentRouteQuery({
+     ...queryRoute,
+     ...currentValue,
+    });
+   });
 
    const getAllRoles = async (query: Record<string, unknown>) => {
     const res = await api.roles.getAll(query);
@@ -268,12 +261,12 @@ import { filter } from "vue/types/umd";
     try {
      const pagination = res.data.meta.pagination;
      setTableData(res.data.data);
-    //  setPagination({
-    //   total: pagination.total,
-    //   total_pages: pagination.total_pages,
-    //   per_page: pagination.per_page,
-    //   current_page: pagination.current_page,
-    //  });
+     //  setPagination({
+     //   total: pagination.total,
+     //   total_pages: pagination.total_pages,
+     //   per_page: pagination.per_page,
+     //   current_page: pagination.current_page,
+     //  });
     } catch (error) {
      console.log(error);
     }
@@ -292,15 +285,15 @@ import { filter } from "vue/types/umd";
     setPagination,
     getAllRoles,
     setCurrentFilterTable,
-    currentRouteQuery
+    currentRouteQuery,
    };
   },
   watch: {
-    isVisible(_newVal){
-      if(!_newVal){
-        this.selectedData = {}
-      }
+   isVisible(_newVal) {
+    if (!_newVal) {
+     this.selectedData = {};
     }
+   },
   },
   computed: {
    ...mapState({
@@ -308,8 +301,8 @@ import { filter } from "vue/types/umd";
    }),
   },
   created() {
-    console.log('container-create',this.queryRoute);
-    
+   console.log("container-create", this.queryRoute);
+
    if (this.previousPagination) {
     const body = {
      ...this.previousPagination,
@@ -318,28 +311,27 @@ import { filter } from "vue/types/umd";
    }
    if (this.queryRoute) {
     if (this.queryRoute.per_page) {
-      const refPagination = { ...this.pagination };
-      refPagination.per_page = +this.queryRoute.per_page;
-      refPagination.current_page = +this.queryRoute.current_page;
-      this.setPagination(refPagination);
-   }
-    let _obj:any =  {...this.queryRoute}
-    delete _obj.per_page,
-    delete _obj.current_page
+     const refPagination = { ...this.pagination };
+     refPagination.per_page = +this.queryRoute.per_page;
+     refPagination.current_page = +this.queryRoute.current_page;
+     this.setPagination(refPagination);
+    }
+    let _obj: any = { ...this.queryRoute };
+    delete _obj.per_page, delete _obj.current_page;
     // this.setCurrentFilterTable(_obj)
 
     // this.setCurrentRouteQuery(this.queryRoute)
-    this.bindingDefaultFilterHeader(_obj)
+    this.bindingDefaultFilterHeader(_obj);
    }
    this.getAllRoles({ ...this.queryRoute });
   },
   methods: {
-    handlerDialogCancel(){
-        this.isVisible = false;
-    },
-    handlerDialogSubmit(value:any){
-        console.log(value);
-    },
+   handlerDialogCancel() {
+    this.isVisible = false;
+   },
+   handlerDialogSubmit(value: any) {
+    console.log(value);
+   },
    pagePaginationChange(_val: any) {
     this.$store.commit("CACHED_PAGINATION", {
      total: this.pagination.total,
@@ -360,109 +352,83 @@ import { filter } from "vue/types/umd";
    clearSetup() {
     this.setLoadingTable(true);
    },
-   filterTableChange(_val:any){
-     
-    this.setCurrentFilterTable(_val) 
+   filterTableChange(_val: any) {
+    this.setCurrentFilterTable(_val);
    },
-   handlerEdit(item:Record<string, unknown>){
-     this.isVisible = true;
-     this.selectedData = {...item}
-     
+   handlerEdit(item: Record<string, unknown>) {
+    this.isVisible = true;
+    this.selectedData = { ...item };
    },
-   bindingDefaultFilterHeader(_obj: Record<string, unknown>){
-     let _headers = this.headers.slice();
-     const currentQuery:Record<string, unknown> = _obj
-     console.log('_obj',_obj);
-     
-     for(const _key in currentQuery){
-        let _keySplit = _key.split('.')
-       
-        if(_keySplit.length===1){
-          let n = _headers.findIndex(o => o.filters.key === _key )
-          if(n !== -1){
-          
-          //  const currentQuery = {..._headers[n]}
-          //  const currentQueryF = {..._headers[n].filters}
-          //  currentQueryF.defaultValue = currentQuery[_key]
-          //  currentQuery.filters = {...currentQueryF}
-          //  _headers.splice(n,1,currentQuery)
-            if(_headers[n].filters.type === 'string'){
-              _headers[n].filters.defaultValue = `${currentQuery[_key]}`
-            }else if(_headers[n].filters.type === 'select'){
-              // _headers[n].filters.defaultValue = _headers[n].filters.items.find(o=>o.id === currentQuery[_key]);
-              _headers[n].filters.defaultValue =  parseInt(`${currentQuery[_key]}`);
-              
-            }
-          }
-        }
-        else{
-          const _keyNew:string = _keySplit[1]
-          let n = _headers.findIndex(o => o.filters.key === _keySplit[0])
-          if(n !== -1){
-          
-           let obj = {..._headers[n]}
-           let objF = {..._headers[n].filters}
-           let defaultValue = typeof(objF.defaultValue)==="object"&&{...objF.defaultValue}
-            obj.filters.defaultValue = {
-              ...defaultValue,
-            }
-            obj.filters.defaultValue[`${_keyNew}`] = currentQuery[`${_key}`]
-           _headers.splice(n,1,obj)
-           console.log( _headers);
-           
-          }
-        }
-       
+   bindingDefaultFilterHeader(_obj: Record<string, unknown>) {
+    let _headers = this.headers.slice();
+    const currentQuery: Record<string, unknown> = _obj;
+    console.log("_obj", _obj);
+
+    for (const _key in currentQuery) {
+     let _keySplit = _key.split(".");
+
+     if (_keySplit.length === 1) {
+      let n = _headers.findIndex(o => o.filters.key === _key);
+      if (n !== -1) {
+       //  const currentQuery = {..._headers[n]}
+       //  const currentQueryF = {..._headers[n].filters}
+       //  currentQueryF.defaultValue = currentQuery[_key]
+       //  currentQuery.filters = {...currentQueryF}
+       //  _headers.splice(n,1,currentQuery)
+       if (_headers[n].filters.type === "string") {
+        _headers[n].filters.defaultValue = `${currentQuery[_key]}`;
+       } else if (_headers[n].filters.type === "select") {
+        // _headers[n].filters.defaultValue = _headers[n].filters.items.find(o=>o.id === currentQuery[_key]);
+        _headers[n].filters.defaultValue = parseInt(`${currentQuery[_key]}`);
+       }
       }
-       
+     } else {
+      const _keyNew: string = _keySplit[1];
+      let n = _headers.findIndex(o => o.filters.key === _keySplit[0]);
+      if (n !== -1) {
+       let obj = { ..._headers[n] };
+       let objF = { ..._headers[n].filters };
+       let defaultValue = typeof objF.defaultValue === "object" && { ...objF.defaultValue };
+       obj.filters.defaultValue = {
+        ...defaultValue,
+       };
+       obj.filters.defaultValue[`${_keyNew}`] = currentQuery[`${_key}`];
+       _headers.splice(n, 1, obj);
+       console.log(_headers);
+      }
      }
+    }
+   },
   },
  });
 </script>
 
 <style lang="scss" scoped>
-  .page-bag-detail{
-    .add-package{
-      color: #1397E3;
-    }
-    .box-left{
-      .detail-data{
-        color: #404040;
-        input{
-          border: 0.6px solid #D5D5D5;
-          box-sizing: border-box;
-          border-radius: 4px;
-          font-size: 14px;
-          color: #444444;
-          height: 32px;
-          outline: none;
-          padding: 0 15px;
-          &::placeholder{
-            font-size: 14px;
-            color: #444444;
-          }
-          &:disabled{
-            background-color: #FAFAFA;
-          }
-        }
-      }
-    }
+ .page-bag-detail {
+  .add-package {
+   color: #1397e3;
   }
-  
-  .page-container{
-    padding: 18px 18px 0;
-    .page-content{
-      padding: 30px;
-      background: #FFFFFF;
-      border: 0.3px solid #B9B9B9;
-      box-sizing: border-box;
-      border-radius: 14px;
+  .box-left {
+   .detail-data {
+    color: #404040;
+    input {
+     border: 0.6px solid #d5d5d5;
+     box-sizing: border-box;
+     border-radius: 4px;
+     font-size: 14px;
+     color: #444444;
+     height: 32px;
+     outline: none;
+     padding: 0 15px;
+     &::placeholder {
+      font-size: 14px;
+      color: #444444;
+     }
+     &:disabled {
+      background-color: #fafafa;
+     }
     }
-    .btn-back-page{
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: #FFFFFF;
-    }
+   }
   }
+ }
 </style>
