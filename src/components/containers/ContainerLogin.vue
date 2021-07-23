@@ -179,7 +179,7 @@ export default defineComponent({
       this.authenticate({ ...body });
     },
     handleFocusPass() {
-      console.log(this);
+
       if (this.$refs.passwordCl) {
         const inputPassword = this.$refs.passwordCl as HTMLElement;
 

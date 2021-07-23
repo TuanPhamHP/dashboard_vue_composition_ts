@@ -367,7 +367,6 @@ export default defineComponent({
             };
             obj.filters.defaultValue[`${_keyNew}`] = currentQuery[`${_key}`];
             _headers.splice(n, 1, obj);
-            console.log(_headers);
           }
         }
       }
