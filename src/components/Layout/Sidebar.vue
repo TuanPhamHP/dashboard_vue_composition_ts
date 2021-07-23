@@ -154,6 +154,14 @@
       },
      },
      {
+      groupText: "Consignee",
+      isGroup: false,
+      matchToActive: ["consignee"],
+      action: () => {
+       this.$router.push("/consignee");
+      },
+     },
+     {
       groupText: "Manifest",
       isGroup: false,
       matchToActive: ["manifest"],
