@@ -103,9 +103,6 @@
    const setCurrentRouteName = (name: string): any => {
     currentRouteName.value = name;
    };
-   const handleLogout = () => {
-    alert("Logout clicked");
-   };
 
    return {
     drawer,
@@ -114,7 +111,6 @@
     setMini,
     setDrawer,
     setCurrentRouteName,
-    handleLogout,
    };
   },
 
@@ -251,6 +247,9 @@
     ],
    };
   },
+  created() {
+   this.setMini(this.isMini);
+  },
   computed: {
    ...mapState({
     logoutIsOpen: (state: any): boolean => state.logoutIsOpen,
@@ -274,6 +273,7 @@
     this.setMini(newVal);
    },
   },
+
   methods: {
    toggleMini() {
     this.setMini(!this.mini);
