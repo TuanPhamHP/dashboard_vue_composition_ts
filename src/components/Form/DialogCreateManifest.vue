@@ -1,18 +1,12 @@
 <template>
   <v-dialog v-model="isVisible" persistent max-width="750">
     <v-card class="dialog-bag-manifest">
-      <v-card-title class="text-h5">
-        Create new Manifest
-      </v-card-title>
+      <v-card-title class="text-h5"> Create new Manifest </v-card-title>
       <v-card-text>
         <div class="form-item mb-5">
           <span class="form-lable"> MAWB No. </span>
           <span class="form-input">
-            <input
-              type="text"
-              placeholder="MAWB No."
-              v-model="formData.mawb"
-            />
+            <input type="text" placeholder="MAWB No." v-model="formData.mawb" />
           </span>
         </div>
         <div class="form-item mb-5">
@@ -38,17 +32,14 @@
         <div class="form-item mb-5">
           <span class="form-lable"> Remark </span>
           <span class="form-input">
-            <input
-              type="text"
-              placeholder="Remark"
-              v-model="formData.remark"
-            />
+            <input type="text" placeholder="Remark" v-model="formData.remark" />
           </span>
         </div>
         <div class="form-item mb-5">
           <span class="form-lable"> CD No </span>
           <span class="form-input">
             <input
+              style="width: 60%"
               type="text"
               placeholder="CD No"
               v-model="formData.cd"
@@ -58,26 +49,45 @@
         <div class="form-item mb-5">
           <span class="form-lable"> Flight Date </span>
           <span class="form-input">
-            <input type="date" v-model="formData.creationDate" />
+            <input
+              style="width: 60%"
+              type="date"
+              v-model="formData.creationDate"
+            />
           </span>
         </div>
         <div class="form-item">
           <span class="form-lable"> Time </span>
           <span class="form-input">
-            <input type="time" v-model="formData.creationTime" />
+            <input
+              style="width: 60%"
+              type="time"
+              v-model="formData.creationTime"
+            />
           </span>
         </div>
       </v-card-text>
-      <v-card-actions>
+      <v-card-actions style="margin-top: 18px">
         <v-spacer></v-spacer>
         <v-btn
           text
           @click="handleCloseCreate"
-          class="buton-secondary button-size border-width-2px mr-4 text-transform-unset font-size-18"
+          class="
+            buton-secondary
+            button-size
+            border-width-2px
+            mr-4
+            text-transform-unset
+            font-size-18
+          "
         >
           Cancel
         </v-btn>
-        <v-btn text @click="btnSubmitClick" class="buton-primary button-size text-transform-unset font-size-18">
+        <v-btn
+          text
+          @click="btnSubmitClick"
+          class="buton-primary button-size text-transform-unset font-size-18"
+        >
           Create
         </v-btn>
       </v-card-actions>
