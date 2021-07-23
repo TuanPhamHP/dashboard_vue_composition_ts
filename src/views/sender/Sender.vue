@@ -14,7 +14,15 @@
     DefaultLayout,
     ContainerSenderPage,
     },
-    
+    created(){
+      this.$store.commit("SET_BREADCRUMB", {
+         viewTxt: "SENDER LIST",
+         ableToBack: false,
+         rootRouter: "/",
+         hasStatus: false,
+         statusTxt: "",
+      });
+    },
     methods:{
        
     }

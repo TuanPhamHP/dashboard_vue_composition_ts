@@ -14,7 +14,6 @@
     DefaultLayout,
     ContainerBagDetailPage,
     },
-    
     methods:{
        
     }

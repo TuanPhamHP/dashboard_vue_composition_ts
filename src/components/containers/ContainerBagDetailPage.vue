@@ -300,9 +300,19 @@
     previousPagination: (state: any) => state.previousPagination,
    }),
   },
+  beforeRouteEnter(to, from, next) {
+   next(vm => {
+    console.log(from);
+   });
+  },
   created() {
-   console.log("container-create", this.queryRoute);
-
+   this.$store.commit("SET_BREADCRUMB", {
+    viewTxt: "Bag 680SP997",
+    ableToBack: false,
+    rootRouter: "/",
+    hasStatus: false,
+    statusTxt: "",
+   });
    if (this.previousPagination) {
     const body = {
      ...this.previousPagination,

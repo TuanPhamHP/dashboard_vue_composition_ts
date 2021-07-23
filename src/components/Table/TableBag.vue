@@ -49,9 +49,25 @@
   <template v-slot:item.actions="{ item }">
     <div class="w-max-content"> 
         <!-- <v-icon small class="mr-2" > </v-icon> -->
-        <img @click="editItem(item)" class="pointer mr-2" src="@/assets/images/icon-edit.svg" alt=""> 
-        <img @click="deleteItem(item)" class="pointer mr-2" src="@/assets/images/icon-remove-r.svg" alt=""> 
-        <v-icon small @click="detailItem(item)"> mdi-eye </v-icon>
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on, attrs }">
+              <img  v-bind="attrs" v-on="on" @click="editItem(item)" class="pointer mr-2" src="@/assets/images/icon-edit.svg" alt=""> 
+          </template>
+          <span>Edit</span>
+        </v-tooltip>
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on, attrs }">
+              <img v-bind="attrs" v-on="on" @click="deleteItem(item)" class="pointer mr-2" src="@/assets/images/icon-remove-r.svg" alt=""> 
+          </template>
+          <span>Delete</span>
+        </v-tooltip>
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on, attrs }">
+              <v-icon v-bind="attrs" v-on="on" small @click="detailItem(item)"> mdi-eye </v-icon>
+          </template>
+          <span>View Detail</span>
+        </v-tooltip>
+        
         </div>
    
   </template>

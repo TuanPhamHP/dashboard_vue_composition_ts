@@ -16,7 +16,7 @@
   },
   created() {
    this.$store.commit("SET_BREADCRUMB", {
-    viewTxt: "BAG",
+    viewTxt: "BAG LIST",
     ableToBack: false,
     rootRouter: "/",
     hasStatus: false,
