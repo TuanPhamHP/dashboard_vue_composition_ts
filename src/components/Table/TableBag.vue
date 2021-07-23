@@ -183,7 +183,6 @@
     const currentRoute = this.$route.fullPath;
     const id: any = item.id;
     const v = currentRoute.replaceAll("&", "mod=");
-    console.log(v);
     this.$router.push({ path: `/bag/${id}`, query: { r_route: v } });
    },
   },
