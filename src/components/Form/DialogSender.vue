@@ -2,7 +2,7 @@
     <v-dialog
         v-model="isVisible"
         persistent
-        max-width="590"
+        max-width="740"
     >
         <v-card class="dialog-bag">
             <v-card-title class="text-h5">
