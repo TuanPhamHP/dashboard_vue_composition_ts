@@ -129,6 +129,7 @@
             border-width-2px
             text-transform-unset
             mr-4
+            font-size-18
           "
         >
           Cancel
@@ -136,7 +137,7 @@
         <v-btn
           text
           @click="btnSubmitClick"
-          class="buton-primary button-size text-transform-unset"
+          class="buton-primary button-size text-transform-unset font-size-18"
         >
           {{ Object.keys(selectedData).length ? "Update" : "Create" }}
         </v-btn>

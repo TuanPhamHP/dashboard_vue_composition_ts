@@ -73,11 +73,11 @@
         <v-btn
           text
           @click="handleCloseCreate"
-          class="buton-secondary button-size border-width-2px mr-4 text-transform-unset"
+          class="buton-secondary button-size border-width-2px mr-4 text-transform-unset font-size-18"
         >
           Cancel
         </v-btn>
-        <v-btn text @click="btnSubmitClick" class="buton-primary button-size text-transform-unset">
+        <v-btn text @click="btnSubmitClick" class="buton-primary button-size text-transform-unset font-size-18">
           Create
         </v-btn>
       </v-card-actions>

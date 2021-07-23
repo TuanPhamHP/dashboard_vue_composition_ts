@@ -72,6 +72,7 @@
             border-width-2px
             text-transform-unset
             mr-4
+            font-size-18
           "
         >
           Cancel
