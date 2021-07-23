@@ -1,5 +1,5 @@
 <template>
- <div class="w-100 px-5 breadcrumb-top">
+ <div class="w-100 breadcrumb-top">
   <span v-if="breadCrumb.ableToBack" class="align-justify-center mr-4 pointer btn-back-page" @click="onGoBack">
    <img src="../../assets/images/arrow-left.svg" alt="" />
   </span>
@@ -43,6 +43,7 @@
  }
  .breadcrumb-top {
   margin-top: 16px;
+  padding-left: 30px !important;
   display: flex;
   .btn-back-page {
    width: 40px;
