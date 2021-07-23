@@ -376,6 +376,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+@import "@/assets/style/_variables.scss";
 .page-container-manifest {
   padding: 18px 18px 0;
   .page-content {
@@ -406,9 +407,9 @@ export default defineComponent({
   mix-blend-mode: normal;
   opacity: 0.9;
   height: 40px !important;
-  border: 1px solid #2f6bff;
+  border: 1px solid $GPEblueText;
   border-radius: 8px;
-  color: #2f6bff !important;
+  color: $GPEblueText !important;
   text-transform: none;
   font-weight: 700;
   box-shadow: none;

@@ -1,77 +1,44 @@
 <template>
-  <div class="page-container-manifest-detail">
-    <!-- <div class="mb-4 page-header">
-   <span class="title-page font-size-32 font-weight-bold text-uppercase display-flex align-center">
-    <span @click="getManifest" class="align-justify-center mr-4 pointer btn-back-page">
-     <img src="@/assets/images/arrow-left.svg" alt="" />
+  <div class="page-container-order">
+    <!-- <div class=" mb-4 page-header">
+    <span class="title-page font-size-32 font-weight-bold text-uppercase display-flex align-center">
+      <span class="align-justify-center mr-4 pointer btn-back-page">
+        <img src="@/assets/images/arrow-left.svg" alt="">
+      </span>
+      Bag List
     </span>
-    Manifest Detail
-   </span>
   </div> -->
     <div class="page-content">
-      <!-- <v-btn @click="setupData" class="mb-3 mx-3">Setup Data</v-btn> -->
-      <div style="display: flex">
-        <div class="mb-3">
-          <div class="form-data">
-            <div class="header-input">Destination</div>
-            <input class="form-input-manifest margin-left-side" type="text" />
-            <div class="header-input">CD No.</div>
-            <input class="form-input-manifest" type="text" />
-          </div>
-          <div class="form-data">
-            <div class="header-input">Flight No</div>
-            <input class="form-input-manifest margin-left-side" type="text" />
-            <div class="header-input">Date</div>
-            <input class="form-input-manifest" type="date" />
-          </div>
-          <div class="form-data">
-            <div class="header-input">Remark</div>
-            <input class="form-input-manifest margin-left-side" type="text" />
-            <div class="header-input">Time</div>
-            <input class="form-input-manifest" type="time" />
-          </div>
-        </div>
-        <div class="buttons">
-          <v-btn @click="setupData" class="mb-3 mx-3 export-button"
-            ><img
-              src="../../assets/images/vector.png"
-              width="21px"
-              height="21px"
-              style="margin-right: 16px"
-            />Export</v-btn
-          >
-          <v-btn
-            color="#2F6BFF"
-            @click="setupData"
-            class="mb-3 mx-3 create-button"
-            ><img
-              src="../../assets/images/save-icon.png"
-              width="18px"
-              height="18px"
-              style="margin-right: 16px"
-            />
-            Save</v-btn
-          >
-        </div>
+      <div class="mb-4">
+        <!-- <v-btn @click="setupData" class="">Setup Data</v-btn> -->
+        <v-btn
+          @click="isVisible = true"
+          class="buton-primary-header text-transform-unset mr-4 border-radius-8"
+        >
+          <img src="@/assets/images/plus-composer.png" class="mr-2" />
+          Create
+        </v-btn>
+        <v-btn
+          class="buton-secondary-header text-transform-unset border-radius-8"
+        >
+          <img src="@/assets/images/export-b.png" class="mr-2" />
+          Export
+        </v-btn>
       </div>
-      <p
-        class="
-          font-size-16
-          add-bag
-          text-decoration-underline
-          pointer
-          display-inline-block
-        "
-        @click="isVisible = true"
-      >
-        Add a new bag
-      </p>
-      <div>
-        <TableManifestDetail
-          :table-data="tableData"
-          :table-loading="loadingTable"
-          :headers="headers"
-          @handleFilterChange="filterTableChange"
+      <TableOrder
+        :table-data="tableData"
+        :table-loading="loadingTable"
+        :headers="headers"
+        @handleFilterChange="filterTableChange"
+        @handleSelectedItem="handlerEdit"
+        :current-binding-url="queryRoute"
+        @handleSelectedItemDetail="handlerViewDetail"
+      />
+      <div class="pt-1">
+        <SharedPagination
+          :pagination-sync="pagination"
+          @handlePageSizeChange="pagePaginationChange"
+          @handlePageChange="pagePaginationChange"
         />
       </div>
     </div>
@@ -81,7 +48,7 @@
 <script lang="ts">
 import { defineComponent, reactive, ref, watch } from "@vue/composition-api";
 import api from "@/services";
-import TableManifestDetail from "@/components/Table/TableManifestDetail.vue";
+import TableOrder from "@/components/Table/TableOrder.vue";
 import { SharedPagination } from "@/components/Shared";
 import { NormalPagination } from "@/InterfaceModel/Pagination";
 import { NormalHeaderItem } from "@/InterfaceModel/Header";
@@ -92,11 +59,18 @@ import { mapState } from "vuex";
 import { filter } from "vue/types/umd";
 export default defineComponent({
   components: {
-    TableManifestDetail,
+    TableOrder,
     SharedPagination,
+  },
+  data() {
+    return {
+      isVisible: false,
+      isVisibleDetail: false,
+    };
   },
   setup: (props) => {
     const { queryRoute, stringQueryRender, getQueryRoute } = useRouteQuery();
+    let selectedData = reactive<Record<string, unknown>>({});
     const loadingTable = ref<boolean>(true);
     const currentRouteQuery = ref<string>(stringQueryRender);
     let tableData = reactive<Record<string, unknown>>({ value: [] });
@@ -110,7 +84,7 @@ export default defineComponent({
 
     const headers: NormalHeaderItem[] = [
       {
-        text: "Bag Number",
+        text: "Order Number",
         align: "start",
         sortable: false,
         value: "mawb",
@@ -118,136 +92,103 @@ export default defineComponent({
         filters: {
           type: "string",
           key: "mawb",
-          placeholder: "Tên bộ lọc",
-          defaultValue: "",
-        },
-      },
-      // {
-      //  text: "Calories",
-      //  value: "calories",
-      //  type: "string",
-      //  filters: {
-      //   type: "select",
-      //   key: "calories",
-      //   placeholder: "Lọc select",
-      //   items: [
-      //    {
-      //     id: 1,
-      //     name: "Lựa chọn 1",
-      //    },
-      //    {
-      //     id: 2,
-      //     name: "Lựa chọn 2",
-      //    },
-      //    {
-      //     id: 3,
-      //     name: "Lựa chọn 3",
-      //    },
-      //   ],
-      //   defaultValue: "",
-      //  },
-      // },
-      {
-        text: "Package Number",
-        value: "package",
-        type: "string",
-        filters: {
-          type: "string",
-          key: "carbs",
-          placeholder: "Tên bộ lọc",
+          placeholder: "Order Number",
           defaultValue: "",
         },
       },
       {
-        text: "Item Details",
-        value: "date",
-        type: "string",
-        filters: {
-          type: "daterange",
-          key: "fat",
-          placeholder: "Tên bộ lọc",
-          defaultValue: {},
-          hasKey: true,
-        },
-      },
-      {
-        text: "Weight (kg)",
-        value: "destination",
+        text: "MAWB",
+        align: "start",
+        sortable: false,
+        value: "v-value",
         type: "string",
         filters: {
           type: "string",
-          key: "protein",
-          placeholder: "Tên bộ lọc",
+          key: "mawb",
+          placeholder: "MAWB",
           defaultValue: "",
         },
       },
       {
         text: "Sender",
-        value: "destination",
+        align: "start",
+        sortable: false,
+        value: "v-value",
         type: "string",
         filters: {
           type: "string",
-          key: "protein",
-          placeholder: "Tên bộ lọc",
+          key: "mawb",
+          placeholder: "Sender",
           defaultValue: "",
         },
       },
       {
-        text: "Consignee",
-        value: "destination",
+        text: "Gross Weight (kg)",
+        align: "start",
+        sortable: false,
+        value: "v-value",
         type: "string",
         filters: {
           type: "string",
-          key: "protein",
-          placeholder: "Tên bộ lọc",
+          key: "mawb",
+          placeholder: "Gross Weight (kg)",
           defaultValue: "",
         },
       },
       {
-        text: "ID No.",
-        value: "destination",
+        text: "Frieght cost (USD)",
+        align: "start",
+        sortable: false,
+        value: "v-value",
         type: "string",
         filters: {
           type: "string",
-          key: "protein",
-          placeholder: "Tên bộ lọc",
+          key: "mawb",
+          placeholder: "Frieght cost (USD)",
           defaultValue: "",
         },
       },
       {
-        text: "Address",
-        value: "destination",
+        text: "Status",
+        align: "start",
+        sortable: false,
+        value: "v-value",
         type: "string",
         filters: {
-          type: "string",
-          key: "protein",
-          placeholder: "Tên bộ lọc",
+          type: "select",
+          key: "calories",
+          placeholder: "Status",
+          items: [
+            {
+              id: 1,
+              name: "Lựa chọn 1",
+            },
+            {
+              id: 2,
+              name: "Lựa chọn 2",
+            },
+            {
+              id: 3,
+              name: "Lựa chọn 3",
+            },
+          ],
           defaultValue: "",
         },
       },
       {
-        text: "Tel No",
-        value: "destination",
+        text: "Person in charge",
+        align: "start",
+        sortable: false,
+        value: "v-value",
         type: "string",
         filters: {
           type: "string",
-          key: "protein",
-          placeholder: "Tên bộ lọc",
+          key: "mawb",
+          placeholder: "Person in charge",
           defaultValue: "",
         },
       },
-      // {
-      //  text: "Iron (%)",
-      //  value: "iron",
-      //  type: "string",
-      //  filters: {
-      //   type: "string",
-      //   key: "iron",
-      //   placeholder: "Tên bộ lọc",
-      //   defaultValue: "",
-      //  },
-      // },
-      // { text: "Actions", value: "actions", sortable: false, filters: {} },
+      { text: "Actions", value: "actions", sortable: false, filters: {} },
     ];
     Object.freeze(headers);
     const setTableData = (payload: Record<string, unknown>[]) => {
@@ -314,6 +255,7 @@ export default defineComponent({
       tableData,
       queryRoute,
       filterTable,
+      selectedData,
       setTableData,
       setLoadingTable,
       setCurrentRouteQuery,
@@ -323,20 +265,24 @@ export default defineComponent({
       currentRouteQuery,
     };
   },
-  watch: {},
+  watch: {
+    isVisible(_newVal) {
+      if (!_newVal) {
+        this.selectedData = {};
+      }
+    },
+    isVisibleDetail(_newVal) {
+      if (!_newVal) {
+        this.selectedData = {};
+      }
+    },
+  },
   computed: {
     ...mapState({
       previousPagination: (state: any) => state.previousPagination,
     }),
   },
   created() {
-    this.$store.commit("SET_BREADCRUMB", {
-      viewTxt: "Manifest 895-85789623",
-      ableToBack: false,
-      rootRouter: "/",
-      hasStatus: false,
-      statusTxt: "",
-    });
     if (this.previousPagination) {
       const body = {
         ...this.previousPagination,
@@ -360,8 +306,14 @@ export default defineComponent({
     this.getAllRoles({ ...this.queryRoute });
   },
   methods: {
-    getManifest() {
-      this.$router.push("/manifest");
+    handlerDialogCancel() {
+      this.isVisible = false;
+    },
+    handlerDialogItemCancel() {
+      this.isVisibleDetail = false;
+    },
+    handlerDialogSubmit(value: any) {
+      console.log(value);
     },
     pagePaginationChange(_val: any) {
       this.$store.commit("CACHED_PAGINATION", {
@@ -385,6 +337,14 @@ export default defineComponent({
     },
     filterTableChange(_val: any) {
       this.setCurrentFilterTable(_val);
+    },
+    handlerEdit(item: Record<string, unknown>) {
+      this.isVisible = true;
+      this.selectedData = { ...item };
+    },
+    handlerViewDetail(item: Record<string, unknown>) {
+      this.isVisibleDetail = true;
+      this.selectedData = { ...item };
     },
     bindingDefaultFilterHeader(_obj: Record<string, unknown>) {
       let _headers = this.headers.slice();
@@ -434,78 +394,19 @@ export default defineComponent({
 
 <style lang="scss">
 @import "@/assets/style/_variables.scss";
-.page-container-manifest-detail {
+.page-container-order {
   padding: 18px 18px 0;
   .page-content {
     padding: 30px;
-    background: #ffffff;
+    background: $primaryWhite;
     box-sizing: border-box;
     border-radius: 14px;
-  }
-  .add-bag {
-    color: $GPEaddLink;
   }
   .btn-back-page {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: #ffffff;
+    background: $primaryWhite;
   }
-}
-.buttons {
-  display: flex;
-  justify-content: flex-end;
-  width: 100%;
-}
-.create-button {
-  mix-blend-mode: normal;
-  opacity: 0.9;
-  height: 40px !important;
-  border-radius: 8px;
-  color: #ffffff !important;
-  font-size: 14px !important;
-  text-transform: none;
-  font-weight: 700;
-  box-shadow: none;
-}
-.export-button {
-  mix-blend-mode: normal;
-  height: 40px !important;
-  opacity: 0.9;
-  border: 1px solid $GPEblueText;
-  border-radius: 8px;
-  color: $GPEblueText !important;
-  text-transform: none;
-  box-shadow: none;
-  font-weight: 700;
-  background-color: #ffffff !important;
-}
-.form-data {
-  display: flex;
-  align-items: center;
-  margin-bottom: 16px;
-}
-.header-input {
-  width: 120px;
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 16px;
-  line-height: 19px;
-  color: $GPEdarkText;
-}
-.margin-left-side {
-  margin-right: 81px;
-}
-.form-input-manifest {
-  padding: 6px 0px 7px 13px;
-  font-size: 14px;
-  font-weight: 400;
-  background: #ffffff;
-  border: 0.6px solid #d5d5d5;
-  box-sizing: border-box;
-  border-radius: 4px;
-  height: 32px;
-  width: 157px;
 }
 </style>

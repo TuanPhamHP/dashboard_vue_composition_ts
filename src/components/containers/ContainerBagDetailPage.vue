@@ -418,25 +418,26 @@
 </script>
 
 <style lang="scss" scoped>
+@import "@/assets/style/_variables.scss";
  .page-bag-detail {
   .add-package {
-   color: #1397e3;
+   color: $GPEaddLink;
   }
   .box-left {
    .detail-data {
-    color: #404040;
+    color: $GPEdarkText;
     input {
      border: 0.6px solid #d5d5d5;
      box-sizing: border-box;
      border-radius: 4px;
      font-size: 14px;
-     color: #444444;
+     color: $GPEdetailData;
      height: 32px;
      outline: none;
      padding: 0 15px;
      &::placeholder {
       font-size: 14px;
-      color: #444444;
+      color: $GPEdetailData;
      }
      &:disabled {
       background-color: #fafafa;
