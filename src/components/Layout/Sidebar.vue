@@ -136,6 +136,8 @@
 import { ref, defineComponent } from "@vue/composition-api";
 import AgencyUnactive from "../../assets/images/sidebar-icon/agency_u.svg";
 import AgencyActive from "../../assets/images/sidebar-icon/agency.svg";
+import ShippingUnactive from "../../assets/images/sidebar-icon/shipping_u.svg";
+import ShippingActive from "../../assets/images/sidebar-icon/shipping.svg";
 import HomeUnactive from "../../assets/images/sidebar-icon/home_white_u.svg";
 import HomeActive from "../../assets/images/sidebar-icon/home.svg";
 import OrderUnactive from "../../assets/images/sidebar-icon/order_u.svg";
@@ -288,6 +290,18 @@ export default defineComponent({
           matchToActive: ["agency"],
           action: () => {
             this.$router.push("/agency");
+          },
+        },
+        {
+          icon: {
+            unActive: ShippingUnactive,
+            active: ShippingActive,
+          },
+          groupText: "Shipping Partner",
+          isGroup: false,
+          matchToActive: ["shipping-partner"],
+          action: () => {
+            this.$router.push("/shipping-partner");
           },
         },
         //  {
