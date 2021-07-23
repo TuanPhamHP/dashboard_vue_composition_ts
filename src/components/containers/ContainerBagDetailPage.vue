@@ -59,7 +59,12 @@
     :current-binding-url="queryRoute"
    />
    <div class="pt-1">
-    <SharedPagination :pagination-sync="pagination" @handlePageSizeChange="pagePaginationChange" @handlePageChange="pagePaginationChange" />
+    <SharedPagination
+     :key="$route.params.id"
+     :pagination-sync="pagination"
+     @handlePageSizeChange="pagePaginationChange"
+     @handlePageChange="pagePaginationChange"
+    />
    </div>
    <DialogBagDetail :is-visible="isVisible" :selected-data="selectedData" @handlerCancel="handlerDialogCancel" @handlerSubmit="handlerDialogSubmit" />
   </div>
@@ -85,12 +90,17 @@
    SharedPagination,
    DialogBagDetail,
   },
+  props: {
+   previousRoute: {
+    type: String,
+   },
+  },
   data() {
    return {
     isVisible: false,
    };
   },
-  setup: props => {
+  setup: () => {
    const { queryRoute, stringQueryRender, getQueryRoute } = useRouteQuery();
    let selectedData = reactive<Record<string, unknown>>({});
    const loadingTable = ref<boolean>(true);
@@ -244,8 +254,6 @@
    });
 
    watch(filterTable, currentValue => {
-    console.log(currentValue);
-
     setCurrentRouteQuery({
      ...queryRoute,
      ...currentValue,
@@ -261,12 +269,12 @@
     try {
      const pagination = res.data.meta.pagination;
      setTableData(res.data.data);
-     //  setPagination({
-     //   total: pagination.total,
-     //   total_pages: pagination.total_pages,
-     //   per_page: pagination.per_page,
-     //   current_page: pagination.current_page,
-     //  });
+     setPagination({
+      total: pagination.total,
+      total_pages: pagination.total_pages,
+      per_page: pagination.per_page,
+      current_page: pagination.current_page,
+     });
     } catch (error) {
      console.log(error);
     }
@@ -300,16 +308,15 @@
     previousPagination: (state: any) => state.previousPagination,
    }),
   },
-  beforeRouteEnter(to, from, next) {
-   next(vm => {
-    console.log(from);
-   });
-  },
+
   created() {
+   console.log(this.$route);
+   const id = this.$route.params.id;
+   const routeQuery = this.$route.query;
    this.$store.commit("SET_BREADCRUMB", {
-    viewTxt: "Bag 680SP997",
-    ableToBack: false,
-    rootRouter: "/",
+    viewTxt: `Bag ${id}`,
+    ableToBack: true,
+    rootRouter: routeQuery.r_route ? String(routeQuery.r_route).replaceAll("mod=", "&") : "/bag/list",
     hasStatus: false,
     statusTxt: "",
    });
@@ -372,7 +379,6 @@
    bindingDefaultFilterHeader(_obj: Record<string, unknown>) {
     let _headers = this.headers.slice();
     const currentQuery: Record<string, unknown> = _obj;
-    console.log("_obj", _obj);
 
     for (const _key in currentQuery) {
      let _keySplit = _key.split(".");
@@ -404,7 +410,6 @@
        };
        obj.filters.defaultValue[`${_keyNew}`] = currentQuery[`${_key}`];
        _headers.splice(n, 1, obj);
-       console.log(_headers);
       }
      }
     }

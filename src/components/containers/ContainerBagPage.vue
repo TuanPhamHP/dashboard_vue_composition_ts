@@ -166,8 +166,6 @@
    });
 
    watch(filterTable, currentValue => {
-    console.log(currentValue);
-
     setCurrentRouteQuery({
      ...queryRoute,
      ...currentValue,
@@ -223,8 +221,6 @@
    }),
   },
   created() {
-   console.log("container-create", this.queryRoute);
-
    if (this.previousPagination) {
     const body = {
      ...this.previousPagination,
@@ -284,7 +280,6 @@
    bindingDefaultFilterHeader(_obj: Record<string, unknown>) {
     let _headers = this.headers.slice();
     const currentQuery: Record<string, unknown> = _obj;
-    console.log("_obj", _obj);
 
     for (const _key in currentQuery) {
      let _keySplit = _key.split(".");
@@ -316,7 +311,6 @@
        };
        obj.filters.defaultValue[`${_keyNew}`] = currentQuery[`${_key}`];
        _headers.splice(n, 1, obj);
-       console.log(_headers);
       }
      }
     }

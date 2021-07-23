@@ -6,16 +6,15 @@
  </DefaultLayout>
 </template>
 <script lang="ts">
- import { defineComponent  } from "@vue/composition-api";
- import DefaultLayout from "@/layouts/default.vue"; 
+ import { defineComponent } from "@vue/composition-api";
+ import DefaultLayout from "@/layouts/default.vue";
  import ContainerBagDetailPage from "@/components/containers/ContainerBagDetailPage.vue";
  export default defineComponent({
-    components: {
-    DefaultLayout,
-    ContainerBagDetailPage,
-    },
-    methods:{
-       
-    }
+  components: {
+   DefaultLayout,
+   ContainerBagDetailPage,
+  },
+
+  methods: {},
  });
 </script>
