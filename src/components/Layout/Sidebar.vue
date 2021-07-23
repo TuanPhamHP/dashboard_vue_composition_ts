@@ -43,17 +43,24 @@
        </template>
       </v-list-group>
      </v-list-group>
+     <v-list-item v-if="side.type !== 'divider' && side.isBlock" class="pointer each-items single-group single-group-block">
+      <v-list-item-title>{{ side.groupText }}</v-list-item-title>
+     </v-list-item>
      <v-list-item
-      v-if="side.type !== 'divider' && !side.isGroup"
+      v-if="side.type !== 'divider' && !side.isGroup && !side.isBlock"
       class="pointer each-items single-group"
       :class="[side.matchToActive.includes(currentRouteName) ? 'sidechick-on-active' : '', mini ? 'each-items-on-menu' : '']"
       @click="side.action()"
      >
-      <v-list-item-icon>
-       <v-icon v-if="!mini">mdi-home</v-icon>
+      <v-list-item-icon v-if="!side.isBlock">
+       <v-icon v-if="!mini && !side.icon">mdi-home</v-icon>
+       <img v-if="!mini && side.icon" :src="side.icon.active" alt="" class="icon-sidebar-active" />
+       <img v-if="!mini && side.icon" :src="side.icon.unActive" alt="" class="icon-sidebar-unactive" />
        <v-tooltip v-if="mini" right>
         <template v-slot:activator="{ on, attrs }">
-         <v-icon v-bind="attrs" v-on="on">mdi-home</v-icon>
+         <v-icon v-if="!side.icon" v-bind="attrs" v-on="on">mdi-home</v-icon>
+         <img v-if="side.icon" :src="side.icon.active" alt="" v-bind="attrs" v-on="on" class="icon-sidebar-active" />
+         <img v-if="side.icon" :src="side.icon.unActive" alt="" v-bind="attrs" v-on="on" class="icon-sidebar-unactive" />
         </template>
         <span>{{ side.groupText }}</span>
        </v-tooltip>
@@ -70,10 +77,12 @@
 </template>
 
 <script lang="ts">
- import { reactive, ref, defineComponent } from "@vue/composition-api";
+ import { ref, defineComponent } from "@vue/composition-api";
+ import AgencyUnactive from "../../assets/images/sidebar-icon/agency_u.svg";
+ import AgencyActive from "../../assets/images/sidebar-icon/agency.svg";
  import ConfirmSignout from "@/components/popup/ConfirmSignout.vue";
- import store from "@/store";
  import { mapState } from "vuex";
+
  export default defineComponent({
   name: "SideBar",
   props: {
@@ -94,9 +103,6 @@
    const setCurrentRouteName = (name: string): any => {
     currentRouteName.value = name;
    };
-   const handleLogout = () => {
-    alert("Logout clicked");
-   };
 
    return {
     drawer,
@@ -105,7 +111,6 @@
     setMini,
     setDrawer,
     setCurrentRouteName,
-    handleLogout,
    };
   },
 
@@ -121,14 +126,24 @@
        this.$router.push("/");
       },
      },
+     //  {
+     //   groupText: "User Guide",
+     //   isGroup: false,
+     //   matchToActive: ["about"],
+     //   action: () => {
+     //    this.$router.push("/about");
+     //   },
+     //  },
      {
-      groupText: "User Guide",
-      isGroup: false,
-      matchToActive: ["about"],
-      action: () => {
-       this.$router.push("/about");
-      },
+      type: "divider",
      },
+     {
+      groupText: "Admin",
+      isGroup: false,
+      isBlock: true,
+      matchToActive: [],
+     },
+
      {
       groupText: "Order",
       isGroup: false,
@@ -170,6 +185,10 @@
       },
      },
      {
+      icon: {
+       unActive: AgencyUnactive,
+       active: AgencyActive,
+      },
       groupText: "Agency",
       isGroup: false,
       matchToActive: ["agency"],
@@ -177,22 +196,22 @@
        this.$router.push("/agency");
       },
      },
-     {
-      groupText: "Invoice",
-      isGroup: false,
-      matchToActive: ["invoice"],
-      action: () => {
-       this.$router.push("/invoice");
-      },
-     },
-     {
-      groupText: "Reports",
-      isGroup: false,
-      matchToActive: ["reports"],
-      action: () => {
-       this.$router.push("/reports");
-      },
-     },
+     //  {
+     //   groupText: "Invoice",
+     //   isGroup: false,
+     //   matchToActive: ["invoice"],
+     //   action: () => {
+     //    this.$router.push("/invoice");
+     //   },
+     //  },
+     //  {
+     //   groupText: "Reports",
+     //   isGroup: false,
+     //   matchToActive: ["reports"],
+     //   action: () => {
+     //    this.$router.push("/reports");
+     //   },
+     //  },
      {
       type: "divider",
      },
@@ -228,6 +247,9 @@
     ],
    };
   },
+  created() {
+   this.setMini(this.isMini);
+  },
   computed: {
    ...mapState({
     logoutIsOpen: (state: any): boolean => state.logoutIsOpen,
@@ -251,6 +273,7 @@
     this.setMini(newVal);
    },
   },
+
   methods: {
    toggleMini() {
     this.setMini(!this.mini);
@@ -326,8 +349,12 @@
     color: #444444;
     height: 50px;
     margin-bottom: 3px !important;
+
     .v-list-item__icon {
      margin-right: 19px !important;
+     .icon-sidebar-active {
+      display: none;
+     }
     }
     &-on-menu {
      padding-left: 0 !important;
@@ -364,6 +391,14 @@
    .single-group {
     padding-top: 4px;
     padding-bottom: 4px;
+    &-block {
+     pointer-events: none;
+     font-weight: bold;
+     font-size: 12px;
+     line-height: 14px;
+     text-transform: uppercase;
+     color: $sidebarText !important;
+    }
    }
    .sidechick-on-active {
     background-color: $primaryColorLighterLv1;
@@ -382,6 +417,12 @@
     }
     &.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
      color: $GPEblueText !important;
+    }
+    .icon-sidebar-active {
+     display: block !important;
+    }
+    .icon-sidebar-unactive {
+     display: none;
     }
    }
    .onechild-on-active {
