@@ -47,9 +47,12 @@
    </tr>
   </template> -->
   <template v-slot:item.actions="{ item }">
-    <div class="w-max-content"> 
-      <img @click="deleteItem(item)" class="pointer mr-2" src="@/assets/images/icon-remove-r.svg" alt=""> 
-    </div>
+     <v-tooltip bottom>
+        <template v-slot:activator="{ on, attrs }">
+            <img v-bind="attrs" v-on="on" @click="deleteItem(item)" class="pointer mr-2" src="@/assets/images/icon-remove-r.svg" alt=""> 
+        </template>
+        <span>Delete</span>
+      </v-tooltip>
    
   </template>
  </v-data-table>
