@@ -310,7 +310,6 @@
   },
 
   created() {
-   console.log(this.$route);
    const id = this.$route.params.id;
    const routeQuery = this.$route.query;
    this.$store.commit("SET_BREADCRUMB", {
