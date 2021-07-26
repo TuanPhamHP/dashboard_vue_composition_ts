@@ -1,6 +1,6 @@
 <template>
  <div class="w-100 top-marker">
-  <h4 class="m-0 bread-header px-4 pt-2 pointer" @click="toggleMini"><img src="../../assets/images/menu_black_24dp.svg" alt="" /></h4>
+  <h4 class="m-0 bread-header pr-4 pl-7 pt-2 pointer" @click="toggleMini"><img src="../../assets/images/menu_black_24dp.svg" alt="" /></h4>
   <div class="header-user-btn">
    <v-row justify="space-around">
     <v-menu :rounded="'0'" offset-y :close-on-click="true">
