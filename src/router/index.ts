@@ -6,6 +6,7 @@ import Login from "../views/Login.vue";
 import Table from "../views/Table.vue";
 import AgencyList from "../views/agency/List.vue";
 import ShippingList from "../views/shipping/Shipping.vue";
+import User from "../views/user/User.vue";
 import Detail from "../views/agency/Detail.vue";
 import auth from "../middleware/auth";
 import api from "@/services";
@@ -102,6 +103,11 @@ const routes: Array<RouteConfig> = [
   name: "Shipping-Partner",
   component: ShippingList,
  },
+ {
+    path: "/user",
+    name: "User",
+    component: User,
+},
 ];
 
 const router = new VueRouter({

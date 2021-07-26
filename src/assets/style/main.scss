@@ -436,6 +436,15 @@ body {
   background: rgba(0, 0, 0, 0.48);
  }
 }
+.input-disabled{
+    &:disabled {
+        background-color: #D5D5D5 !important;
+        color: #898989 !important;
+    }
+    &::placeholder {
+        color: $GPEinputText;
+    }
+}
 
 // REPONSIVE
 @import "./reponsive/reponsive_main.scss";

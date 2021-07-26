@@ -304,6 +304,18 @@ export default defineComponent({
             this.$router.push("/shipping-partner");
           },
         },
+         {
+          icon: {
+            unActive: ShippingUnactive,
+            active: ShippingActive,
+          },
+          groupText: "User",
+          isGroup: false,
+          matchToActive: ["user"],
+          action: () => {
+            this.$router.push("/user");
+          },
+        },
         //  {
         //   groupText: "Invoice",
         //   isGroup: false,
