@@ -1,18 +1,18 @@
 <template>
  <DefaultLayout>
   <div class="px-3">
-   <ContainerConsignee />
+   <ContainerShipping />
   </div>
  </DefaultLayout>
 </template>
 <script lang="ts">
  import { defineComponent  } from "@vue/composition-api";
  import DefaultLayout from "@/layouts/default.vue"; 
- import ContainerConsignee from "@/components/containers/ContainerConsignee.vue";
+ import ContainerShipping from "@/components/containers/ContainerShipping.vue";
  export default defineComponent({
     components: {
     DefaultLayout,
-    ContainerConsignee,
+    ContainerShipping,
     },
     
     methods:{

@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="isVisible" persistent max-width="80vw">
-    <v-card class="dialog-consignee-detail">
-      <v-card-title class="text-h5"> Packages of Consignee </v-card-title>
+    <v-card class="dialog-shipping-detail">
+      <v-card-title class="text-h5"> Packages of Shipping Partner </v-card-title>
       <v-card-text class="">
         <div class="box-top mb-4 col-xxl-12">
           <div class="row my-0">
@@ -55,7 +55,7 @@
             </div>
           </div>
         </div>
-        <TableConsigneeDetail
+        <TableShippingDetail
           :table-data="tableData"
           :table-loading="loadingTable"
           :headers="headers"
@@ -91,7 +91,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, reactive, watch } from "@vue/composition-api";
-import TableConsigneeDetail from "@/components/Table/TableConsigneeDetail.vue";
+import TableShippingDetail from "@/components/Table/TableShippingDetail.vue";
 import api from "@/services";
 import { NormalHeaderItem } from "@/InterfaceModel/Header";
 export default defineComponent({
@@ -112,7 +112,7 @@ export default defineComponent({
     },
   },
   components: {
-    TableConsigneeDetail,
+    TableShippingDetail,
   },
   setup: (props, ctx) => {
     let tableData = reactive<Record<string, unknown>>({ value: [] });
@@ -125,7 +125,7 @@ export default defineComponent({
     };
     const headers: NormalHeaderItem[] = [
       {
-        text: "Order Number",
+        text: "Bag Number",
         align: "start",
         sortable: false,
         value: "mawb",
@@ -164,7 +164,7 @@ export default defineComponent({
         },
       },
       {
-        text: " Weight.",
+        text: " Weight (kg)",
         align: "start",
         sortable: false,
         value: "v-value",
@@ -190,6 +190,32 @@ export default defineComponent({
         },
       },
       {
+        text: "Consignee",
+        align: "start",
+        sortable: false,
+        value: "v-value",
+        type: "string",
+        filters: {
+          // type: "string",
+          // key: "v-value",
+          // placeholder: "Tên bộ lọc",
+          // defaultValue: "",
+        },
+      },
+      {
+        text: "ID No.",
+        align: "start",
+        sortable: false,
+        value: "v-value",
+        type: "string",
+        filters: {
+          // type: "string",
+          // key: "v-value",
+          // placeholder: "Tên bộ lọc",
+          // defaultValue: "",
+        },
+      },
+      {
         text: "Address",
         align: "start",
         sortable: false,
@@ -203,7 +229,7 @@ export default defineComponent({
         },
       },
       {
-        text: "Tel No.",
+        text: "Tel No",
         align: "start",
         sortable: false,
         value: "v-value",
@@ -280,7 +306,7 @@ export default defineComponent({
 
 <style lang="scss">
 @import "@/assets/style/_variables.scss";
-.v-dialog .dialog-consignee-detail {
+.v-dialog .dialog-shipping-detail {
   border-radius: 14px;
   padding: 35px 35px;
   & > .v-card__title {
