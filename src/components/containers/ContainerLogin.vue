@@ -150,8 +150,8 @@ export default defineComponent({
         return;
       }
       if (res.status > 399) {
-        setIsMessage(res.data.meta.message);
         setLoadingLogin(false);
+        setIsMessage(res.data.message || res.data.meta.message);
         return;
       }
       try {
