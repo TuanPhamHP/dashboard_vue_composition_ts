@@ -46,6 +46,7 @@
         :selected-data="selectedData"
         @handlerCancel="handlerDialogCancel"
         @handlerSubmit="handlerDialogSubmit"
+        @handlerUpdate="handlerDialogUpdate"
       />
       <DialogConsigneeDetail
         :is-visible="isVisibleDetail"
@@ -321,6 +322,25 @@ export default defineComponent({
     },
     async handlerDialogSubmit(value: any) {
       const res = await api.roles.createConsignee(value);
+      this.setLoadingTable(false);
+      if (!res) {
+        return;
+      }
+      try {
+        const pagination = res.data.meta.pagination;
+        this.setTableData(res.data.data);
+        //  setPagination({
+        //   total: pagination.total,
+        //   total_pages: pagination.total_pages,
+        //   per_page: pagination.per_page,
+        //   current_page: pagination.current_page,
+        //  });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async handlerDialogUpdate(value: any) {
+      const res = await api.roles.updateConsignee(this.selectedData.id, value);
       this.setLoadingTable(false);
       if (!res) {
         return;

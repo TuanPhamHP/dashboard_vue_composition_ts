@@ -158,6 +158,9 @@ export default defineComponent({
     handlerSubmit: {
       type: Function,
     },
+    handlerUpdate: {
+      type: Function,
+    },
   },
   setup: (props, ctx) => {
     let formData = ref<Record<string, any>>({});
@@ -165,7 +168,12 @@ export default defineComponent({
       ctx.emit("handlerCancel");
     };
     const btnSubmitClick = () => {
-      ctx.emit("handlerSubmit", formData.value);
+      if(Object.keys(props.selectedData).length) {
+        ctx.emit("handlerUpdate", formData.value);
+      }
+      else {
+        ctx.emit("handlerSubmit", formData.value);
+      }
     };
     return {
       formData,
@@ -174,6 +182,11 @@ export default defineComponent({
     };
   },
   methods: {},
+  watch: {
+    selectedData(){
+      this.formData = this.selectedData;
+    }
+  }
 });
 </script>
 

@@ -77,6 +77,16 @@ const roleRepo = (axios: any) => {
      return err.response;
     });
   },
+  updateConsignee(id: number, payload: any) {
+    return axios
+     .post(`/api/consignees/${id}`, payload)
+     .then((res: any) => {
+      return res;
+     })
+     .catch((err: any) => {
+      return err.response;
+     });
+   },
  };
 };
 export default roleRepo;
