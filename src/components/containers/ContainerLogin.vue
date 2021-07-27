@@ -146,6 +146,7 @@ export default defineComponent({
       const res = await api.user.loginUser(query);
       if (!res) {
         setLoadingLogin(false);
+        setIsMessage('Có lỗi không thể đăng nhập , vui lòng thử lại sau');
         return;
       }
       if (res.status > 399) {
