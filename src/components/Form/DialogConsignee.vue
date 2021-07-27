@@ -10,18 +10,12 @@
       </v-card-title>
       <v-card-text class="form-list scrollbar-y">
         <div class="form-item mb-5">
-          <span class="form-lable"> No. </span>
-          <span class="form-input">
-            <input type="text" placeholder="No." v-model="formData.no" />
-          </span>
-        </div>
-        <div class="form-item mb-5">
           <span class="form-lable"> Contact Person </span>
           <span class="form-input">
             <input
               type="text"
               placeholder="Contact Person"
-              v-model="formData.bagNumber"
+              v-model="formData.name"
             />
           </span>
         </div>
@@ -41,14 +35,14 @@
             <input
               type="text"
               placeholder="Reminiscent Name"
-              v-model="formData.reminiscent"
+              v-model="formData.name"
             />
           </span>
         </div>
         <div class="form-item mb-5">
           <span class="form-lable"> ID No.</span>
           <span class="form-input">
-            <input type="text" placeholder="ID No." v-model="formData.id" />
+            <input type="text" placeholder="ID No." v-model="formData.identity_code" />
           </span>
         </div>
         <div class="form-item mb-5">
@@ -93,20 +87,20 @@
             <input
               type="number"
               placeholder="Phone Number"
-              v-model="formData.phone_number"
+              v-model="formData.phone"
             />
           </span>
         </div>
         <div class="form-item mb-5">
           <span class="form-lable"> Email </span>
           <span class="form-input">
-            <input type="text" placeholder="Email" v-model="formData.emai" />
+            <input type="text" placeholder="Email" v-model="formData.email" />
           </span>
         </div>
         <div class="form-item mb-5">
           <span class="form-lable"> VAT </span>
           <span class="form-input">
-            <input type="text" placeholder="VAT" v-model="formData.vat" />
+            <input type="text" placeholder="VAT" v-model="formData.tax_code" />
           </span>
         </div>
         <!-- <div class="form-item ">

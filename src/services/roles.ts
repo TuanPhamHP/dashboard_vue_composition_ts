@@ -43,6 +43,16 @@ const roleRepo = (axios: any) => {
      return err.response;
     });
   },
+  createConsignee(payload: Record<string, unknown> = {}) {
+    return axios
+     .post(`/api/consignees`, payload)
+     .then((res: any) => {
+      return res;
+     })
+     .catch((err: any) => {
+      return err.response;
+     });
+   },
 
   delete(_id: number) {
    return axios({
