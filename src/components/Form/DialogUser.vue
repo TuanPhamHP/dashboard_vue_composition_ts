@@ -24,19 +24,12 @@
         </div>
         <div class="form-item mb-5">
           <span class="form-lable"> Profile </span>
-          <!-- <span class="form-input"> -->
-            <!-- <input
-              type="text"
-              placeholder="Profile"
-              v-model="formData.profile"
-            /> -->
-            <v-select
-              :items="listProfile"
-              placeholder="Profile"
-              class="form-input"
-              outlined
-            ></v-select>
-          <!-- </span> -->
+          <v-select
+            :items="listProfile"
+            placeholder="Profile"
+            class="form-input"
+            outlined
+          ></v-select>
         </div>
         <div class="form-item mb-5">
           <span class="form-lable"> Phone Number </span>
@@ -118,7 +111,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from "@vue/composition-api";
- import { tDate } from "validation_t/src";
+//  import { tDate } from "validation_t/src";
 export default defineComponent({
   props: {
     isVisible: {
@@ -138,8 +131,9 @@ export default defineComponent({
   },
   setup: (props, ctx) => {
     const getDateObject = (_date:any)=>{
-      let date = tDate.formatDateCustomize(_date);
-      return `${date.yyyy}-${date.MM}-${date.dd}`;
+      // let date = tDate.formatDateCustomize(_date);
+      // return `${date.yyyy}-${date.MM}-${date.dd}`;
+      return _date;
     };
     let formData = ref<Record<string, any>>({
     });

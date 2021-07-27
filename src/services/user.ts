@@ -18,7 +18,7 @@ const roleRepo = (axios: any) => {
   },
   getUserInfo() {
    return axios
-    .get(`/api/users/me?include=roles,permissions`, {
+    .get(`/api/me?include=roles,permissions`, {
      
     })
     .then((res: any) => {

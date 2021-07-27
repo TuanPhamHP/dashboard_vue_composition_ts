@@ -225,7 +225,7 @@ export default defineComponent({
         return;
       }
       let body = {
-        username: this.username,
+        email: this.username,
         password: this.password,
       };
       this.authenticate({ ...body });
