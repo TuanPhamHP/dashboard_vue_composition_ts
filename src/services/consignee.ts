@@ -49,6 +49,16 @@ const consigneeRepo = (axios: any) => {
        return err.response;
       });
     },
+    getConsigneeDetail(id: unknown) {
+      return axios
+      .get(`/api/consignees/${id}`)
+      .then((res: any) => {
+       return res;
+      })
+      .catch((err: any) => {
+       return err.response;
+      });
+     },
   };
  };
  export default consigneeRepo;
