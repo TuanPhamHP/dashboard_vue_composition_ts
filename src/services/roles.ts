@@ -16,22 +16,6 @@ const roleRepo = (axios: any) => {
      return err.response;
     });
   },
-  getAllConsignee(filterOptions: Record<string, unknown> = {}) {
-    const body = {
-     ...filterOptions,
-     // include: filterOptions.include ? `${filterOptions.include},parts,parts.warehouse,parts.warehouse_off_airport_terminal` : "parts",
-    };
-    return axios
-     .get(`/api/consignees`, {
-      params: body,
-     })
-     .then((res: any) => {
-      return res;
-     })
-     .catch((err: any) => {
-      return err.response;
-     });
-   },
 
   create(payload: Record<string, unknown> = {}) {
    return axios
@@ -43,16 +27,6 @@ const roleRepo = (axios: any) => {
      return err.response;
     });
   },
-  createConsignee(payload: Record<string, unknown> = {}) {
-    return axios
-     .post(`/api/consignees`, payload)
-     .then((res: any) => {
-      return res;
-     })
-     .catch((err: any) => {
-      return err.response;
-     });
-   },
 
   delete(_id: number) {
    return axios({
@@ -77,16 +51,6 @@ const roleRepo = (axios: any) => {
      return err.response;
     });
   },
-  updateConsignee(id: number, payload: any) {
-    return axios
-     .post(`/api/consignees/${id}`, payload)
-     .then((res: any) => {
-      return res;
-     })
-     .catch((err: any) => {
-      return err.response;
-     });
-   },
  };
 };
 export default roleRepo;
