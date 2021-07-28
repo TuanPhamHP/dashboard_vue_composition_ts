@@ -90,10 +90,7 @@ export default defineComponent({
     },
     handlerCancel: {
       type: Function,
-    },
-    handlerSubmit: {
-      type: Function,
-    },
+    }
   },
   components: {
     TableConsigneeDetail,

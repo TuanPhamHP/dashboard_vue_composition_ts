@@ -52,7 +52,6 @@
         :is-visible="isVisibleDetail"
         :selected-data="selectedData"
         @handlerCancel="handlerDialogItemCancel"
-        @handlerSubmit="handlerDialogSubmit"
       />
     </div>
   </div>
@@ -327,8 +326,9 @@ export default defineComponent({
         return;
       }
       try {
-        const pagination = res.data.meta.pagination;
-        this.setTableData(res.data.data);
+        // const pagination = res.data.meta.pagination;
+        // this.setTableData(res.data.data);
+        this.isVisible = false;
         //  setPagination({
         //   total: pagination.total,
         //   total_pages: pagination.total_pages,
@@ -346,8 +346,9 @@ export default defineComponent({
         return;
       }
       try {
-        const pagination = res.data.meta.pagination;
-        this.setTableData(res.data.data);
+        // const pagination = res.data.meta.pagination;
+        // this.setTableData(res.data.data);
+        this.isVisible = false;
         //  setPagination({
         //   total: pagination.total,
         //   total_pages: pagination.total_pages,
