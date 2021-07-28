@@ -46,6 +46,7 @@
         :selected-data="selectedData"
         @handlerCancel="handlerDialogCancel"
         @handlerSubmit="handlerDialogSubmit"
+        @handlerUpdate="handlerDialogUpdate"
       />
       <DialogConsigneeDetail
         :is-visible="isVisibleDetail"
@@ -103,7 +104,7 @@ export default defineComponent({
         text: "No.",
         align: "start",
         sortable: false,
-        value: "mawb",
+        value: "id",
         type: "string",
         filters: {},
       },
@@ -111,7 +112,7 @@ export default defineComponent({
         text: "Company",
         align: "start",
         sortable: false,
-        value: "v-value",
+        value: "company",
         type: "string",
         filters: {},
       },
@@ -119,7 +120,7 @@ export default defineComponent({
         text: "Contact Person",
         align: "start",
         sortable: false,
-        value: "v-value",
+        value: "name",
         type: "string",
         filters: {},
       },
@@ -127,7 +128,7 @@ export default defineComponent({
         text: "Reminiscent Name",
         align: "start",
         sortable: false,
-        value: "v-value",
+        value: "name",
         type: "string",
         filters: {},
       },
@@ -135,7 +136,7 @@ export default defineComponent({
         text: "ID No.",
         align: "start",
         sortable: false,
-        value: "v-value",
+        value: "identity_code",
         type: "string",
         filters: {},
       },
@@ -143,7 +144,7 @@ export default defineComponent({
         text: "Address",
         align: "start",
         sortable: false,
-        value: "v-value",
+        value: "address",
         type: "string",
         filters: {},
       },
@@ -151,7 +152,7 @@ export default defineComponent({
         text: "State",
         align: "start",
         sortable: false,
-        value: "v-value",
+        value: "state",
         type: "string",
         filters: {},
       },
@@ -159,7 +160,7 @@ export default defineComponent({
         text: "Country",
         align: "start",
         sortable: false,
-        value: "v-value",
+        value: "country",
         type: "string",
         filters: {},
       },
@@ -167,7 +168,7 @@ export default defineComponent({
         text: "Post Code",
         align: "start",
         sortable: false,
-        value: "v-value",
+        value: "post_code",
         type: "string",
         filters: {},
       },
@@ -175,7 +176,7 @@ export default defineComponent({
         text: "Phone Number",
         align: "start",
         sortable: false,
-        value: "v-value",
+        value: "phone",
         type: "string",
         filters: {},
       },
@@ -183,7 +184,7 @@ export default defineComponent({
         text: "Email",
         align: "start",
         sortable: false,
-        value: "v-value",
+        value: "email",
         type: "string",
         filters: {},
       },
@@ -191,7 +192,7 @@ export default defineComponent({
         text: "VAT",
         align: "start",
         sortable: false,
-        value: "v-value",
+        value: "tax_code",
         type: "string",
         filters: {},
       },
@@ -243,8 +244,8 @@ export default defineComponent({
         return;
       }
       try {
-        const pagination = res.data.meta.pagination;
-        setTableData(res.data.data);
+        // const pagination = res.data.meta.pagination;
+        setTableData(res.data.data.consignees);
         //  setPagination({
         //   total: pagination.total,
         //   total_pages: pagination.total_pages,
@@ -319,8 +320,43 @@ export default defineComponent({
     handlerDialogItemCancel() {
       this.isVisibleDetail = false;
     },
-    handlerDialogSubmit(value: any) {
-      console.log(value);
+    async handlerDialogSubmit(value: any) {
+      const res = await api.roles.createConsignee(value);
+      this.setLoadingTable(false);
+      if (!res) {
+        return;
+      }
+      try {
+        const pagination = res.data.meta.pagination;
+        this.setTableData(res.data.data);
+        //  setPagination({
+        //   total: pagination.total,
+        //   total_pages: pagination.total_pages,
+        //   per_page: pagination.per_page,
+        //   current_page: pagination.current_page,
+        //  });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async handlerDialogUpdate(value: any) {
+      const res = await api.roles.updateConsignee(this.selectedData.id, value);
+      this.setLoadingTable(false);
+      if (!res) {
+        return;
+      }
+      try {
+        const pagination = res.data.meta.pagination;
+        this.setTableData(res.data.data);
+        //  setPagination({
+        //   total: pagination.total,
+        //   total_pages: pagination.total_pages,
+        //   per_page: pagination.per_page,
+        //   current_page: pagination.current_page,
+        //  });
+      } catch (error) {
+        console.log(error);
+      }
     },
     pagePaginationChange(_val: any) {
       this.$store.commit("CACHED_PAGINATION", {
