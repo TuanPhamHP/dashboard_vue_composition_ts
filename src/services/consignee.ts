@@ -27,10 +27,10 @@ const consigneeRepo = (axios: any) => {
       });
     },
  
-   delete(_id: number) {
+   deleteConsignee(_id: unknown) {
     return axios({
      method: "DELETE",
-     url: `api/roles/${_id}`,
+     url: `api/consignees/${_id}`,
     })
      .then((res: any) => {
       return res;

@@ -1,24 +1,25 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="tableData.value"
-    :sort-by="[]"
-    :sort-desc="[false, true]"
-    :hide-default-header="false"
-    :height="tableHeight"
-    multi-sort
-    ref="tableMod"
-    class="
-      table-modify-css table-consignee-model table-scroll-y
-      header-sticky-table header-no-border-table
-    "
-    hide-default-footer
-    :items-per-page="10000"
-    :loading="tableLoading"
-    loading-text="Loading... Please wait"
-    :class="tableLoading ? 'table-on-loading' : ''"
-  >
-    <!-- <template v-slot:body.prepend="{ headers }">
+  <div>
+    <v-data-table
+      :headers="headers"
+      :items="tableData.value"
+      :sort-by="[]"
+      :sort-desc="[false, true]"
+      :hide-default-header="false"
+      :height="tableHeight"
+      multi-sort
+      ref="tableMod"
+      class="
+        table-modify-css table-consignee-model table-scroll-y
+        header-sticky-table header-no-border-table
+      "
+      hide-default-footer
+      :items-per-page="10000"
+      :loading="tableLoading"
+      loading-text="Loading... Please wait"
+      :class="tableLoading ? 'table-on-loading' : ''"
+    >
+      <!-- <template v-slot:body.prepend="{ headers }">
    <tr class="filter-prepend-body" :style="`top:${endedThead}px;position:sticky;z-index:3`">
     <td v-for="header in headers" :key="header.text" class="pointer" :class="header.type === 'date' ? 'date-header' : ''">
      <div>
@@ -44,54 +45,62 @@
     </td>
    </tr>
   </template> -->
-    <!-- <template v-if="tableLoading" v-slot:item>
+      <!-- <template v-if="tableLoading" v-slot:item>
    <tr>
     <td colspan="999">i'm loading</td>
    </tr>
   </template> -->
-    <template v-slot:item.actions="{ item }">
-      <div class="w-max-content">
-        <v-tooltip bottom content-class="top text-white">
-          <template v-slot:activator="{ on, attrs }">
-            <img
-              v-on="on"
-              v-bind="attrs"
-              @click="editItem(item)"
-              class="pointer mr-2"
-              src="@/assets/images/icon-edit.svg"
-              alt=""
-            />
-          </template>
-          <span>Edit</span>
-        </v-tooltip>
-        <v-tooltip bottom content-class="top text-white">
-          <template v-slot:activator="{ on, attrs }">
-            <img
-              v-on="on"
-              v-bind="attrs"
-              @click="deleteItem(item)"
-              class="pointer mr-2"
-              src="@/assets/images/icon-remove-r.svg"
-              alt=""
-            />
-          </template>
-          <span>Delete</span>
-        </v-tooltip>
-        <v-tooltip bottom content-class="top text-white">
-          <template v-slot:activator="{ on, attrs }">
-            <v-icon v-bind="attrs" v-on="on" small @click="detailItem(item)">
-              mdi-eye
-            </v-icon>
-          </template>
-          <span>View Detail</span>
-        </v-tooltip>
-      </div>
-    </template>
-  </v-data-table>
+      <template v-slot:item.actions="{ item }">
+        <div class="w-max-content">
+          <v-tooltip bottom content-class="top text-white">
+            <template v-slot:activator="{ on, attrs }">
+              <img
+                v-on="on"
+                v-bind="attrs"
+                @click="editItem(item)"
+                class="pointer mr-2"
+                src="@/assets/images/icon-edit.svg"
+                alt=""
+              />
+            </template>
+            <span>Edit</span>
+          </v-tooltip>
+          <v-tooltip bottom content-class="top text-white">
+            <template v-slot:activator="{ on, attrs }">
+              <img
+                v-on="on"
+                v-bind="attrs"
+                @click="getDeleteItem(item.id)"
+                class="pointer mr-2"
+                src="@/assets/images/icon-remove-r.svg"
+                alt=""
+              />
+            </template>
+            <span>Delete</span>
+          </v-tooltip>
+          <v-tooltip bottom content-class="top text-white">
+            <template v-slot:activator="{ on, attrs }">
+              <v-icon v-bind="attrs" v-on="on" small @click="detailItem(item)">
+                mdi-eye
+              </v-icon>
+            </template>
+            <span>View Detail</span>
+          </v-tooltip>
+        </div>
+      </template>
+    </v-data-table>
+    <ConfirmDelete
+      v-if="logoutIsOpen"
+      :logout-is-open="logoutIsOpen"
+      :cancel="cancel"
+      :delete-item="deleteItem"
+    ></ConfirmDelete>
+  </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import api from "@/services";
 import {
   ref,
   defineComponent,
@@ -106,6 +115,7 @@ import {
 } from "@/components/Shared/index";
 import { NormalFilterObject } from "@/InterfaceModel/Filter";
 import { returnFilterObject } from "@/utils/TableFilters";
+import ConfirmDelete from "@/components/popup/ConfirmDelete.vue";
 export default defineComponent({
   props: {
     tableData: {
@@ -132,13 +142,19 @@ export default defineComponent({
       type: Function,
     },
   },
-  components: { TableFiltersInput, TableFiltersSelect, TableFiltersDateRange },
+  components: {
+    TableFiltersInput,
+    TableFiltersSelect,
+    TableFiltersDateRange,
+    ConfirmDelete,
+  },
   setup: (props, ctx) => {
     const endedThead = ref<number>(40);
     const tableHeight = ref<number>(600);
     let filtersTable = ref<Record<string, unknown>>({});
     let selectedData = ref<Record<string, unknown>>({});
     let selectedDataDetail = ref<Record<string, unknown>>({});
+    let selectedDataDelete = ref<number>();
 
     const setEndedThead = (payload: number) => {
       endedThead.value = payload;
@@ -150,6 +166,9 @@ export default defineComponent({
     const setSelectedDataDetail = (payload: Record<string, unknown>) => {
       selectedDataDetail.value = payload;
       ctx.emit("handleSelectedItemDetail", selectedDataDetail.value);
+    };
+    const setSelectedDataDelete = (payload: number) => {
+      selectedDataDelete.value = payload;
     };
     const setTableHeight = (payload: number) => {
       tableHeight.value = payload;
@@ -172,16 +191,19 @@ export default defineComponent({
       endedThead,
       selectedData,
       selectedDataDetail,
+      selectedDataDelete,
       setEndedThead,
       setTableHeight,
       setFiltersTable,
       setSelectedData,
       setSelectedDataDetail,
+      setSelectedDataDelete
     };
   },
   data() {
     return {
       arraySort: [],
+      logoutIsOpen: false,
     };
   },
   mounted() {
@@ -209,6 +231,28 @@ export default defineComponent({
       };
       this.setFiltersTable(body);
     },
+    cancel() {
+      this.logoutIsOpen = false;
+    },
+    async deleteItem() {
+      const res = await api.consignee.deleteConsignee(this.selectedDataDelete);
+      if (!res) {
+        return;
+      }
+      try {
+        this.logoutIsOpen = false;
+        // const pagination = res.data.meta.pagination;
+        // this.setTableData(res.data.data);
+        //  setPagination({
+        //   total: pagination.total,
+        //   total_pages: pagination.total_pages,
+        //   per_page: pagination.per_page,
+        //   current_page: pagination.current_page,
+        //  });
+      } catch (error) {
+        console.log(error);
+      }
+    },
     listenDateChange(value: NormalFilterObject) {
       const valObject = { ...value };
       const body = {
@@ -222,6 +266,10 @@ export default defineComponent({
     },
     detailItem(item: Record<string, string>) {
       this.setSelectedDataDetail(item);
+    },
+    getDeleteItem(item: number) {
+      this.logoutIsOpen = true;
+      this.setSelectedDataDelete(item);
     },
   },
 });
