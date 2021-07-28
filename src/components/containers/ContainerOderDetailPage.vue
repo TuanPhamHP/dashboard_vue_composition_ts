@@ -1,75 +1,34 @@
 <template>
- <div class="page-container">
-  <div class="page-content page-create-order">
-    <div class="mb-7 box-top">
-      <div class="row my-0 display-flex detail-data align-center">
-        <span class="col-xxl-3"> Status </span>
-        <span class="col-xxl-9 form-input">
-          <input type="text" placeholder="Status" class="max-width-74" v-model="formData.status" />
-        </span>
-      </div>
-      <div class="row my-0 display-flex detail-data align-center">
-        <span class="col-xxl-3"> Order Date </span>
-        <span class="col-xxl-9 form-input">
-          <input type="date" placeholder="Order Date" class="max-width-74" v-model="formData.order_date" />
-        </span>
-      </div>
-      <div class="row my-0 display-flex detail-data align-center">
-        <span class="col-xxl-3"> Parcels Received </span>
-        <span class="col-xxl-9 form-input">
-          <input type="text" placeholder="Parcels Received" class="max-width-74" v-model="formData.parcelsr_eceived" />
-        </span>
-      </div>
-      <div class="row my-0 display-flex detail-data align-center">
-        <span class="col-xxl-3"> Status </span>
-        <span class="col-xxl-9 form-input">
-          <input type="text" placeholder="Status" class="max-width-74" v-model="formData.status" />
-        </span>
-      </div>
-      <div class="row my-0 display-flex detail-data align-center">
-        <span class="col-xxl-3"> Gross Weight (kg) </span>
-        <span class="col-xxl-9 form-input">
-          <input type="text" placeholder="Gross Weight (kg)" class="max-width-74" v-model="formData.status" />
-        </span>
-      </div>
-      <div class="row my-0 display-flex detail-data align-center">
-        <span class=" mb-4 text-decoration-underline add-package display-flex justify-flex-end pr-87px"> Add a new Sender </span>
-        <span class="col-xxl-3"> Sender </span>
-        <span class="col-xxl-9 form-input display-flex align-center">
-          <v-select
-            :items="listSender"
-            placeholder="Alain Maurice"
-            class="form-input max-width-74"
-            outlined
-          ></v-select>
-          <img src="@/assets/images/Compose-message.svg" style="margin-left:20px" class="pointer" alt="">
-        </span>
-        
-      </div>
-      <div class="row my-0 display-flex detail-data align-center">
-        <span class=" mb-4 text-decoration-underline add-package display-flex justify-flex-end pr-87px"> Add a new Consignee </span>
-        <span class="col-xxl-3"> Consignee </span>
-        <span class="col-xxl-9 form-input display-flex align-center">
-          <v-select
-            :items="listConsignee"
-            placeholder="Teing Phong"
-            class="form-input max-width-74"
-            outlined
-          ></v-select>
-          <img src="@/assets/images/Compose-message.svg" style="margin-left:20px" class="pointer" alt="">
-        </span>
-        
-      </div>
+ <div class="page-container page-container-detail-order">
+    <v-tabs
+      v-model="tab"
+      align-with-title
+    >
+      <v-tabs-slider color="yellow"></v-tabs-slider>
+
+      <v-tab
+        v-for="(item,index) in listTabs"
+        :key="item"
+      >
+        {{ `${index+1}. ${item}` }}
+      </v-tab>
+    </v-tabs>
+    <div class="page-content page-detail-order">
+      <v-tabs-items v-model="tab">
+        <v-tab-item>
+          <Create></Create>
+        </v-tab-item>
+        <v-tab-item>
+          <Package></Package>
+        </v-tab-item>
+        <v-tab-item>
+          <Create></Create>
+        </v-tab-item>
+        <v-tab-item>
+          <Create></Create>
+        </v-tab-item>
+      </v-tabs-items>
     </div>
-    <div class="mb-4  display-flex justify-flex-end max-width-74">
-      <v-btn class="buton-secondary text-transform-unset button-size mr-4 ">
-        Cancel
-      </v-btn>
-      <v-btn class="buton-primary text-transform-unset button-size">
-        Create
-      </v-btn>
-    </div>
-  </div>
  </div>
 </template>
 
@@ -77,24 +36,24 @@
  import { defineComponent, reactive, ref, watch } from "@vue/composition-api";
  import api from "@/services";
  import route from "@/router/index";
+ import Create from "@/components/Form/order/Create.vue";
+ import Package from "@/components/Form/order/Package.vue";
  import { mapState } from "vuex";
  export default defineComponent({
   components: {
+    Create,
+    Package
   },
   data() {
    return {
-    isVisible: false,
-    isVisibleDetail: false,
+    listTabs:['Overview','Packages','Delivery','Payment']
    };
   },
   setup: props => {
-   let formData:Record<string,string>  = reactive({})
-   let listSender:Record<string,string>[]  = reactive([])
-   let listConsignee:Record<string,string>[]  = reactive([])
+   let tab  = ref<number>(1)
+   
    return {
-      formData,
-      listSender,
-      listConsignee,
+      tab,
    };
   },
   watch: {
@@ -111,9 +70,37 @@
 
 <style lang="scss">
 @import "@/assets/style/_variables.scss";
-  .page-create-order {
-    &.page-create-order{
-      padding: 60px 70px 60px 50px;
+  .page-container-detail-order{
+    .theme--light.v-tabs > .v-tabs-bar {
+      background-color: transparent;
+      .v-slide-group__content {
+        .v-tabs-slider-wrapper{
+          display: none;
+        }
+        .v-tab{
+          background-color: #FFFFFF;
+          margin: 0 5px;
+          border: 1px solid #D5D5D5; 
+          border-bottom-width: 0;
+          border-radius: 14px 14px 0px 0px;
+          min-width: 200px;
+          color: #898989;
+          justify-content: flex-start;
+          text-transform: unset;
+          &.v-tab--active{
+            background-color: #E7EEFF;
+            color: #2F6BFF;
+            border-color: #2F6BFF;
+          }
+        }
+      }
+    }
+  }
+  .page-content {
+    &.page-detail-order{
+      position: relative;
+      z-index: 1;
+      padding: 60px 50px 60px 70px;
     }
     .max-width-74{
       max-width: calc(100% - 74px); 
@@ -134,58 +121,6 @@
       color: $primaryBlack;
       font-weight: 700 !important;
     }
-    .box-top {
-      .detail-data {
-        color: $GPEdarkText;
-        margin-bottom: 30px !important;
-        .form-input{
-          &>input {
-            border: 0.6px solid #d5d5d5;
-            box-sizing: border-box;
-            border-radius: 4px;
-            font-size: 16px;
-            color: $GPEdetailData;
-            height: 52px;
-            outline: none;
-            padding: 0 15px;
-            &::placeholder {
-              font-size: 16px;
-              color: $GPEdetailData;
-            }
-            &:disabled {
-              background-color: #fafafa;
-            }
-          }
-          &.v-select {
-            border: 0.6px solid #d5d5d5;
-            .v-input__slot{
-              margin-bottom: 0;
-              min-height: 52px;
-              input {
-                width: 100%;
-                box-sizing: border-box;
-                border-radius: 4px;
-                height: 52px;
-                font-size: 16px;
-                font-weight: 400;
-                color: $GPEinputText;
-                outline: unset;
-                padding: 0 3px;
-                &::placeholder {
-                  color: $GPEinputText;
-                  font-size: 16px;
-                }
-              }
-            }
-            fieldset,.v-text-field__details{
-              display: none;
-            }
-          }
-
-        }
-      }
-    }
-
     .border-width-2px {
       border-width: 2px !important;
     }

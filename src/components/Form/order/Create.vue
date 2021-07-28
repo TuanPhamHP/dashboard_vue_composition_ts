@@ -1,11 +1,16 @@
 <template>
- <div class="page-container">
-  <div class="page-content page-create-order">
+  <div class="tab-create">
     <div class="mb-7 box-top">
+      <div class="row my-0 display-flex detail-data align-center">
+        <span class="col-xxl-3"> Order Number </span>
+        <span class="col-xxl-9 form-input">
+          <input type="text" placeholder="Order Number" class="max-width-74" v-model="formData.status" />
+        </span>
+      </div>
       <div class="row my-0 display-flex detail-data align-center">
         <span class="col-xxl-3"> Creator </span>
         <span class="col-xxl-9 form-input">
-          <input type="text" placeholder="Creator" class="max-width-74" v-model="formData.creator" />
+          <input type="text" placeholder="Creator" class="max-width-74" v-model="formData.status" />
         </span>
       </div>
       <div class="row my-0 display-flex detail-data align-center">
@@ -64,7 +69,6 @@
       </v-btn>
     </div>
   </div>
- </div>
 </template>
 
 <script lang="ts">
@@ -77,18 +81,16 @@
   },
   data() {
    return {
-    isVisible: false,
-    isVisibleDetail: false,
+    listTabs:['Overview','Packages','Delivery','Payment']
    };
   },
   setup: props => {
+   let tab  = ref<number>(1)
    let formData:Record<string,string>  = reactive({})
-   let listSender:Record<string,string>[]  = reactive([])
-   let listConsignee:Record<string,string>[]  = reactive([])
+   
    return {
-      formData,
-      listSender,
-      listConsignee,
+      tab,
+      formData
    };
   },
   watch: {
@@ -105,10 +107,9 @@
 
 <style lang="scss">
 @import "@/assets/style/_variables.scss";
-  .page-create-order {
-    &.page-create-order{
-      padding: 60px 50px 60px 70px;
-    }
+  .tab-create{
+    position: relative;
+    z-index: 1;
     .max-width-74{
       max-width: calc(100% - 74px); 
       width: calc(100% - 74px); 
@@ -119,8 +120,6 @@
     .add-package {
       color: $GPEaddLink;
     }
-    border-radius: 14px;
-    padding: 35px 35px;
     & > .v-card__title {
       padding-top: 0 !important;
       padding-bottom: 40px !important;

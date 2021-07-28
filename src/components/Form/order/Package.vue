@@ -1,26 +1,17 @@
 <template>
- <div class="page-container">
-  <!-- <div class=" mb-4 page-header">
-    <span class="title-page font-size-32 font-weight-bold text-uppercase display-flex align-center">
-      <span class="align-justify-center mr-4 pointer btn-back-page">
-        <img src="@/assets/images/arrow-left.svg" alt="">
-      </span>
-      Bag List
-    </span>
-  </div> -->
-  <div class="page-content">
-   <div class="mb-4">
+  <div class="container-order-package">
+    <div class="mb-4">
     <!-- <v-btn @click="setupData" class="">Setup Data</v-btn> -->
     <v-btn @click="isVisible = true" class="buton-primary-header text-transform-unset mr-4 border-radius-8">
      <img src="@/assets/images/plus-composer.png" class="mr-2" />
-     Create
+     Add New Package
     </v-btn>
     <v-btn class="buton-secondary-header text-transform-unset border-radius-8">
-     <img src="@/assets/images/export-b.png" class="mr-2" />
-     Export
+     <img src="@/assets/images/icon-print.svg" class="mr-2" />
+     Print
     </v-btn>
    </div>
-   <TableBag
+   <TablePackage
     :table-data="tableData"
     :table-loading="loadingTable"
     :headers="headers"
@@ -28,18 +19,13 @@
     @handleSelectedItem="handlerEdit"
     :current-binding-url="queryRoute"
    />
-   <div class="pt-1">
-    <SharedPagination :pagination-sync="pagination" @handlePageSizeChange="pagePaginationChange" @handlePageChange="pagePaginationChange" />
-   </div>
-   <DialogBag :is-visible="isVisible" :selected-data="selectedData" @handlerCancel="handlerDialogCancel" @handlerSubmit="handlerDialogSubmit" />
   </div>
- </div>
 </template>
 
 <script lang="ts">
  import { defineComponent, reactive, ref, watch } from "@vue/composition-api";
  import api from "@/services";
- import TableBag from "@/components/Table/TableBag.vue";
+ import TablePackage from "@/components/Table/TablePackage.vue";
  import DialogBag from "@/components/Form/DialogBag.vue";
  import { SharedPagination } from "@/components/Shared";
  import { NormalPagination } from "@/InterfaceModel/Pagination";
@@ -51,7 +37,7 @@
  import { filter } from "vue/types/umd";
  export default defineComponent({
   components: {
-   TableBag,
+   TablePackage,
    SharedPagination,
    DialogBag,
   },
@@ -76,60 +62,100 @@
 
    const headers: NormalHeaderItem[] = [
     {
+     text: "Status",
+     align: "start",
+     sortable: false,
+     value: "mawb",
+     type: "string",
+     filters: {},
+    },
+    {
+     text: "MAWB",
+     align: "start",
+     sortable: false,
+     value: "mawb",
+     type: "string",
+     filters: {},
+    },
+    {
      text: "Bag Number",
      align: "start",
      sortable: false,
      value: "mawb",
      type: "string",
-     filters: {
-      type: "string",
-      key: "mawb",
-      placeholder: "Bag Number",
-      defaultValue: "",
-     },
+     filters: {},
     },
     {
-     text: "Create Date",
-     value: "fat",
-     type: "date",
-     filters: {
-      type: "daterange",
-      key: "fat",
-      placeholder: "Date",
-      defaultValue: {},
-      hasKey: true,
-     },
-    },
-    {
-     text: "Total Package",
-     value: "carbs",
+     text: "Package Number",
+     align: "start",
+     sortable: false,
+     value: "mawb",
      type: "string",
      filters: {},
     },
     {
-     text: "Status",
-     value: "calories",
+     text: "Draft ID",
+     align: "start",
+     sortable: false,
+     value: "mawb",
      type: "string",
-     filters: {
-      type: "select",
-      key: "calories",
-      placeholder: "Status",
-      items: [
-       {
-        id: 1,
-        name: "Lựa chọn 1",
-       },
-       {
-        id: 2,
-        name: "Lựa chọn 2",
-       },
-       {
-        id: 3,
-        name: "Lựa chọn 3",
-       },
-      ],
-      defaultValue: "",
-     },
+     filters: {},
+    },
+     {
+     text: "Package Type",
+     align: "start",
+     sortable: false,
+     value: "mawb",
+     type: "string",
+     filters: {},
+    },
+     {
+     text: "Item Details",
+     align: "start",
+     sortable: false,
+     value: "mawb",
+     type: "string",
+     filters: {},
+    },
+    {
+     text: " Weight (kg)",
+     align: "start",
+     sortable: false,
+     value: "mawb",
+     type: "string",
+     filters: {},
+    },
+    {
+     text: " Volume",
+     align: "start",
+     sortable: false,
+     value: "mawb",
+     type: "string",
+     filters: {},
+    },
+    {
+     text: " Length (cm)",
+     align: "start",
+     sortable: false,
+     value: "mawb",
+     type: "string",
+     filters: {},
+    },
+     {
+     text: " Width (cm)",
+     align: "start",
+     sortable: false,
+     value: "mawb",
+     type: "string",
+     filters: {},
+    },
+     {
+     text: " Height (cm)",
+     align: "start",
+     sortable: false,
+     value: "mawb",
+     type: "string",
+     filters: {},
     },
     { text: "Actions", value: "actions", sortable: false, filters: {} },
    ];
@@ -174,7 +200,7 @@
 
    const getAllRoles = async (query: Record<string, unknown>) => {
     if(!Object.keys(query).length) return;
-    const res = await api.bag.getAll(query);
+    const res = await api.roles.getAll(query);
     setLoadingTable(false);
     if (!res) {
      return;
