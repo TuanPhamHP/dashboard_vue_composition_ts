@@ -1,13 +1,5 @@
 <template>
  <div class="page-container">
-  <!-- <div class=" mb-4 page-header">
-    <span class="title-page font-size-32 font-weight-bold text-uppercase display-flex align-center">
-      <span class="align-justify-center mr-4 pointer btn-back-page">
-        <img src="@/assets/images/arrow-left.svg" alt="">
-      </span>
-      Bag List
-    </span>
-  </div> -->
   <div class="page-content">
    <div class="mb-7">
     <!-- <v-btn @click="setupData" class="">Setup Data</v-btn> -->
@@ -26,13 +18,24 @@
     :headers="headers"
     @handleFilterChange="filterTableChange"
     @handleSelectedItem="handlerEdit"
+    @handleRemoveItem="handlerRemove"
     :current-binding-url="queryRoute"
     @handleSelectedItemDetail="handlerViewDetail"
    />
    <div class="pt-1">
     <SharedPagination :pagination-sync="pagination" @handlePageSizeChange="pagePaginationChange" @handlePageChange="pagePaginationChange" />
    </div>
-   <DialogUser :is-visible="isVisible" :selected-data="selectedData" @handlerCancel="handlerDialogCancel" @handlerSubmit="handlerDialogSubmit" />
+   <DialogUser :is-visible="isVisible"              :selected-data="selectedData"     @handlerCancel="handlerDialogCancel"  @handlerSubmit="handlerDialogSubmit" 
+    :loading-btn="loadingBtn" 
+    :mess-eror="messageErr" 
+   />
+   <ConfirmRemove
+      :is-visible="isVisibleConfirm"
+      :handlerCancel="handlerDialogConfirmCancel"
+      :handlerConfirm="handleConfirmRemoveItem"
+      :loading-btn="loadingBtn" 
+   >
+   </ConfirmRemove>
   </div>
  </div>
 </template>
@@ -46,6 +49,7 @@
  import { NormalPagination } from "@/InterfaceModel/Pagination";
  import { NormalHeaderItem } from "@/InterfaceModel/Header";
  import { IdentifyObject } from "@/InterfaceModel/CustomObject";
+import ConfirmRemove from "@/components/popup/ConfirmRemove.vue";
  import useRouteQuery from "@/utils/uses/routerQuery/useRouteQuery";
  import route from "@/router/index";
  import { mapState } from "vuex";
@@ -55,20 +59,20 @@
    TableUser,
    SharedPagination,
    DialogUser,
+   ConfirmRemove
   },
-  data() {
-   return {
-    isVisible: false,
-    isVisibleDetail: false,
-   };
-  },
-  setup: props => {
+  setup: (props,ctx) => {
    const { queryRoute, stringQueryRender, getQueryRoute } = useRouteQuery();
    let selectedData = reactive<Record<string, unknown>>({});
    const loadingTable = ref<boolean>(true);
    const currentRouteQuery = ref<string>(stringQueryRender);
    let tableData = reactive<Record<string, unknown>>({ value: [] });
+    const loadingBtn = ref<boolean>(false);
+   const isVisible = ref<boolean>(false); 
+   const isVisibleConfirm = ref<boolean>(false); 
+   const isVisibleDetail = ref<boolean>(false);
    let filterTable = ref({});
+   const messageErr = ref<string>("");
    let pagination = ref<NormalPagination>({
     total: 1,
     per_page: 15,
@@ -154,10 +158,31 @@
    const setLoadingTable = (payload: boolean) => {
     loadingTable.value = payload;
    };
-
+   const setIsVisible = (payload: boolean) => {
+    isVisible.value = payload;
+   };
+   const setIsVisibleDetail = (payload: boolean) => {
+    isVisibleDetail.value = payload;
+   };
+   const setIsVisibleConfirm = (payload: boolean) => {
+    isVisibleConfirm.value = payload;
+   };
+   const setLoadingBtn = (payload: boolean) => {
+    loadingBtn.value = payload;
+   };
    watch(currentRouteQuery, currentValue => {
     route.push(`${currentValue}`);
    });
+   watch(isVisible, currentValue => {
+    if(!currentValue){
+      selectedData.value = {};
+    }
+  });
+  watch(isVisibleDetail, currentValue => {
+    if(!currentValue){
+      selectedData.value = {};
+    }
+  });
    watch(pagination, currentValue => {
     const { current_page, per_page } = currentValue;
     setCurrentRouteQuery({
@@ -176,39 +201,171 @@
     });
    });
 
-   const getAllRoles = async (query: Record<string, unknown>) => {
+   const getAllUser = async (query: Record<string, unknown>) => {
+    setLoadingTable(true);
     if(!Object.keys(query).length) return;
-    const res = await api.roles.getAll(query);
+    const res = await api.users.getAll(query);
     setLoadingTable(false);
+    if (!res) {
+      ctx.root.$store.commit("SET_SNACKBAR", {
+          type: "error",
+          title: "",
+          content: "Update error",
+      });
+     return;
+    }
+    try {
+      if(res.status > 199 && res.status < 399 ){
+        const pagination = res.data.data.meta.pagination;
+        setTableData(res.data.data.users);
+        setPagination({
+          total: pagination.total,
+          total_pages: pagination.total_pages,
+          per_page: pagination.per_page,
+          current_page: pagination.current_page,
+        });
+      }
+    
+    } catch (error) {
+     console.log(error);
+    }
+   };
+   const createUser = async (parrams: Record<string, unknown>) => {
+    setLoadingBtn(true);
+    const res = await api.users.create(parrams);
+    setLoadingBtn(false);
+    if (!res) {
+      ctx.root.$store.commit("SET_SNACKBAR", {
+          type: "error",
+          title: "",
+          content: "Update error",
+      });
+      return;
+    }
+    try {
+      if(res.status > 199 && res.status < 399 ){
+        let _data =  res.data.data.User
+        
+        console.log(_data);
+        console.log(tableData.value);
+        // let arr:Record<string, unknown>[] = tableData.value
+        // arr.push(_data)
+        // console.log(arr);
+        
+        // setTableData
+        setIsVisible(false)
+        ctx.root.$store.commit("SET_SNACKBAR", {
+            type: "success",
+            title: "",
+            content: "Create success",
+        });
+      }
+      else{
+        messageErr.value = res.data.data.error||res.data.message
+        ctx.root.$store.commit("SET_SNACKBAR", {
+            type: "error",
+            title: "",
+            content: "Create error",
+        });
+      }
+    } catch (error) {
+      messageErr.value = error
+      ctx.root.$store.commit("SET_SNACKBAR", {
+          type: "error",
+          title: "",
+          content: "Create error",
+      });
+    }
+   };
+   const updateUser = async (parrams: Record<string, unknown>,_id:any) => {
+    setLoadingBtn(true);
+    const res = await api.users.update(parrams,_id);
+    setLoadingBtn(false);
+    if (!res) {
+      ctx.root.$store.commit("SET_SNACKBAR", {
+            type: "error",
+            title: "",
+            content: "Update error",
+      });
+     return;
+    }
+    try {
+      if(res.status > 199 && res.status < 399 ){
+        setIsVisible(false)
+        ctx.root.$store.commit("SET_SNACKBAR", {
+            type: "success",
+            title: "",
+            content: "Update success",
+        });
+          
+        
+      }
+      else{
+        messageErr.value = res.data.data.error
+        ctx.root.$store.commit("SET_SNACKBAR", {
+            type: "error",
+            title: "",
+            content: "Update error",
+        });
+      }
+    } catch (error) {
+      messageErr.value = error
+       ctx.root.$store.commit("SET_SNACKBAR", {
+            type: "error",
+            title: "",
+            content: "Update error",
+        });
+    }
+   };
+   const deleteUser = async (_id:any) => {
+    setLoadingBtn(true);
+    const res = await api.users.delete(_id);
+    setLoadingBtn(false);
     if (!res) {
      return;
     }
     try {
-     const pagination = res.data.meta.pagination;
-     setTableData(res.data.data);
-     //  setPagination({
-     //   total: pagination.total,
-     //   total_pages: pagination.total_pages,
-     //   per_page: pagination.per_page,
-     //   current_page: pagination.current_page,
-     //  });
+      if(res.status > 199 && res.status < 399 ){
+        setIsVisibleConfirm(false)
+        // this.$store.commit("SET_SNACKBAR", {
+        //     type: "",
+        //     title: "",
+        //     content: "",
+        // });
+          
+        
+      }
+      else{
+        messageErr.value = res.data.data.error
+      }
     } catch (error) {
-     console.log(error);
+      messageErr.value = error
     }
    };
    return {
     headers,
     pagination,
     loadingTable,
+    loadingBtn,
     tableData,
     queryRoute,
     filterTable,
     selectedData,
+    isVisible,
+    isVisibleDetail,
+    isVisibleConfirm,
+    messageErr,
     setTableData,
     setLoadingTable,
+    setIsVisible,
+    setIsVisibleConfirm,
+    setIsVisibleDetail,
     setCurrentRouteQuery,
     setPagination,
-    getAllRoles,
+    getAllUser,
+    createUser,
+    updateUser,
+    deleteUser,
     setCurrentFilterTable,
     currentRouteQuery,
    };
@@ -253,17 +410,30 @@
     // this.setCurrentRouteQuery(this.queryRoute)
     this.bindingDefaultFilterHeader(_obj);
    }
-   this.getAllRoles({ ...this.queryRoute });
+   this. getAllUser({ ...this.queryRoute });
   },
   methods: {
    handlerDialogCancel() {
-    this.isVisible = false;
+    this.setIsVisible(false);
    },
    handlerDialogItemCancel() {
-    this.isVisibleDetail = false;
+    this.setIsVisibleDetail(false);
+   },
+    handlerDialogConfirmCancel(){
+     this.setIsVisibleConfirm(false);
+   },
+   handleConfirmRemoveItem(item: Record<string, unknown>){
+     const id  = this.selectedData.id
+     this.deleteUser(id);
    },
    handlerDialogSubmit(value: any) {
-    console.log(value);
+    if(Object.keys(this.selectedData).length){
+       const id = this.selectedData.id
+      this.updateUser(value,id)
+     }
+     else{
+      this.createUser(value)
+     }
    },
    pagePaginationChange(_val: any) {
     this.$store.commit("CACHED_PAGINATION", {
@@ -289,7 +459,11 @@
     this.setCurrentFilterTable(_val);
    },
    handlerEdit(item: Record<string, unknown>) {
-    this.isVisible = true;
+    this.setIsVisible(true);
+    this.selectedData = { ...item };
+   },
+   handlerRemove(item: Record<string, unknown>) {
+    this.setIsVisibleConfirm(true);
     this.selectedData = { ...item };
    },
    handlerViewDetail(item: Record<string, unknown>) {

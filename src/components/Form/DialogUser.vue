@@ -2,8 +2,12 @@
   <v-dialog v-model="isVisible" persistent max-width="740">
     <v-card class="dialog-user">
       <v-card-title class="text-h5">
-        {{ Object.keys(selectedData).length ? "Update" : "Create" }} Sender
-        Information
+         <span v-if="Object.keys(selectedData).length">
+          Update User Information: <span class="text-uppercase text-primary-color">{{selectedData.tax_code?selectedData.tax_code:''}}</span>
+        </span>
+        <span v-else>
+          Create new user
+        </span>
       </v-card-title>
       <v-card-text class="form-list scrollbar-y">
         <div class="form-item mb-5">
@@ -18,7 +22,7 @@
             <input
               type="text"
               placeholder="Full Name"
-              v-model="formData.full_name"
+              v-model="formData.name"
             />
           </span>
         </div>
@@ -37,7 +41,7 @@
             <input
               type="number"
               placeholder="Phone Number"
-              v-model="formData.phone_number"
+              v-model="formData.phone"
             />
           </span>
         </div>
@@ -81,6 +85,7 @@
           </span>
         </div>
       </v-card-text>
+      <p class="text-error" style="padding: 0 24px;">{{messEror}}</p>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
@@ -101,6 +106,7 @@
           text
           @click="btnSubmitClick"
           class="buton-primary button-size text-transform-unset font-size-18"
+          :loading="loadingBtn"
         >
           {{ Object.keys(selectedData).length ? "Update" : "Create" }}
         </v-btn>
@@ -110,8 +116,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "@vue/composition-api";
+import { defineComponent, onMounted,toRef, ref,watch } from "@vue/composition-api";
 //  import { tDate } from "validation_t/src";
+import api from "@/services";
 export default defineComponent({
   props: {
     isVisible: {
@@ -128,8 +135,16 @@ export default defineComponent({
     handlerSubmit: {
       type: Function,
     },
+     loadingBtn:{
+      type: Boolean,
+      default:false,
+    },
+    messEror:{
+      type: String,
+    }
   },
   setup: (props, ctx) => {
+    let dataDefault: Record<string, any> | undefined = toRef(props, "selectedData");
     const getDateObject = (_date:any)=>{
       // let date = tDate.formatDateCustomize(_date);
       // return `${date.yyyy}-${date.MM}-${date.dd}`;
@@ -137,13 +152,35 @@ export default defineComponent({
     };
     let formData = ref<Record<string, any>>({
     });
-    let listProfile = ref([]);
+    watch(dataDefault,currentValue=>{
+        formData.value = {...currentValue};
+    })
+    let listProfile = ref<Record<string,unknown>[]>([]);
+    const setlistProfileData = (payload:Record<string,unknown>[])=>{
+      listProfile.value = payload
+    }
     const btnCancelClick = () => {
       ctx.emit("handlerCancel");
     };
     const btnSubmitClick = () => {
       ctx.emit("handlerSubmit", formData.value);
     };
+    const getAllAgency = async () => {
+      const res = await api.agency.getAll();
+      if (!res) {
+        return;
+      }
+      try {
+        if(res.status > 199 && res.status < 399 ){
+          setlistProfileData(res.data.data.agencies);
+        }
+      
+      } catch (error) {
+      console.log(error);
+      }
+    
+    };
+    onMounted(getAllAgency)
     return {
       formData,
       listProfile,

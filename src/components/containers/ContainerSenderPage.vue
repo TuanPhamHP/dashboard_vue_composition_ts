@@ -190,8 +190,6 @@
    ];
    Object.freeze(headers);
    const setTableData = (payload: Record<string, unknown>[]) => {
-      console.log('payload',payload);
-     
       tableData.value = payload;
    };
    const setPagination = (payload: NormalPagination) => {
@@ -314,6 +312,7 @@
         });
       }
       else{
+        messageErr.value = res.data.data.error||res.data.message
         ctx.root.$store.commit("SET_SNACKBAR", {
             type: "error",
             title: "",
@@ -403,7 +402,6 @@
     queryRoute,
     filterTable,
     selectedData,
-    deleteSender,
     isVisible,
     isVisibleDetail,
     isVisibleConfirm,
@@ -419,6 +417,7 @@
     getAllSender,
     createSender,
     updateSender,
+    deleteSender,
     setCurrentFilterTable,
     currentRouteQuery,
    };
@@ -432,7 +431,6 @@
     console.log('beforeCreate',this);
   },
   created() {
-    console.log('created',this);
    if (this.previousPagination) {
     const body = {
      ...this.previousPagination,
@@ -467,6 +465,10 @@
    },
    handlerDialogConfirmCancel(){
      this.setIsVisibleConfirm(false);
+   },
+   handleConfirmRemoveItem(item: Record<string, unknown>){
+     const id  = this.selectedData.id
+     this.deleteSender(id);
    },
    handlerDialogSubmit(value: any) {
      if(Object.keys(this.selectedData).length){
@@ -511,10 +513,6 @@
    handlerViewDetail(item: Record<string, unknown>) {
     this.setIsVisibleDetail(true);
     this.selectedData = { ...item };
-   },
-   handleConfirmRemoveItem(item: Record<string, unknown>){
-     const id  = this.selectedData.id
-     this.deleteSender(id);
    },
    bindingDefaultFilterHeader(_obj: Record<string, unknown>) {
     let _headers = this.headers.slice();
