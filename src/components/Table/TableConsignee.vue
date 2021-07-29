@@ -186,6 +186,7 @@ export default defineComponent({
     //  watch(selectedDataDetail, currentValue => {
     //  });
     return {
+      ctx,
       filtersTable,
       tableHeight,
       endedThead,
@@ -237,10 +238,28 @@ export default defineComponent({
     async deleteItem() {
       const res = await api.consignee.deleteConsignee(this.selectedDataDelete);
       if (!res) {
+        this.ctx.root.$store.commit("SET_SNACKBAR", {
+          type: "error",
+          title: "",
+          content: "Delete error",
+        });
         return;
       }
       try {
-        this.logoutIsOpen = false;
+        if (res.status > 199 && res.status < 399) {
+          this.logoutIsOpen = false;
+          this.ctx.root.$store.commit("SET_SNACKBAR", {
+            type: "success",
+            title: "",
+            content: "Delete success",
+          });
+        } else {
+          this.ctx.root.$store.commit("SET_SNACKBAR", {
+            type: "error",
+            title: "",
+            content: "Delete error",
+          });
+        }
         // const pagination = res.data.meta.pagination;
         // this.setTableData(res.data.data);
         //  setPagination({
@@ -251,6 +270,11 @@ export default defineComponent({
         //  });
       } catch (error) {
         console.log(error);
+        this.ctx.root.$store.commit("SET_SNACKBAR", {
+          type: "error",
+          title: "",
+          content: "Delete error",
+        });
       }
     },
     listenDateChange(value: NormalFilterObject) {
