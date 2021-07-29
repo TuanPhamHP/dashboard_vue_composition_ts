@@ -1,6 +1,6 @@
 export interface NormalPagination {
- total: number | string;
- total_pages: number | string;
- per_page: number | string;
- current_page: number | string;
+ total: number;
+ total_pages: number;
+ per_page: number ;
+ current_page: number ;
 }

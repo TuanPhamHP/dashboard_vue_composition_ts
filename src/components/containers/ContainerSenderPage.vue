@@ -26,19 +26,34 @@
     :headers="headers"
     @handleFilterChange="filterTableChange"
     @handleSelectedItem="handlerEdit"
+    @handleRemoveItem="handlerRemove"
     :current-binding-url="queryRoute"
     @handleSelectedItemDetail="handlerViewDetail"
    />
    <div class="pt-1">
     <SharedPagination :pagination-sync="pagination" @handlePageSizeChange="pagePaginationChange" @handlePageChange="pagePaginationChange" />
    </div>
-   <DialogSender :is-visible="isVisible" :selected-data="selectedData" @handlerCancel="handlerDialogCancel" @handlerSubmit="handlerDialogSubmit" />
+   <DialogSender 
+    :is-visible="isVisible" 
+    :selected-data="selectedData" 
+    @handlerCancel="handlerDialogCancel"
+    @handlerSubmit="handlerDialogSubmit" 
+    :loading-btn="loadingBtn" 
+    :mess-eror="messageErr"
+    />
    <DialogSenderDetail
     :is-visible="isVisibleDetail"
     :selected-data="selectedData"
     @handlerCancel="handlerDialogItemCancel"
     @handlerSubmit="handlerDialogSubmit"
    />
+   <ConfirmRemove
+      :is-visible="isVisibleConfirm"
+      :handlerCancel="handlerDialogConfirmCancel"
+      :handlerConfirm="handleConfirmRemoveItem"
+      :loading-btn="loadingBtn" 
+   >
+   </ConfirmRemove>>
   </div>
  </div>
 </template>
@@ -49,6 +64,7 @@
  import TableSender from "@/components/Table/TableSender.vue";
  import DialogSender from "@/components/Form/DialogSender.vue";
  import DialogSenderDetail from "@/components/Form/DialogSenderDetail.vue";
+ import ConfirmRemove from "@/components/popup/ConfirmRemove.vue";
  import { SharedPagination } from "@/components/Shared";
  import { NormalPagination } from "@/InterfaceModel/Pagination";
  import { NormalHeaderItem } from "@/InterfaceModel/Header";
@@ -63,18 +79,22 @@
    SharedPagination,
    DialogSenderDetail,
    DialogSender,
+   ConfirmRemove
   },
-  data() {
-   return {
-    isVisible: false,
-    isVisibleDetail: false,
-   };
-  },
-  setup: props => {
+  setup: (props,ctx) => {
+
+    console.log('ctx',ctx);
+    
+
    const { queryRoute, stringQueryRender, getQueryRoute } = useRouteQuery();
-   let selectedData = reactive<Record<string, unknown>>({});
-   const loadingTable = ref<boolean>(true);
+   const selectedData = ref<Record<string, unknown>>({});
+   const loadingTable = ref<boolean>(false);
+   const loadingBtn = ref<boolean>(false);
+   const isVisible = ref<boolean>(false); 
+   const isVisibleConfirm = ref<boolean>(false); 
+   const isVisibleDetail = ref<boolean>(false);
    const currentRouteQuery = ref<string>(stringQueryRender);
+   const messageErr = ref<string>("");
    let tableData = reactive<Record<string, unknown>>({ value: [] });
    let filterTable = ref({});
    let pagination = ref<NormalPagination>({
@@ -83,7 +103,8 @@
     total_pages: 15,
     current_page: 1,
    });
-
+  console.log(this);
+  
    const headers: NormalHeaderItem[] = [
     {
      text: "No.",
@@ -97,7 +118,7 @@
      text: "Company",
      align: "start",
      sortable: false,
-     value: "v-value",
+     value: "company",
      type: "string",
      filters: {},
     },
@@ -105,7 +126,7 @@
      text: "Contact Person",
      align: "start",
      sortable: false,
-     value: "v-value",
+     value: "tax_code",
      type: "string",
      filters: {},
     },
@@ -113,7 +134,7 @@
      text: "Reminiscent Name",
      align: "start",
      sortable: false,
-     value: "v-value",
+     value: "name",
      type: "string",
      filters: {},
     },
@@ -121,7 +142,7 @@
      text: "Address",
      align: "start",
      sortable: false,
-     value: "v-value",
+     value: "address",
      type: "string",
      filters: {},
     },
@@ -129,7 +150,7 @@
      text: "State",
      align: "start",
      sortable: false,
-     value: "v-value",
+     value: "state",
      type: "string",
      filters: {},
     },
@@ -137,7 +158,7 @@
      text: "Country",
      align: "start",
      sortable: false,
-     value: "v-value",
+     value: "country",
      type: "string",
      filters: {},
     },
@@ -145,7 +166,7 @@
      text: "Phone Number",
      align: "start",
      sortable: false,
-     value: "v-value",
+     value: "phone",
      type: "string",
      filters: {},
     },
@@ -153,7 +174,7 @@
      text: "Email",
      align: "start",
      sortable: false,
-     value: "v-value",
+     value: "email",
      type: "string",
      filters: {},
     },
@@ -161,7 +182,7 @@
      text: "VAT",
      align: "start",
      sortable: false,
-     value: "v-value",
+     value: "vat",
      type: "string",
      filters: {},
     },
@@ -169,7 +190,9 @@
    ];
    Object.freeze(headers);
    const setTableData = (payload: Record<string, unknown>[]) => {
-    tableData.value = payload;
+      console.log('payload',payload);
+     
+      tableData.value = payload;
    };
    const setPagination = (payload: NormalPagination) => {
     pagination.value = { ...payload };
@@ -185,6 +208,18 @@
    };
    const setLoadingTable = (payload: boolean) => {
     loadingTable.value = payload;
+   };
+   const setLoadingBtn = (payload: boolean) => {
+    loadingBtn.value = payload;
+   };
+    const setIsVisible = (payload: boolean) => {
+    isVisible.value = payload;
+   };
+   const setIsVisibleDetail = (payload: boolean) => {
+    isVisibleDetail.value = payload;
+   };
+   const setIsVisibleConfirm = (payload: boolean) => {
+    isVisibleConfirm.value = payload;
    };
 
    watch(currentRouteQuery, currentValue => {
@@ -207,64 +242,197 @@
      ...currentValue,
     });
    });
+  watch(isVisible, currentValue => {
+    if(!currentValue){
+      selectedData.value = {};
+    }
+  });
+  watch(isVisibleDetail, currentValue => {
+    if(!currentValue){
+      selectedData.value = {};
+    }
+  });
 
-   const getAllRoles = async (query: Record<string, unknown>) => {
+
+   const getAllSender = async (query: Record<string, unknown>) => {
+    setLoadingTable(true);
     if(!Object.keys(query).length) return;
-    const res = await api.roles.getAll(query);
+    const res = await api.senders.getAll(query);
     setLoadingTable(false);
+    if (!res) {
+      ctx.root.$store.commit("SET_SNACKBAR", {
+          type: "error",
+          title: "",
+          content: "Update error",
+      });
+     return;
+    }
+    try {
+      if(res.status > 199 && res.status < 399 ){
+        const pagination = res.data.data.meta.pagination;
+        setTableData(res.data.data.senders);
+        setPagination({
+        total: pagination.total,
+        total_pages: pagination.total_pages,
+        per_page: pagination.per_page,
+        current_page: pagination.current_page,
+        });
+      }
+    
+    } catch (error) {
+     console.log(error);
+    }
+   };
+   const createSender = async (parrams: Record<string, unknown>) => {
+    setLoadingBtn(true);
+    const res = await api.senders.create(parrams);
+    setLoadingBtn(false);
+    if (!res) {
+      ctx.root.$store.commit("SET_SNACKBAR", {
+          type: "error",
+          title: "",
+          content: "Update error",
+      });
+      return;
+    }
+    try {
+      if(res.status > 199 && res.status < 399 ){
+        let _data =  res.data.data.sender
+        
+        console.log(_data);
+        console.log(tableData.value);
+        // let arr:Record<string, unknown>[] = tableData.value
+        // arr.push(_data)
+        // console.log(arr);
+        
+        // setTableData
+        setIsVisible(false)
+        ctx.root.$store.commit("SET_SNACKBAR", {
+            type: "success",
+            title: "",
+            content: "Create success",
+        });
+      }
+      else{
+        ctx.root.$store.commit("SET_SNACKBAR", {
+            type: "error",
+            title: "",
+            content: "Create error",
+        });
+      }
+    } catch (error) {
+      messageErr.value = error
+      ctx.root.$store.commit("SET_SNACKBAR", {
+          type: "error",
+          title: "",
+          content: "Create error",
+      });
+    }
+   };
+   const updateSender = async (parrams: Record<string, unknown>,_id:any) => {
+    setLoadingBtn(true);
+    const res = await api.senders.update(parrams,_id);
+    setLoadingBtn(false);
+    if (!res) {
+      ctx.root.$store.commit("SET_SNACKBAR", {
+            type: "error",
+            title: "",
+            content: "Update error",
+      });
+     return;
+    }
+    try {
+      if(res.status > 199 && res.status < 399 ){
+        setIsVisible(false)
+        ctx.root.$store.commit("SET_SNACKBAR", {
+            type: "success",
+            title: "",
+            content: "Update success",
+        });
+          
+        
+      }
+      else{
+        messageErr.value = res.data.data.error
+        ctx.root.$store.commit("SET_SNACKBAR", {
+            type: "error",
+            title: "",
+            content: "Update error",
+        });
+      }
+    } catch (error) {
+      messageErr.value = error
+       ctx.root.$store.commit("SET_SNACKBAR", {
+            type: "error",
+            title: "",
+            content: "Update error",
+        });
+    }
+   };
+   const deleteSender = async (_id:any) => {
+    setLoadingBtn(true);
+    const res = await api.senders.delete(_id);
+    setLoadingBtn(false);
     if (!res) {
      return;
     }
     try {
-     const pagination = res.data.meta.pagination;
-     setTableData(res.data.data);
-     //  setPagination({
-     //   total: pagination.total,
-     //   total_pages: pagination.total_pages,
-     //   per_page: pagination.per_page,
-     //   current_page: pagination.current_page,
-     //  });
+      if(res.status > 199 && res.status < 399 ){
+        setIsVisibleConfirm(false)
+        // this.$store.commit("SET_SNACKBAR", {
+        //     type: "",
+        //     title: "",
+        //     content: "",
+        // });
+          
+        
+      }
+      else{
+        messageErr.value = res.data.data.error
+      }
     } catch (error) {
-     console.log(error);
+      messageErr.value = error
     }
    };
    return {
     headers,
     pagination,
     loadingTable,
+    loadingBtn,
     tableData,
     queryRoute,
     filterTable,
     selectedData,
+    deleteSender,
+    isVisible,
+    isVisibleDetail,
+    isVisibleConfirm,
+    messageErr,
     setTableData,
     setLoadingTable,
+    setLoadingBtn,
     setCurrentRouteQuery,
     setPagination,
-    getAllRoles,
+    setIsVisible,
+    setIsVisibleConfirm,
+    setIsVisibleDetail,
+    getAllSender,
+    createSender,
+    updateSender,
     setCurrentFilterTable,
     currentRouteQuery,
    };
   },
-  watch: {
-   isVisible(_newVal) {
-    if (!_newVal) {
-     this.selectedData = {};
-    }
-   },
-   isVisibleDetail(_newVal) {
-    if (!_newVal) {
-     this.selectedData = {};
-    }
-   },
-  },
   computed: {
-   ...mapState({
-    previousPagination: (state: any) => state.previousPagination,
-   }),
+    ...mapState({
+      previousPagination: (state: any) => state.previousPagination,
+    }),
+  },
+  beforeCreate(){
+    console.log('beforeCreate',this);
   },
   created() {
-   console.log("container-create", this.queryRoute);
-
+    console.log('created',this);
    if (this.previousPagination) {
     const body = {
      ...this.previousPagination,
@@ -285,17 +453,29 @@
     // this.setCurrentRouteQuery(this.queryRoute)
     this.bindingDefaultFilterHeader(_obj);
    }
-   this.getAllRoles({ ...this.queryRoute });
+   this.getAllSender({ ...this.queryRoute });
+  },
+  mounted(){
+    console.log('mounted',this);
   },
   methods: {
    handlerDialogCancel() {
-    this.isVisible = false;
+    this.setIsVisible(false);
    },
    handlerDialogItemCancel() {
-    this.isVisibleDetail = false;
+    this.setIsVisibleDetail(false);
+   },
+   handlerDialogConfirmCancel(){
+     this.setIsVisibleConfirm(false);
    },
    handlerDialogSubmit(value: any) {
-    console.log(value);
+     if(Object.keys(this.selectedData).length){
+       const id = this.selectedData.id
+      this.updateSender(value,id)
+     }
+     else{
+      this.createSender(value)
+     }
    },
    pagePaginationChange(_val: any) {
     this.$store.commit("CACHED_PAGINATION", {
@@ -321,12 +501,20 @@
     this.setCurrentFilterTable(_val);
    },
    handlerEdit(item: Record<string, unknown>) {
-    this.isVisible = true;
+    this.setIsVisible(true);
+    this.selectedData = { ...item };
+   },
+   handlerRemove(item: Record<string, unknown>) {
+    this.setIsVisibleConfirm(true);
     this.selectedData = { ...item };
    },
    handlerViewDetail(item: Record<string, unknown>) {
-    this.isVisibleDetail = true;
+    this.setIsVisibleDetail(true);
     this.selectedData = { ...item };
+   },
+   handleConfirmRemoveItem(item: Record<string, unknown>){
+     const id  = this.selectedData.id
+     this.deleteSender(id);
    },
    bindingDefaultFilterHeader(_obj: Record<string, unknown>) {
     let _headers = this.headers.slice();

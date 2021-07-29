@@ -100,6 +100,9 @@
    handleSelectedItem:{
      type:Function
    },
+   handleRemoveItem:{
+     type:Function
+   },
    handleSelectedItemDetail:{
      type:Function
    },
@@ -117,14 +120,20 @@
    };
    const setSelectedData = (payload: Record<string, unknown>) => {
       selectedData.value = payload;
-    ctx.emit('handleSelectedItem',selectedData.value)
-
    };
-   const setSelectedDataDetail = (payload: Record<string, unknown>) => {
-      selectedDataDetail.value = payload;
-    ctx.emit('handleSelectedItemDetail',selectedDataDetail.value)
-
+  
+   const editItem = (item:Record<string,string>)=>{
+      setSelectedData(item)
+       ctx.emit('handleSelectedItem',selectedData.value)
    };
+   const detailItem = (item:Record<string,string>)=>{
+     setSelectedData(item)
+      ctx.emit('handleSelectedItemDetail',selectedData.value)
+   }
+   const deleteItem = (item:Record<string,string>)=>{
+     setSelectedData(item)
+      ctx.emit('handleRemoveItem',selectedData.value)
+   }
    const setTableHeight = (payload: number) => {
     tableHeight.value = payload;
    };
@@ -150,7 +159,9 @@
       setTableHeight, 
       setFiltersTable,
       setSelectedData,
-      setSelectedDataDetail
+      editItem,
+      detailItem,
+      deleteItem,
       };
   },
   data() {
@@ -190,12 +201,6 @@
      ...valObject,
     };
     this.setFiltersTable(body);
-   },
-  editItem(item:Record<string,string>){
-      this.setSelectedData(item)
-   },
-   detailItem(item:Record<string,string>){
-     this.setSelectedDataDetail(item)
    }
   },
  });
