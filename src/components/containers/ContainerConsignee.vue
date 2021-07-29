@@ -84,7 +84,7 @@ export default defineComponent({
       isVisibleDetail: false,
     };
   },
-  setup: (props) => {
+  setup: (props, ctx) => {
     const { queryRoute, stringQueryRender, getQueryRoute } = useRouteQuery();
     let selectedData = reactive<Record<string, unknown>>({});
     const loadingTable = ref<boolean>(true);
@@ -270,6 +270,7 @@ export default defineComponent({
       getAllRoles,
       setCurrentFilterTable,
       currentRouteQuery,
+      ctx,
     };
   },
   watch: {
@@ -323,12 +324,28 @@ export default defineComponent({
       const res = await api.consignee.createConsignee(value);
       this.setLoadingTable(false);
       if (!res) {
+        this.ctx.root.$store.commit("SET_SNACKBAR", {
+          type: "error",
+          title: "",
+          content: "Create error",
+        });
         return;
       }
       try {
-        // const pagination = res.data.meta.pagination;
-        // this.setTableData(res.data.data);
-        this.isVisible = false;
+        if (res.status > 199 && res.status < 399) {
+          this.isVisible = false;
+          this.ctx.root.$store.commit("SET_SNACKBAR", {
+            type: "success",
+            title: "",
+            content: "Create success",
+          });
+        } else {
+          this.ctx.root.$store.commit("SET_SNACKBAR", {
+            type: "error",
+            title: "",
+            content: "Create error",
+          });
+        }
         //  setPagination({
         //   total: pagination.total,
         //   total_pages: pagination.total_pages,
@@ -337,18 +354,42 @@ export default defineComponent({
         //  });
       } catch (error) {
         console.log(error);
+        this.ctx.root.$store.commit("SET_SNACKBAR", {
+          type: "error",
+          title: "",
+          content: "Create error",
+        });
       }
     },
     async handlerDialogUpdate(value: any) {
-      const res = await api.consignee.updateConsignee(this.selectedData.id, value);
+      const res = await api.consignee.updateConsignee(
+        this.selectedData.id,
+        value
+      );
       this.setLoadingTable(false);
       if (!res) {
+        this.ctx.root.$store.commit("SET_SNACKBAR", {
+          type: "error",
+          title: "",
+          content: "Update error",
+        });
         return;
       }
       try {
-        // const pagination = res.data.meta.pagination;
-        // this.setTableData(res.data.data);
-        this.isVisible = false;
+        if (res.status > 199 && res.status < 399) {
+          this.isVisible = false;
+          this.ctx.root.$store.commit("SET_SNACKBAR", {
+            type: "success",
+            title: "",
+            content: "Update success",
+          });
+        } else {
+          this.ctx.root.$store.commit("SET_SNACKBAR", {
+            type: "error",
+            title: "",
+            content: "Update error",
+          });
+        }
         //  setPagination({
         //   total: pagination.total,
         //   total_pages: pagination.total_pages,
@@ -357,6 +398,11 @@ export default defineComponent({
         //  });
       } catch (error) {
         console.log(error);
+        this.ctx.root.$store.commit("SET_SNACKBAR", {
+          type: "error",
+          title: "",
+          content: "Update error",
+        });
       }
     },
     pagePaginationChange(_val: any) {
@@ -450,7 +496,7 @@ export default defineComponent({
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: $primaryWhite
+    background: $primaryWhite;
   }
 }
 </style>
