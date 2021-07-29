@@ -52,7 +52,6 @@
         :is-visible="isVisibleDetail"
         :selected-data="selectedData"
         @handlerCancel="handlerDialogItemCancel"
-        @handlerSubmit="handlerDialogSubmit"
       />
     </div>
   </div>
@@ -238,7 +237,7 @@ export default defineComponent({
     });
 
     const getAllRoles = async (query: Record<string, unknown>) => {
-      const res = await api.roles.getAllConsignee(query);
+      const res = await api.consignee.getAllConsignee(query);
       setLoadingTable(false);
       if (!res) {
         return;
@@ -321,14 +320,15 @@ export default defineComponent({
       this.isVisibleDetail = false;
     },
     async handlerDialogSubmit(value: any) {
-      const res = await api.roles.createConsignee(value);
+      const res = await api.consignee.createConsignee(value);
       this.setLoadingTable(false);
       if (!res) {
         return;
       }
       try {
-        const pagination = res.data.meta.pagination;
-        this.setTableData(res.data.data);
+        // const pagination = res.data.meta.pagination;
+        // this.setTableData(res.data.data);
+        this.isVisible = false;
         //  setPagination({
         //   total: pagination.total,
         //   total_pages: pagination.total_pages,
@@ -340,14 +340,15 @@ export default defineComponent({
       }
     },
     async handlerDialogUpdate(value: any) {
-      const res = await api.roles.updateConsignee(this.selectedData.id, value);
+      const res = await api.consignee.updateConsignee(this.selectedData.id, value);
       this.setLoadingTable(false);
       if (!res) {
         return;
       }
       try {
-        const pagination = res.data.meta.pagination;
-        this.setTableData(res.data.data);
+        // const pagination = res.data.meta.pagination;
+        // this.setTableData(res.data.data);
+        this.isVisible = false;
         //  setPagination({
         //   total: pagination.total,
         //   total_pages: pagination.total_pages,

@@ -7,25 +7,9 @@
           <div class="row my-0">
             <div class="col-xxl-6 mb-3">
               <div class="row my-0 detail-data display-flex align-center">
-                <span class="col-xxl-5"> No . </span>
-                <span class="col-xxl-7">
-                  <input type="text" class="w-100" />
-                </span>
-              </div>
-            </div>
-            <div class="col-xxl-6 mb-3">
-              <div class="row my-0 detail-data display-flex align-center">
-                <span class="col-xxl-5"> Address </span>
-                <span class="col-xxl-7">
-                  <input type="text" disabled class="w-100" />
-                </span>
-              </div>
-            </div>
-            <div class="col-xxl-6 mb-3">
-              <div class="row my-0 detail-data display-flex align-center">
                 <span class="col-xxl-5"> Company </span>
                 <span class="col-xxl-7">
-                  <input type="text" disabled class="w-100" />
+                  <input type="text" v-model="formData.company" disabled class="w-100" />
                 </span>
               </div>
             </div>
@@ -33,7 +17,7 @@
               <div class="row my-0 detail-data display-flex align-center">
                 <span class="col-xxl-5"> Phone Number </span>
                 <span class="col-xxl-7">
-                  <input type="text" disabled class="w-100" />
+                  <input type="text" v-model="formData.phone" disabled class="w-100" />
                 </span>
               </div>
             </div>
@@ -41,7 +25,7 @@
               <div class="row my-0 detail-data display-flex align-center">
                 <span class="col-xxl-5"> Contact Person </span>
                 <span class="col-xxl-7">
-                  <input type="text" disabled class="w-100" />
+                  <input type="text" v-model="formData.name" disabled class="w-100" />
                 </span>
               </div>
             </div>
@@ -49,7 +33,7 @@
               <div class="row my-0 detail-data display-flex align-center">
                 <span class="col-xxl-5"> Email </span>
                 <span class="col-xxl-7">
-                  <input type="text" disabled class="w-100" />
+                  <input type="text" v-model="formData.email" disabled class="w-100" />
                 </span>
               </div>
             </div>
@@ -106,10 +90,7 @@ export default defineComponent({
     },
     handlerCancel: {
       type: Function,
-    },
-    handlerSubmit: {
-      type: Function,
-    },
+    }
   },
   components: {
     TableConsigneeDetail,
@@ -236,15 +217,16 @@ export default defineComponent({
     const setLoadingTable = (payload: boolean) => {
       loadingTable.value = payload;
     };
+    let formData = ref<Record<string, any>>({});
     const getAllData = async (query: Record<string, unknown>) => {
-      const res = await api.roles.getAll(query);
+      const res = await api.consignee.getConsigneeDetail(query);
       setLoadingTable(false);
       if (!res) {
         return;
       }
       try {
-        const pagination = res.data.meta.pagination;
-        setTableData(res.data.data);
+        // const pagination = res.data.meta.pagination;
+        // setTableData(res.data.data.consignee);
         //  setPagination({
         //   total: pagination.total,
         //   total_pages: pagination.total_pages,
@@ -257,6 +239,7 @@ export default defineComponent({
     };
     return {
       headers,
+      formData,
       loadingTable,
       tableData,
       btnCancelClick,
@@ -266,6 +249,10 @@ export default defineComponent({
   },
   methods: {},
   watch: {
+    selectedData(){
+      this.formData = this.selectedData;
+      console.log(this.formData)
+    },
     isVisible(_newVal) {
       if (_newVal) {
         if (this.selectedData.id) {
