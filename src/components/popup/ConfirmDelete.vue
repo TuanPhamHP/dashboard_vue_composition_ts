@@ -7,7 +7,9 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn text @click="cancel" class="cancel"> Cancel </v-btn>
-        <v-btn text @click="deleteItem" class="yes"> Delete </v-btn>
+        <v-btn :loading="loadingBtn" text @click="deleteItem" class="yes">
+          Delete
+        </v-btn>
       </v-card-actions>
       <!-- <div class="sign-out">
         <div class="header">Do you really want to Sign out?</div>
@@ -34,16 +36,18 @@ export default defineComponent({
       default: false,
     },
     cancel: {
-      type: Function
+      type: Function,
     },
     deleteItem: {
-      type: Function
-    }
+      type: Function,
+    },
+    loadingBtn: {
+      type: Boolean,
+      default: false,
+    },
   },
-  computed: {
-  },
-  methods: {
-  },
+  computed: {},
+  methods: {},
 });
 </script>
 <style lang="scss" scoped>
