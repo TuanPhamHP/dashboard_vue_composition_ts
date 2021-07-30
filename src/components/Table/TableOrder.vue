@@ -1,7 +1,7 @@
 <template>
   <v-data-table
     :headers="headers"
-    :items="tableData.value"
+    :items="tableData"
     :sort-by="[]"
     :sort-desc="[false, true]"
     :hide-default-header="false"

@@ -31,7 +31,11 @@
     @handleSelectedItemDetail="handlerViewDetail"
    />
    <div class="pt-1">
-    <SharedPagination :pagination-sync="pagination" @handlePageSizeChange="pagePaginationChange" @handlePageChange="pagePaginationChange" />
+    <SharedPagination 
+    :pagination-sync="pagination"
+    @handlePageSizeChange="pagePaginationChange" 
+    @handlePageChange="pagePaginationChange" 
+    />
    </div>
    <DialogSender 
     :is-visible="isVisible" 
@@ -53,7 +57,7 @@
       :handlerConfirm="handleConfirmRemoveItem"
       :loading-btn="loadingBtn" 
    >
-   </ConfirmRemove>>
+   </ConfirmRemove>
   </div>
  </div>
 </template>
@@ -282,6 +286,7 @@
     }
    };
    const createSender = async (parrams: Record<string, unknown>) => {
+    messageErr.value= ""
     setLoadingBtn(true);
     const res = await api.senders.create(parrams);
     setLoadingBtn(false);
@@ -296,14 +301,7 @@
     try {
       if(res.status > 199 && res.status < 399 ){
         let _data =  res.data.data.sender
-        
-        console.log(_data);
-        console.log(tableData.value);
-        // let arr:Record<string, unknown>[] = tableData.value
-        // arr.push(_data)
-        // console.log(arr);
-        
-        // setTableData
+
         setIsVisible(false)
         ctx.root.$store.commit("SET_SNACKBAR", {
             type: "success",
@@ -329,6 +327,7 @@
     }
    };
    const updateSender = async (parrams: Record<string, unknown>,_id:any) => {
+    messageErr.value= ""
     setLoadingBtn(true);
     const res = await api.senders.update(parrams,_id);
     setLoadingBtn(false);

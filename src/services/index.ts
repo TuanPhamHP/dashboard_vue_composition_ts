@@ -5,6 +5,7 @@ import senders from "../services/senders";
 import consignee from "../services/consignee";
 import users from "../services/users";
 import agency from "../services/agency";
+import order from "../services/order";
 import axios from "axios";
 const repository = (axios: any) => {
  return {
@@ -14,7 +15,8 @@ const repository = (axios: any) => {
   senders: senders(axios),
   consignee: consignee(axios),
   users: users(axios),
-  agency: agency(axios)
+  agency: agency(axios),
+  order: order(axios),
  };
 };
 const repo = repository(axios);

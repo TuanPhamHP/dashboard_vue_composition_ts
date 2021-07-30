@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts">
- import { defineComponent, reactive, ref, watch } from "@vue/composition-api";
+ import { defineComponent, onMounted, reactive, ref, watch } from "@vue/composition-api";
  import api from "@/services";
  import TablePackage from "@/components/Table/TablePackage.vue";
  import DialogBag from "@/components/Form/DialogBag.vue";
@@ -41,15 +41,11 @@
    SharedPagination,
    DialogBag,
   },
-  data() {
-   return {
-    isVisible: false,
-   };
-  },
   setup: props => {
-   const { queryRoute, stringQueryRender, getQueryRoute } = useRouteQuery();
+   const { queryRoute, stringQueryRender, getQueryRoute,currentParram } = useRouteQuery();
+   const currentID:number = currentParram;
    let selectedData = reactive<Record<string, unknown>>({});
-   const loadingTable = ref<boolean>(true);
+   const loadingTable = ref<boolean>(false);
    const currentRouteQuery = ref<string>(stringQueryRender);
    let tableData = reactive<Record<string, unknown>>({ value: [] });
    let filterTable = ref({});
@@ -198,26 +194,29 @@
     });
    });
 
-   const getAllRoles = async (query: Record<string, unknown>) => {
-    if(!Object.keys(query).length) return;
-    const res = await api.roles.getAll(query);
-    setLoadingTable(false);
-    if (!res) {
-     return;
-    }
-    try {
-     const pagination = res.data.meta.pagination;
-     setTableData(res.data.data);
-     //  setPagination({
-     //   total: pagination.total,
-     //   total_pages: pagination.total_pages,
-     //   per_page: pagination.per_page,
-     //   current_page: pagination.current_page,
-     //  });
-    } catch (error) {
-     console.log(error);
-    }
+   const getOrderPackage = async () => {
+     console.log('getOrderPackage');
+     
+    // setLoadingTable(false);
+    // const res = await api.roles.getAll(id);
+    // setLoadingTable(false);
+    // if (!res) {
+    //  return;
+    // }
+    // try {
+    //  const pagination = res.data.meta.pagination;
+    //  setTableData(res.data.data);
+    //  //  setPagination({
+    //  //   total: pagination.total,
+    //  //   total_pages: pagination.total_pages,
+    //  //   per_page: pagination.per_page,
+    //  //   current_page: pagination.current_page,
+    //  //  });
+    // } catch (error) {
+    //  console.log(error);
+    // }
    };
+   onMounted(getOrderPackage)
    return {
     headers,
     pagination,
@@ -230,7 +229,7 @@
     setLoadingTable,
     setCurrentRouteQuery,
     setPagination,
-    getAllRoles,
+    getOrderPackage,
     setCurrentFilterTable,
     currentRouteQuery,
    };
@@ -246,29 +245,6 @@
    ...mapState({
     previousPagination: (state: any) => state.previousPagination,
    }),
-  },
-  created() {
-   if (this.previousPagination) {
-    const body = {
-     ...this.previousPagination,
-    };
-    this.setPagination(body);
-   }
-   if (this.queryRoute) {
-    if (this.queryRoute.per_page) {
-     const refPagination = { ...this.pagination };
-     refPagination.per_page = +this.queryRoute.per_page;
-     refPagination.current_page = +this.queryRoute.current_page;
-     this.setPagination(refPagination);
-    }
-    let _obj: any = { ...this.queryRoute };
-    delete _obj.per_page, delete _obj.current_page;
-    // this.setCurrentFilterTable(_obj)
-
-    // this.setCurrentRouteQuery(this.queryRoute)
-    this.bindingDefaultFilterHeader(_obj);
-   }
-   this.getAllRoles({ ...this.queryRoute });
   },
   methods: {
    handlerDialogCancel() {

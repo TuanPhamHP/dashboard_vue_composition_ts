@@ -1,6 +1,8 @@
 import router from "@/router/index";
 export default function (): any {
  const currentRoute = router.currentRoute;
+ const currentParram = currentRoute.params.id;
+ 
  const queryRoute = currentRoute.query;
  let stringQueryRender = "";
  const arrayKey = Object.keys(queryRoute);
@@ -29,5 +31,5 @@ export default function (): any {
   return stringQueryRender;
  };
 
- return { queryRoute, stringQueryRender, getQueryRoute };
+ return { queryRoute, stringQueryRender, getQueryRoute,currentParram };
 }

@@ -50,7 +50,7 @@
    };
   },
   setup: props => {
-   let tab  = ref<number>(1)
+   let tab  = ref<number>(0)
    
    return {
       tab,

@@ -35,12 +35,18 @@
         <span class=" mb-4 text-decoration-underline add-package display-flex justify-flex-end pr-87px"> Add a new Sender </span>
         <span class="col-xxl-3"> Sender </span>
         <span class="col-xxl-9 form-input display-flex align-center">
-          <v-select
+           <v-autocomplete
+            v-model="defaultSender"
             :items="listSender"
+            item-text="name"
+            item-value="id"
+            outlined
+            dense
             placeholder="Alain Maurice"
             class="form-input max-width-74"
-            outlined
-          ></v-select>
+            @change="(val)=>{handerSelecChange(val,'sender_id')}"
+          >
+          </v-autocomplete>
           <img src="@/assets/images/Compose-message.svg" style="margin-left:20px" class="pointer" alt="">
         </span>
         
@@ -49,12 +55,18 @@
         <span class=" mb-4 text-decoration-underline add-package display-flex justify-flex-end pr-87px"> Add a new Consignee </span>
         <span class="col-xxl-3"> Consignee </span>
         <span class="col-xxl-9 form-input display-flex align-center">
-          <v-select
+          <v-autocomplete
+            v-model="defaultConsignee"
             :items="listConsignee"
+            item-text="name"
+            item-value="id"
+            outlined
+            dense
             placeholder="Teing Phong"
             class="form-input max-width-74"
-            outlined
-          ></v-select>
+            @change="(val)=>{handerSelecChange(val,'consignee_id')}"
+          >
+          </v-autocomplete>
           <img src="@/assets/images/Compose-message.svg" style="margin-left:20px" class="pointer" alt="">
         </span>
         
@@ -72,7 +84,7 @@
 </template>
 
 <script lang="ts">
- import { defineComponent, reactive, ref, watch } from "@vue/composition-api";
+ import { defineComponent, reactive, ref, watch ,onMounted} from "@vue/composition-api";
  import api from "@/services";
  import route from "@/router/index";
  import { mapState } from "vuex";
@@ -86,11 +98,59 @@
   },
   setup: props => {
    let tab  = ref<number>(1)
-   let formData:Record<string,string>  = reactive({})
-   
+   let formData = ref<Record<string,string> >({})
+   let listSender  = ref<Record<string,string>[]>([])
+   let defaultSender = ref<Record<string,any>>({}) 
+   let listConsignee  = ref<Record<string,string>[]>([])
+   let defaultConsignee = ref<Record<string,any>>({}) 
+  const getAllSender = async (query: Record<string, unknown>) => {
+    const res = await api.senders.getAll(query);
+    if (!res) {
+     return;
+    }
+    try {
+      if(res.status > 199 && res.status < 399 ){
+        listSender.value = res.data.data.senders
+      }
+    } catch (error) {
+     console.log(error);
+    }
+   };
+   onMounted(getAllSender);
+   const getAllConsignee = async (query: Record<string, unknown>) => {
+    const res = await api.consignee.getAllConsignee(query);
+    if (!res) {
+     return;
+    }
+    try {
+      if(res.status > 199 && res.status < 399 ){
+        listConsignee.value = res.data.data.consignees
+      }
+    } catch (error) {
+     console.log(error);
+    }
+   };
+   onMounted(getAllConsignee);
+  const setDataFormValue = (payload: Record<string,any>) => {
+    formData.value = {
+      ...formData.value,
+      ...payload
+    };
+   };
+  const handerSelecChange = (val:any,feild:string)=>{
+    let _obj:Record<string, unknown> = {}
+    _obj[`${feild}`] = val
+    setDataFormValue(_obj)
+    
+  }
    return {
       tab,
-      formData
+      formData,
+      listSender,
+      defaultSender,
+      listConsignee,
+      defaultConsignee,
+      handerSelecChange,
    };
   },
   watch: {

@@ -12,7 +12,7 @@
       <div class="mb-4">
         <!-- <v-btn @click="setupData" class="">Setup Data</v-btn> -->
         <v-btn
-          @click="isVisible = true"
+          @click="handlerCreateOrder"
           class="buton-primary-header text-transform-unset mr-4 border-radius-8"
         >
           <img src="@/assets/images/plus-composer.png" class="mr-2" />
@@ -26,11 +26,12 @@
         </v-btn>
       </div>
       <TableOrder
-        :table-data="tableData"
+        :table-data="dataTableComputed"
         :table-loading="loadingTable"
         :headers="headers"
         @handleFilterChange="filterTableChange"
         @handleSelectedItem="handlerEdit"
+        @handleRemoveItem="handlerRemove"
         :current-binding-url="queryRoute"
         @handleSelectedItemDetail="handlerViewDetail"
       />
@@ -41,16 +42,24 @@
           @handlePageChange="pagePaginationChange"
         />
       </div>
+      <ConfirmRemove
+        :is-visible="isVisibleConfirm"
+        :handlerCancel="handlerDialogConfirmCancel"
+        :handlerConfirm="handleConfirmRemoveItem"
+        :loading-btn="loadingBtn" 
+      >
+      </ConfirmRemove>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, watch } from "@vue/composition-api";
+import { defineComponent, reactive, ref, watch,computed } from "@vue/composition-api";
 import api from "@/services";
 import TableOrder from "@/components/Table/TableOrder.vue";
 import { SharedPagination } from "@/components/Shared";
 import { NormalPagination } from "@/InterfaceModel/Pagination";
+import ConfirmRemove from "@/components/popup/ConfirmRemove.vue";
 import { NormalHeaderItem } from "@/InterfaceModel/Header";
 import { IdentifyObject } from "@/InterfaceModel/CustomObject";
 import useRouteQuery from "@/utils/uses/routerQuery/useRouteQuery";
@@ -61,19 +70,19 @@ export default defineComponent({
   components: {
     TableOrder,
     SharedPagination,
+    ConfirmRemove
   },
-  data() {
-    return {
-      isVisible: false,
-      isVisibleDetail: false,
-    };
-  },
-  setup: (props) => {
+  setup: (props,ctx) => {
     const { queryRoute, stringQueryRender, getQueryRoute } = useRouteQuery();
     let selectedData = reactive<Record<string, unknown>>({});
     const loadingTable = ref<boolean>(true);
+    const loadingBtn = ref<boolean>(true);
+    const isVisible = ref<boolean>(false); 
+    const isVisibleConfirm = ref<boolean>(false); 
+    const isVisibleDetail = ref<boolean>(false);
     const currentRouteQuery = ref<string>(stringQueryRender);
-    let tableData = reactive<Record<string, unknown>>({ value: [] });
+    const messageErr = ref<string>("");
+    let tableData = reactive<Record<string, any>>({ value: [] });
     let filterTable = ref({});
     let pagination = ref<NormalPagination>({
       total: 1,
@@ -87,11 +96,11 @@ export default defineComponent({
         text: "Order Number",
         align: "start",
         sortable: false,
-        value: "mawb",
+        value: "order_number",
         type: "string",
         filters: {
           type: "string",
-          key: "mawb",
+          key: "order_number",
           placeholder: "Order Number",
           defaultValue: "",
         },
@@ -100,7 +109,7 @@ export default defineComponent({
         text: "MAWB",
         align: "start",
         sortable: false,
-        value: "v-value",
+        value: "mawb",
         type: "string",
         filters: {
           type: "string",
@@ -113,7 +122,7 @@ export default defineComponent({
         text: "Sender",
         align: "start",
         sortable: false,
-        value: "v-value",
+        value: "sender",
         type: "string",
         filters: {
           type: "string",
@@ -126,11 +135,11 @@ export default defineComponent({
         text: "Gross Weight (kg)",
         align: "start",
         sortable: false,
-        value: "v-value",
+        value: "gross_weight",
         type: "string",
         filters: {
           type: "string",
-          key: "mawb",
+          key: "gross_weight",
           placeholder: "Gross Weight (kg)",
           defaultValue: "",
         },
@@ -139,11 +148,11 @@ export default defineComponent({
         text: "Frieght cost (USD)",
         align: "start",
         sortable: false,
-        value: "v-value",
+        value: "freight_cost",
         type: "string",
         filters: {
           type: "string",
-          key: "mawb",
+          key: "freight_cost",
           placeholder: "Frieght cost (USD)",
           defaultValue: "",
         },
@@ -152,11 +161,11 @@ export default defineComponent({
         text: "Status",
         align: "start",
         sortable: false,
-        value: "v-value",
+        value: "status",
         type: "string",
         filters: {
           type: "select",
-          key: "calories",
+          key: "status",
           placeholder: "Status",
           items: [
             {
@@ -179,11 +188,11 @@ export default defineComponent({
         text: "Person in charge",
         align: "start",
         sortable: false,
-        value: "v-value",
+        value: "consignee",
         type: "string",
         filters: {
           type: "string",
-          key: "mawb",
+          key: "consignee",
           placeholder: "Person in charge",
           defaultValue: "",
         },
@@ -194,6 +203,21 @@ export default defineComponent({
     const setTableData = (payload: Record<string, unknown>[]) => {
       tableData.value = payload;
     };
+    const dataTableComputed = computed(() =>{
+      const arr:Record<string, any>[] = tableData.value
+      return arr.map(o=>{
+        return{
+          order_number : o.order_number,
+          mawb : o.order_number,
+          consignee : o.consignee.name,
+          sender : o.sender.name,
+          gross_weight : o.gross_weight,
+          freight_cost : o.freight_cost,
+          status : o.status,
+        }
+      })
+    });
+
     const setPagination = (payload: NormalPagination) => {
       pagination.value = { ...payload };
     };
@@ -208,6 +232,18 @@ export default defineComponent({
     };
     const setLoadingTable = (payload: boolean) => {
       loadingTable.value = payload;
+    };
+    const setLoadingBtn = (payload: boolean) => {
+    loadingBtn.value = payload;
+   };
+    const setIsVisible = (payload: boolean) => {
+      isVisible.value = payload;
+    };
+    const setIsVisibleDetail = (payload: boolean) => {
+      isVisibleDetail.value = payload;
+    };
+    const setIsVisibleConfirm = (payload: boolean) => {
+      isVisibleConfirm.value = payload;
     };
 
     watch(currentRouteQuery, (currentValue) => {
@@ -229,40 +265,83 @@ export default defineComponent({
       });
     });
 
-    const getAllRoles = async (query: Record<string, unknown>) => {
-      const res = await api.roles.getAll(query);
-      setLoadingTable(false);
+    const getAllOrder = async (query: Record<string, unknown>) => {
+    setLoadingTable(true);
+    if(!Object.keys(query).length) return;
+    query.include = "creator,sender,consignee,payment_type,currency,shipping_partner"
+    const res = await api.order.getAll(query);
+    setLoadingTable(false);
+    if (!res) {
+      ctx.root.$store.commit("SET_SNACKBAR", {
+          type: "error",
+          title: "",
+          content: "Update error",
+      });
+     return;
+    }
+    try {
+      if(res.status > 199 && res.status < 399 ){
+        const pagination = res.data.data.meta.pagination;
+        setTableData(res.data.data.orders);
+        setPagination({
+        total: pagination.total,
+        total_pages: pagination.total_pages,
+        per_page: pagination.per_page,
+        current_page: pagination.current_page,
+        });
+      }
+    
+    } catch (error) {
+     console.log(error);
+    }
+    };
+    const deleteOrder = async (_id:any) => {
+      setLoadingBtn(true);
+      const res = await api.senders.delete(_id);
+      setLoadingBtn(false);
       if (!res) {
-        return;
+      return;
       }
       try {
-        const pagination = res.data.meta.pagination;
-        setTableData(res.data.data);
-        //  setPagination({
-        //   total: pagination.total,
-        //   total_pages: pagination.total_pages,
-        //   per_page: pagination.per_page,
-        //   current_page: pagination.current_page,
-        //  });
+        if(res.status > 199 && res.status < 399 ){
+          setIsVisibleConfirm(false)
+          // this.$store.commit("SET_SNACKBAR", {
+          //     type: "",
+          //     title: "",
+          //     content: "",
+          // });
+            
+          
+        }
+        else{
+          messageErr.value = res.data.data.error
+        }
       } catch (error) {
-        console.log(error);
+        messageErr.value = error
       }
     };
     return {
       headers,
       pagination,
       loadingTable,
+      loadingBtn,
       tableData,
       queryRoute,
       filterTable,
       selectedData,
+      isVisibleConfirm,
+      currentRouteQuery,
+      dataTableComputed,
       setTableData,
       setLoadingTable,
       setCurrentRouteQuery,
       setPagination,
-      getAllRoles,
+      getAllOrder,
       setCurrentFilterTable,
-      currentRouteQuery,
+      setIsVisible,
+      setIsVisibleConfirm,
+      setIsVisibleDetail,
+      deleteOrder,
     };
   },
   watch: {
@@ -303,7 +382,7 @@ export default defineComponent({
       // this.setCurrentRouteQuery(this.queryRoute)
       this.bindingDefaultFilterHeader(_obj);
     }
-    this.getAllRoles({ ...this.queryRoute });
+    this.getAllOrder({ ...this.queryRoute });
   },
   methods: {
     handlerDialogCancel() {
@@ -311,6 +390,13 @@ export default defineComponent({
     },
     handlerDialogItemCancel() {
       this.isVisibleDetail = false;
+    },
+    handlerDialogConfirmCancel(){
+     this.setIsVisibleConfirm(false);
+    },
+    handleConfirmRemoveItem(item: Record<string, unknown>){
+     const id  = this.selectedData.id
+     this.deleteOrder(id);
     },
     handlerDialogSubmit(value: any) {
       console.log(value);
@@ -339,11 +425,15 @@ export default defineComponent({
       this.setCurrentFilterTable(_val);
     },
     handlerEdit(item: Record<string, unknown>) {
-      this.isVisible = true;
+      this.setIsVisible(true);
+      this.selectedData = { ...item };
+    },
+    handlerRemove(item: Record<string, unknown>) {
+      this.setIsVisibleConfirm(true);
       this.selectedData = { ...item };
     },
     handlerViewDetail(item: Record<string, unknown>) {
-      this.isVisibleDetail = true;
+      this.setIsVisibleDetail(true);
       this.selectedData = { ...item };
     },
     bindingDefaultFilterHeader(_obj: Record<string, unknown>) {
@@ -388,6 +478,9 @@ export default defineComponent({
         }
       }
     },
+    handlerCreateOrder(){
+      this.$router.push("/order/create")
+    }
   },
 });
 </script>
