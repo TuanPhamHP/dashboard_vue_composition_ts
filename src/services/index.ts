@@ -6,6 +6,7 @@ import consignee from "../services/consignee";
 import users from "../services/users";
 import agency from "../services/agency";
 import order from "../services/order";
+import shipping from "../services/shipping";
 import axios from "axios";
 const repository = (axios: any) => {
  return {
@@ -17,6 +18,7 @@ const repository = (axios: any) => {
   users: users(axios),
   agency: agency(axios),
   order: order(axios),
+  shipping: shipping(axios)
  };
 };
 const repo = repository(axios);

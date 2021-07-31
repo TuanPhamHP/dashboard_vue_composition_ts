@@ -46,12 +46,12 @@
         :selected-data="selectedData"
         @handlerCancel="handlerDialogCancel"
         @handlerSubmit="handlerDialogSubmit"
+        :mess-eror="messageErr"
       />
       <DialogShippingDetail
         :is-visible="isVisibleDetail"
         :selected-data="selectedData"
         @handlerCancel="handlerDialogItemCancel"
-        @handlerSubmit="handlerDialogSubmit"
       />
     </div>
   </div>
@@ -84,10 +84,15 @@ export default defineComponent({
       isVisibleDetail: false,
     };
   },
-  setup: (props) => {
+  setup: (props, ctx) => {
     const { queryRoute, stringQueryRender, getQueryRoute } = useRouteQuery();
     let selectedData = reactive<Record<string, unknown>>({});
     const loadingTable = ref<boolean>(true);
+    const loadingBtn = ref<boolean>(false);
+    const isVisible = ref<boolean>(false);
+    const messageErr = ref<string>("");
+    const isVisibleConfirm = ref<boolean>(false);
+    const isVisibleDetail = ref<boolean>(false);
     const currentRouteQuery = ref<string>(stringQueryRender);
     let tableData = reactive<Record<string, unknown>>({ value: [] });
     let filterTable = ref({});
@@ -103,7 +108,7 @@ export default defineComponent({
         text: "No.",
         align: "start",
         sortable: false,
-        value: "mawb",
+        value: "id",
         type: "string",
         filters: {},
       },
@@ -111,7 +116,7 @@ export default defineComponent({
         text: "Company",
         align: "start",
         sortable: false,
-        value: "v-value",
+        value: "name",
         type: "string",
         filters: {},
       },
@@ -119,7 +124,7 @@ export default defineComponent({
         text: "Contact Person",
         align: "start",
         sortable: false,
-        value: "v-value",
+        value: "contact_person",
         type: "string",
         filters: {},
       },
@@ -127,7 +132,7 @@ export default defineComponent({
         text: "Reminiscent Name",
         align: "start",
         sortable: false,
-        value: "v-value",
+        value: "contact_person",
         type: "string",
         filters: {},
       },
@@ -135,7 +140,7 @@ export default defineComponent({
         text: "Address",
         align: "start",
         sortable: false,
-        value: "v-value",
+        value: "address",
         type: "string",
         filters: {},
       },
@@ -143,7 +148,7 @@ export default defineComponent({
         text: "Country",
         align: "start",
         sortable: false,
-        value: "v-value",
+        value: "country",
         type: "string",
         filters: {},
       },
@@ -151,7 +156,7 @@ export default defineComponent({
         text: "Post Code",
         align: "start",
         sortable: false,
-        value: "v-value",
+        value: "post_code",
         type: "string",
         filters: {},
       },
@@ -159,7 +164,7 @@ export default defineComponent({
         text: "Phone Number",
         align: "start",
         sortable: false,
-        value: "v-value",
+        value: "phone",
         type: "string",
         filters: {},
       },
@@ -167,7 +172,7 @@ export default defineComponent({
         text: "Email",
         align: "start",
         sortable: false,
-        value: "v-value",
+        value: "email",
         type: "string",
         filters: {},
       },
@@ -175,7 +180,7 @@ export default defineComponent({
         text: "VAT",
         align: "start",
         sortable: false,
-        value: "v-value",
+        value: "tax-code",
         type: "string",
         filters: {},
       },
@@ -200,6 +205,18 @@ export default defineComponent({
     const setLoadingTable = (payload: boolean) => {
       loadingTable.value = payload;
     };
+    const setLoadingBtn = (payload: boolean) => {
+      loadingBtn.value = payload;
+    };
+    const setIsVisible = (payload: boolean) => {
+      isVisible.value = payload;
+    };
+    const setIsVisibleDetail = (payload: boolean) => {
+      isVisibleDetail.value = payload;
+    };
+    const setIsVisibleConfirm = (payload: boolean) => {
+      isVisibleConfirm.value = payload;
+    };
 
     watch(currentRouteQuery, (currentValue) => {
       route.push(`${currentValue}`);
@@ -221,14 +238,15 @@ export default defineComponent({
     });
 
     const getAllRoles = async (query: Record<string, unknown>) => {
-      const res = await api.roles.getAll(query);
+      const res = await api.shipping.getAll(query);
       setLoadingTable(false);
       if (!res) {
         return;
       }
       try {
-        const pagination = res.data.meta.pagination;
-        setTableData(res.data.data);
+        // const pagination = res.data.meta.pagination;
+        console.log(res.data.data.shippingPartners)
+        setTableData(res.data.data.shippingPartners);
         //  setPagination({
         //   total: pagination.total,
         //   total_pages: pagination.total_pages,
@@ -239,18 +257,123 @@ export default defineComponent({
         console.log(error);
       }
     };
+    const createShipping = async (parrams: Record<string, unknown>) => {
+      messageErr.value = "";
+      setLoadingBtn(true);
+      const res = await api.shipping.create(parrams);
+      setLoadingBtn(false);
+      if (!res) {
+        ctx.root.$store.commit("SET_SNACKBAR", {
+          type: "error",
+          title: "",
+          content: "Update error",
+        });
+        return;
+      }
+      try {
+        if (res.status > 199 && res.status < 399) {
+          setIsVisible(false);
+          ctx.root.$store.commit("SET_SNACKBAR", {
+            type: "success",
+            title: "",
+            content: "Create success",
+          });
+        } else {
+          messageErr.value = res.data.data.error || res.data.message;
+          ctx.root.$store.commit("SET_SNACKBAR", {
+            type: "error",
+            title: "",
+            content: "Create error",
+          });
+        }
+      } catch (error) {
+        messageErr.value = error;
+        ctx.root.$store.commit("SET_SNACKBAR", {
+          type: "error",
+          title: "",
+          content: "Create error",
+        });
+      }
+    };
+    const updateShipping = async (
+      parrams: Record<string, unknown>,
+      _id: any
+    ) => {
+      messageErr.value = "";
+      setLoadingBtn(true);
+      const res = await api.senders.update(parrams, _id);
+      setLoadingBtn(false);
+      if (!res) {
+        ctx.root.$store.commit("SET_SNACKBAR", {
+          type: "error",
+          title: "",
+          content: "Update error",
+        });
+        return;
+      }
+      try {
+        if (res.status > 199 && res.status < 399) {
+          setIsVisible(false);
+          ctx.root.$store.commit("SET_SNACKBAR", {
+            type: "success",
+            title: "",
+            content: "Update success",
+          });
+        } else {
+          messageErr.value = res.data.data.error;
+          ctx.root.$store.commit("SET_SNACKBAR", {
+            type: "error",
+            title: "",
+            content: "Update error",
+          });
+        }
+      } catch (error) {
+        messageErr.value = error;
+        ctx.root.$store.commit("SET_SNACKBAR", {
+          type: "error",
+          title: "",
+          content: "Update error",
+        });
+      }
+    };
+    const deleteShipping = async (_id: any) => {
+      setLoadingBtn(true);
+      const res = await api.senders.delete(_id);
+      setLoadingBtn(false);
+      if (!res) {
+        return;
+      }
+      try {
+        if (res.status > 199 && res.status < 399) {
+          setIsVisibleConfirm(false);
+          // this.$store.commit("SET_SNACKBAR", {
+          //     type: "",
+          //     title: "",
+          //     content: "",
+          // });
+        } else {
+          messageErr.value = res.data.data.error;
+        }
+      } catch (error) {
+        messageErr.value = error;
+      }
+    };
     return {
       headers,
       pagination,
       loadingTable,
       tableData,
       queryRoute,
+      messageErr,
       filterTable,
       selectedData,
       setTableData,
       setLoadingTable,
       setCurrentRouteQuery,
       setPagination,
+      createShipping,
+      updateShipping,
+      deleteShipping,
       getAllRoles,
       setCurrentFilterTable,
       currentRouteQuery,
@@ -304,7 +427,12 @@ export default defineComponent({
       this.isVisibleDetail = false;
     },
     handlerDialogSubmit(value: any) {
-      console.log(value);
+      if (Object.keys(this.selectedData).length) {
+        const id = this.selectedData.id;
+        this.updateShipping(value, id);
+      } else {
+        this.createShipping(value);
+      }
     },
     pagePaginationChange(_val: any) {
       this.$store.commit("CACHED_PAGINATION", {
@@ -397,7 +525,7 @@ export default defineComponent({
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: $primaryWhite
+    background: $primaryWhite;
   }
 }
 </style>

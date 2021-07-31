@@ -10,18 +10,12 @@
       </v-card-title>
       <v-card-text class="form-list scrollbar-y">
         <div class="form-item mb-5">
-          <span class="form-lable"> No. </span>
-          <span class="form-input">
-            <input type="text" placeholder="No." v-model="formData.no" />
-          </span>
-        </div>
-        <div class="form-item mb-5">
           <span class="form-lable"> Contact Person </span>
           <span class="form-input">
             <input
               type="text"
               placeholder="Contact Person"
-              v-model="formData.bagNumber"
+              v-model="formData.contact_person"
             />
           </span>
         </div>
@@ -31,7 +25,7 @@
             <input
               type="text"
               placeholder="Company"
-              v-model="formData.company"
+              v-model="formData.name"
             />
           </span>
         </div>
@@ -41,7 +35,7 @@
             <input
               type="text"
               placeholder="Reminiscent Name"
-              v-model="formData.reminiscent"
+              v-model="formData.contact_person"
             />
           </span>
         </div>
@@ -81,20 +75,20 @@
             <input
               type="number"
               placeholder="Phone Number"
-              v-model="formData.phone_number"
+              v-model="formData.phone"
             />
           </span>
         </div>
         <div class="form-item mb-5">
           <span class="form-lable"> Email </span>
           <span class="form-input">
-            <input type="text" placeholder="Email" v-model="formData.emai" />
+            <input type="text" placeholder="Email" v-model="formData.email" />
           </span>
         </div>
         <div class="form-item mb-5">
           <span class="form-lable"> VAT </span>
           <span class="form-input">
-            <input type="text" placeholder="VAT" v-model="formData.vat" />
+            <input type="text" placeholder="VAT" v-model="formData.tax_code" />
           </span>
         </div>
         <!-- <div class="form-item ">
@@ -106,6 +100,7 @@
                     </span>
                 </div> -->
       </v-card-text>
+      <p class="text-error" style="padding: 0 24px;">{{messEror}}</p>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
@@ -152,6 +147,9 @@ export default defineComponent({
     handlerSubmit: {
       type: Function,
     },
+    messEror:{
+      type: String,
+    }
   },
   setup: (props, ctx) => {
     let formData = ref<Record<string, any>>({});
