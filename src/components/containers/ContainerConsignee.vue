@@ -47,6 +47,7 @@
         @handlerCancel="handlerDialogCancel"
         @handlerSubmit="handlerDialogSubmit"
         @handlerUpdate="handlerDialogUpdate"
+        :loading-btn="loadingBtn" 
       />
       <DialogConsigneeDetail
         :is-visible="isVisibleDetail"
@@ -88,6 +89,7 @@ export default defineComponent({
     const { queryRoute, stringQueryRender, getQueryRoute } = useRouteQuery();
     let selectedData = reactive<Record<string, unknown>>({});
     const loadingTable = ref<boolean>(true);
+    const loadingBtn = ref<boolean>(false);
     const currentRouteQuery = ref<string>(stringQueryRender);
     let tableData = reactive<Record<string, unknown>>({ value: [] });
     let filterTable = ref({});
@@ -213,6 +215,9 @@ export default defineComponent({
     const setCurrentFilterTable = (payload: Record<string, unknown>): any => {
       filterTable.value = { ...payload };
     };
+    const setLoadingBtn = (payload: boolean) => {
+      loadingBtn.value = payload;
+    };
     const setLoadingTable = (payload: boolean) => {
       loadingTable.value = payload;
     };
@@ -259,6 +264,7 @@ export default defineComponent({
       headers,
       pagination,
       loadingTable,
+      loadingBtn,
       tableData,
       queryRoute,
       filterTable,
@@ -267,6 +273,7 @@ export default defineComponent({
       setLoadingTable,
       setCurrentRouteQuery,
       setPagination,
+      setLoadingBtn,
       getAllRoles,
       setCurrentFilterTable,
       currentRouteQuery,
@@ -321,8 +328,10 @@ export default defineComponent({
       this.isVisibleDetail = false;
     },
     async handlerDialogSubmit(value: any) {
+      this.setLoadingBtn(true);
       const res = await api.consignee.createConsignee(value);
       this.setLoadingTable(false);
+      this.setLoadingBtn(false);
       if (!res) {
         this.ctx.root.$store.commit("SET_SNACKBAR", {
           type: "error",
@@ -362,10 +371,12 @@ export default defineComponent({
       }
     },
     async handlerDialogUpdate(value: any) {
+      this.setLoadingBtn(true);
       const res = await api.consignee.updateConsignee(
         this.selectedData.id,
         value
       );
+      this.setLoadingBtn(false);
       this.setLoadingTable(false);
       if (!res) {
         this.ctx.root.$store.commit("SET_SNACKBAR", {

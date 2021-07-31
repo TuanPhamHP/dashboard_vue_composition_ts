@@ -132,6 +132,7 @@
           text
           @click="btnSubmitClick"
           class="buton-primary button-size text-transform-unset font-size-18"
+          :loading="loadingBtn"
         >
           {{ Object.keys(selectedData).length ? "Update" : "Create" }}
         </v-btn>
@@ -157,6 +158,10 @@ export default defineComponent({
     },
     handlerSubmit: {
       type: Function,
+    },
+    loadingBtn:{
+      type: Boolean,
+      default:false,
     },
     handlerUpdate: {
       type: Function,

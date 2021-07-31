@@ -94,6 +94,7 @@
       :logout-is-open="logoutIsOpen"
       :cancel="cancel"
       :delete-item="deleteItem"
+      :loading-btn="loadingBtn" 
     ></ConfirmDelete>
   </div>
 </template>
@@ -151,6 +152,7 @@ export default defineComponent({
   setup: (props, ctx) => {
     const endedThead = ref<number>(40);
     const tableHeight = ref<number>(600);
+    const loadingBtn = ref<boolean>(false);
     let filtersTable = ref<Record<string, unknown>>({});
     let selectedData = ref<Record<string, unknown>>({});
     let selectedDataDetail = ref<Record<string, unknown>>({});
@@ -166,6 +168,9 @@ export default defineComponent({
     const setSelectedDataDetail = (payload: Record<string, unknown>) => {
       selectedDataDetail.value = payload;
       ctx.emit("handleSelectedItemDetail", selectedDataDetail.value);
+    };
+    const setLoadingBtn = (payload: boolean) => {
+      loadingBtn.value = payload;
     };
     const setSelectedDataDelete = (payload: number) => {
       selectedDataDelete.value = payload;
@@ -188,6 +193,7 @@ export default defineComponent({
     return {
       ctx,
       filtersTable,
+      loadingBtn,
       tableHeight,
       endedThead,
       selectedData,
@@ -195,6 +201,7 @@ export default defineComponent({
       selectedDataDelete,
       setEndedThead,
       setTableHeight,
+      setLoadingBtn,
       setFiltersTable,
       setSelectedData,
       setSelectedDataDetail,
@@ -236,7 +243,9 @@ export default defineComponent({
       this.logoutIsOpen = false;
     },
     async deleteItem() {
+      this.setLoadingBtn(true);
       const res = await api.consignee.deleteConsignee(this.selectedDataDelete);
+      this.setLoadingBtn(false);
       if (!res) {
         this.ctx.root.$store.commit("SET_SNACKBAR", {
           type: "error",
