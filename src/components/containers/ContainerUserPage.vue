@@ -101,7 +101,7 @@ import ConfirmRemove from "@/components/popup/ConfirmRemove.vue";
      text: "Full Name",
      align: "start",
      sortable: false,
-     value: "v-value",
+     value: "name",
      type: "string",
      filters: {},
     },
@@ -109,7 +109,7 @@ import ConfirmRemove from "@/components/popup/ConfirmRemove.vue";
      text: "Phone Number",
      align: "start",
      sortable: false,
-     value: "v-value",
+     value: "phone",
      type: "string",
      filters: {},
     },
@@ -117,7 +117,7 @@ import ConfirmRemove from "@/components/popup/ConfirmRemove.vue";
      text: "Email",
      align: "start",
      sortable: false,
-     value: "v-value",
+     value: "email",
      type: "string",
      filters: {},
     },
@@ -133,7 +133,7 @@ import ConfirmRemove from "@/components/popup/ConfirmRemove.vue";
      text: "Creation Date",
      align: "start",
      sortable: false,
-     value: "v-value",
+     value: "created_at",
      type: "string",
      filters: {},
     },
@@ -204,6 +204,7 @@ import ConfirmRemove from "@/components/popup/ConfirmRemove.vue";
    const getAllUser = async (query: Record<string, unknown>) => {
     setLoadingTable(true);
     if(!Object.keys(query).length) return;
+    query.include = 'agency'
     const res = await api.users.getAll(query);
     setLoadingTable(false);
     if (!res) {

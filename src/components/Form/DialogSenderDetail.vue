@@ -1,11 +1,11 @@
 <template>
   <v-dialog v-model="isVisible" persistent max-width="80vw">
     <v-card class="dialog-sender-detail">
-      <v-card-title class="text-h5"> Packages of Sender </v-card-title>
+      <v-card-title class="text-h5"> Packages of Sender: <span class="text-primary-color"> {{selectedData.name}}</span> </v-card-title>
       <v-card-text class="">
         <div class="box-top mb-4 col-xxl-12">
           <div class="row my-0">
-            <div class="col-xxl-6 mb-3">
+            <!-- <div class="col-xxl-6 mb-3">
               <div class="row my-0 detail-data display-flex align-center">
                 <span class="col-xxl-5"> No . </span>
                 <span class="col-xxl-7">
@@ -20,12 +20,12 @@
                   <input type="text" class="w-100" />
                 </span>
               </div>
-            </div>
+            </div> -->
             <div class="col-xxl-6 mb-3">
               <div class="row my-0 detail-data display-flex align-center">
                 <span class="col-xxl-5"> Company </span>
                 <span class="col-xxl-7">
-                  <input type="text" disabled class="w-100" />
+                  <input type="text" disabled class="w-100" v-model="detailSender.company"/>
                 </span>
               </div>
             </div>
@@ -33,7 +33,7 @@
               <div class="row my-0 detail-data display-flex align-center">
                 <span class="col-xxl-5"> Phone Number </span>
                 <span class="col-xxl-7">
-                  <input type="text" disabled class="w-100" />
+                  <input type="text" disabled class="w-100"  v-model="detailSender.phone"/>
                 </span>
               </div>
             </div>
@@ -41,7 +41,7 @@
               <div class="row my-0 detail-data display-flex align-center">
                 <span class="col-xxl-5"> Contact Person </span>
                 <span class="col-xxl-7">
-                  <input type="text" disabled class="w-100" />
+                  <input type="text" disabled class="w-100" v-model="detailSender.name"/>
                 </span>
               </div>
             </div>
@@ -49,7 +49,7 @@
               <div class="row my-0 detail-data display-flex align-center">
                 <span class="col-xxl-5"> Email </span>
                 <span class="col-xxl-7">
-                  <input type="text" disabled class="w-100" />
+                  <input type="text" disabled class="w-100" v-model="detailSender.email"/>
                 </span>
               </div>
             </div>
@@ -90,7 +90,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, watch } from "@vue/composition-api";
+import { defineComponent, ref, reactive, watch, onMounted, toRef } from "@vue/composition-api";
 import TableSenderDetail from "@/components/Table/TableSenderDetail.vue";
 import api from "@/services";
 import { NormalHeaderItem } from "@/InterfaceModel/Header";
@@ -116,6 +116,8 @@ export default defineComponent({
   },
   setup: (props, ctx) => {
     let tableData = reactive<Record<string, unknown>>({ value: [] });
+    let dataDefault: Record<string, any> = toRef(props, "selectedData");
+    let detailSender: Record<string, any> = ref({});
     const loadingTable = ref<boolean>(true);
     const btnCancelClick = () => {
       ctx.emit("handlerCancel");
@@ -249,44 +251,49 @@ export default defineComponent({
     const setLoadingTable = (payload: boolean) => {
       loadingTable.value = payload;
     };
-    const getAllData = async (query: Record<string, unknown>) => {
-      const res = await api.roles.getAll(query);
-      setLoadingTable(false);
-      if (!res) {
-        return;
-      }
-      try {
-        const pagination = res.data.meta.pagination;
-        setTableData(res.data.data);
-        //  setPagination({
-        //   total: pagination.total,
-        //   total_pages: pagination.total_pages,
-        //   per_page: pagination.per_page,
-        //   current_page: pagination.current_page,
-        //  });
-      } catch (error) {
-        console.log(error);
-      }
+    const getDetail = async (query: Record<string, unknown>) => {
+      const _id:number  =  dataDefault.value.id
+      if(_id){
+        const res = await api.senders.getDetail(_id);
+        if (!res) {
+          return;
+        }
+        try {
+          detailSender.value = res.data.data.sender
+          // const pagination = res.data.meta.pagination;
+          // setTableData(res.data.data.sender);
+          //  setPagination({
+          //   total: pagination.total,
+          //   total_pages: pagination.total_pages,
+          //   per_page: pagination.per_page,
+          //   current_page: pagination.current_page,
+          //  });
+        } catch (error) {
+          console.log(error);
+        }
+      }   
     };
+    onMounted(getDetail)
     return {
       headers,
       loadingTable,
       tableData,
       btnCancelClick,
       btnSubmitClick,
-      getAllData,
+      detailSender
+      // getDetail,
     };
   },
   methods: {},
   watch: {
-    isVisible(_newVal) {
-      if (_newVal) {
-        if (this.selectedData.id) {
-          const _id = this.selectedData.id;
-          this.getAllData(_id);
-        }
-      }
-    },
+    // isVisible(_newVal) {
+    //   if (_newVal) {
+    //     if (this.selectedData.id) {
+    //       const _id = this.selectedData.id;
+    //       this.getDetail(_id);
+    //     }
+    //   }
+    // },
   },
 });
 </script>
@@ -315,13 +322,14 @@ export default defineComponent({
         height: 32px;
         outline: none;
         padding: 0 15px;
+        color: $disableText;
         &::placeholder {
           font-size: 14px;
           color: $GPEdetailData;
         }
-        &:disabled {
-          background-color: #fafafa;
-        }
+        // &:disabled {
+        //   background-color: #fafafa;
+        // }
       }
     }
   }

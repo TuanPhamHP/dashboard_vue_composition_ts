@@ -100,7 +100,7 @@
   components: {
   },
   setup: (props,ctx) => {
-   let formData  = ref<Record<string,any>>({a:1}) 
+   let formData  = ref<Record<string,any>>({}) 
    let defaultSender = ref<Record<string,any>>({}) 
    let defaultConsignee = ref<Record<string,any>>({}) 
    let listSender  = ref<Record<string,string>[]>([])

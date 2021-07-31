@@ -56,6 +56,7 @@
       :handlerCancel="handlerDialogConfirmCancel"
       :handlerConfirm="handleConfirmRemoveItem"
       :loading-btn="loadingBtn" 
+      title="Sender"
    >
    </ConfirmRemove>
   </div>

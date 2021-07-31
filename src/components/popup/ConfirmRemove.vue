@@ -2,7 +2,7 @@
   <v-dialog v-model="isVisible" persistent max-width="500px">
     <v-card>
       <v-card-title class="header py-5">
-        <p class="mb-0 py-5">Do you really want remove order?</p>
+        <p class="mb-0 py-5">Do you really want to delete this {{title}}?</p>
       </v-card-title>
       <v-card-actions class="p-4 pt-0">
         <v-spacer></v-spacer>
@@ -32,6 +32,9 @@ export default defineComponent({
     loadingBtn:{
       type:Boolean,
       default:false
+    },
+    title:{
+      type:String,
     }
   },
   setup(props){

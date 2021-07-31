@@ -12,9 +12,13 @@
       <v-card-text class="form-list scrollbar-y">
         <div class="form-item mb-5">
           <span class="form-lable"> Company </span>
-          <span class="form-input">
-            <input type="text" placeholder="Company" v-model="formData.company" />
-          </span>
+          <v-select
+            :items="listCompany"
+            placeholder="Company"
+            class="form-input"
+            outlined
+            @change="(val)=>{handerSelecChange(val,'company')}"
+          ></v-select>
         </div>
         <div class="form-item mb-5">
           <span class="form-lable"> Full Name </span>
@@ -33,6 +37,7 @@
             placeholder="Profile"
             class="form-input"
             outlined
+            @change="(val)=>{handerSelecChange(val,'profile')}"
           ></v-select>
         </div>
         <div class="form-item mb-5">
@@ -58,7 +63,7 @@
         <div class="form-item mb-5">
           <span class="form-lable"> Password: </span>
           <span class="form-input">
-            <input type="text" placeholder="Password" v-model="formData.password" />
+            <input type="password" placeholder="Password" v-model="formData.password" />
           </span>
         </div>
         <div class="form-item mb-5">
@@ -150,14 +155,23 @@ export default defineComponent({
       // return `${date.yyyy}-${date.MM}-${date.dd}`;
       return _date;
     };
-    let formData = ref<Record<string, any>>({
-    });
+    let formData = ref<Record<string, any>>({});
     watch(dataDefault,currentValue=>{
         formData.value = {...currentValue};
     })
+     const setDataFormValue = (payload: Record<string,any>) => {
+      formData.value = {
+        ...formData.value,
+        ...payload
+      };
+    };
     let listProfile = ref<Record<string,unknown>[]>([]);
+    let listCompany = ref<Record<string,unknown>[]>([]);
     const setlistProfileData = (payload:Record<string,unknown>[])=>{
       listProfile.value = payload
+    }
+    const setlistCompanyData = (payload:Record<string,unknown>[])=>{
+      listCompany.value = payload
     }
     const btnCancelClick = () => {
       ctx.emit("handlerCancel");
@@ -165,6 +179,12 @@ export default defineComponent({
     const btnSubmitClick = () => {
       ctx.emit("handlerSubmit", formData.value);
     };
+    const handerSelecChange = (val:any,feild:string)=>{
+     let _obj:Record<string, unknown> = {}
+     _obj[`${feild}`] = val
+     setDataFormValue(_obj)
+     
+    }
     const getAllAgency = async () => {
       const res = await api.agency.getAll();
       if (!res) {
@@ -180,13 +200,30 @@ export default defineComponent({
       }
     
     };
+    const getAllCompany = async () => {
+      const res = await api.agency.getAll();
+      if (!res) {
+        return;
+      }
+      try {
+        if(res.status > 199 && res.status < 399 ){
+          setlistCompanyData(res.data.data.company);
+        }
+      
+      } catch (error) {
+      console.log(error);
+      }
+    
+    };
     onMounted(getAllAgency)
     return {
       formData,
       listProfile,
+      listCompany,
       btnCancelClick,
       getDateObject,
       btnSubmitClick,
+      handerSelecChange
     };
   },
   methods: {

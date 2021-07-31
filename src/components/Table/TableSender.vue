@@ -62,7 +62,7 @@
         </v-tooltip>
         <v-tooltip bottom>
           <template v-slot:activator="{ on, attrs }">
-              <v-icon v-bind="attrs" v-on="on" small @click="detailItem(item)"> mdi-eye </v-icon>
+              <img v-bind="attrs" v-on="on" @click="detailItem(item)" class="pointer mr-2" src="@/assets/images/icon-detail.svg" alt=""> 
           </template>
           <span>View Detail</span>
         </v-tooltip>

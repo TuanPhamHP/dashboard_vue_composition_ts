@@ -88,6 +88,7 @@
  import api from "@/services";
  import route from "@/router/index";
  import { mapState } from "vuex";
+  import useRouteQuery from "@/utils/uses/routerQuery/useRouteQuery";
  export default defineComponent({
   components: {
   },
@@ -97,12 +98,28 @@
    };
   },
   setup: props => {
+  const { queryRoute, stringQueryRender, getQueryRoute,currentParram } = useRouteQuery();
    let tab  = ref<number>(1)
    let formData = ref<Record<string,string> >({})
    let listSender  = ref<Record<string,string>[]>([])
    let defaultSender = ref<Record<string,any>>({}) 
    let listConsignee  = ref<Record<string,string>[]>([])
    let defaultConsignee = ref<Record<string,any>>({}) 
+  const currentID:number = currentParram;
+  const getOrderDetail = async () => {
+    const res = await api.order.getDetail(currentID);
+    if (!res) {
+     return;
+    }
+    try {
+      if(res.status > 199 && res.status < 399 ){
+        setDataFormValue(res.data.data.order)
+      }
+    } catch (error) {
+     console.log(error);
+    }
+   };
+   onMounted(getOrderDetail);
   const getAllSender = async (query: Record<string, unknown>) => {
     const res = await api.senders.getAll(query);
     if (!res) {

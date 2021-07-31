@@ -120,8 +120,6 @@
    };
    const setSelectedData = (payload: Record<string, unknown>) => {
       selectedData.value = payload;
-    ctx.emit('handleSelectedItem',selectedData.value)
-
    };
    const editItem = (item:Record<string,string>)=>{
       setSelectedData(item)
@@ -203,12 +201,6 @@
     };
     this.setFiltersTable(body);
    },
-  editItem(item:Record<string,string>){
-      this.setSelectedData(item)
-   },
-   detailItem(item:Record<string,string>){
-     this.setSelectedDataDetail(item)
-   }
   },
  });
 </script>
