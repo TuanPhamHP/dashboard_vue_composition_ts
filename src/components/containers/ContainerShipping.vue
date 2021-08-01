@@ -30,6 +30,7 @@
         :table-loading="loadingTable"
         :headers="headers"
         @handleFilterChange="filterTableChange"
+        @handleRemoveItem="handlerRemove"
         @handleSelectedItem="handlerEdit"
         :current-binding-url="queryRoute"
         @handleSelectedItemDetail="handlerViewDetail"
@@ -46,6 +47,7 @@
         :selected-data="selectedData"
         @handlerCancel="handlerDialogCancel"
         @handlerSubmit="handlerDialogSubmit"
+        :loading-btn="loadingBtn"
         :mess-eror="messageErr"
       />
       <DialogShippingDetail
@@ -53,6 +55,14 @@
         :selected-data="selectedData"
         @handlerCancel="handlerDialogItemCancel"
       />
+      <ConfirmRemove
+        :is-visible="isVisibleConfirm"
+        :handlerCancel="handlerDialogConfirmCancel"
+        :handlerConfirm="handleConfirmRemoveItem"
+        :loading-btn="loadingBtn"
+        title="Shipping Partner"
+      >
+      </ConfirmRemove>
     </div>
   </div>
 </template>
@@ -69,6 +79,7 @@ import { NormalHeaderItem } from "@/InterfaceModel/Header";
 import { IdentifyObject } from "@/InterfaceModel/CustomObject";
 import useRouteQuery from "@/utils/uses/routerQuery/useRouteQuery";
 import route from "@/router/index";
+import ConfirmRemove from "@/components/popup/ConfirmRemove.vue";
 import { mapState } from "vuex";
 import { filter } from "vue/types/umd";
 export default defineComponent({
@@ -77,16 +88,11 @@ export default defineComponent({
     SharedPagination,
     DialogShippingDetail,
     DialogShipping,
-  },
-  data() {
-    return {
-      isVisible: false,
-      isVisibleDetail: false,
-    };
+    ConfirmRemove,
   },
   setup: (props, ctx) => {
     const { queryRoute, stringQueryRender, getQueryRoute } = useRouteQuery();
-    let selectedData = reactive<Record<string, unknown>>({});
+    const selectedData = ref<Record<string, unknown>>({});
     const loadingTable = ref<boolean>(true);
     const loadingBtn = ref<boolean>(false);
     const isVisible = ref<boolean>(false);
@@ -236,6 +242,16 @@ export default defineComponent({
         ...currentValue,
       });
     });
+    watch(isVisible, (currentValue) => {
+      if (!currentValue) {
+        selectedData.value = {};
+      }
+    });
+    watch(isVisibleDetail, (currentValue) => {
+      if (!currentValue) {
+        selectedData.value = {};
+      }
+    });
 
     const getAllRoles = async (query: Record<string, unknown>) => {
       const res = await api.shipping.getAll(query);
@@ -245,7 +261,7 @@ export default defineComponent({
       }
       try {
         // const pagination = res.data.meta.pagination;
-        console.log(res.data.data.shippingPartners)
+        console.log(res.data.data.shippingPartners);
         setTableData(res.data.data.shippingPartners);
         //  setPagination({
         //   total: pagination.total,
@@ -257,10 +273,10 @@ export default defineComponent({
         console.log(error);
       }
     };
-    const createShipping = async (parrams: Record<string, unknown>) => {
+    const createShipping = async (params: Record<string, unknown>) => {
       messageErr.value = "";
       setLoadingBtn(true);
-      const res = await api.shipping.create(parrams);
+      const res = await api.shipping.create(params);
       setLoadingBtn(false);
       if (!res) {
         ctx.root.$store.commit("SET_SNACKBAR", {
@@ -296,12 +312,12 @@ export default defineComponent({
       }
     };
     const updateShipping = async (
-      parrams: Record<string, unknown>,
+      params: Record<string, unknown>,
       _id: any
     ) => {
       messageErr.value = "";
       setLoadingBtn(true);
-      const res = await api.senders.update(parrams, _id);
+      const res = await api.shipping.update(_id, params);
       setLoadingBtn(false);
       if (!res) {
         ctx.root.$store.commit("SET_SNACKBAR", {
@@ -338,7 +354,7 @@ export default defineComponent({
     };
     const deleteShipping = async (_id: any) => {
       setLoadingBtn(true);
-      const res = await api.senders.delete(_id);
+      const res = await api.shipping.delete(_id);
       setLoadingBtn(false);
       if (!res) {
         return;
@@ -364,32 +380,28 @@ export default defineComponent({
       loadingTable,
       tableData,
       queryRoute,
+      loadingBtn,
       messageErr,
       filterTable,
+      isVisible,
+      isVisibleDetail,
+      isVisibleConfirm,
       selectedData,
       setTableData,
       setLoadingTable,
       setCurrentRouteQuery,
       setPagination,
+      setLoadingBtn,
       createShipping,
+      setIsVisible,
+      setIsVisibleDetail,
       updateShipping,
+      setIsVisibleConfirm,
       deleteShipping,
       getAllRoles,
       setCurrentFilterTable,
       currentRouteQuery,
     };
-  },
-  watch: {
-    isVisible(_newVal) {
-      if (!_newVal) {
-        this.selectedData = {};
-      }
-    },
-    isVisibleDetail(_newVal) {
-      if (!_newVal) {
-        this.selectedData = {};
-      }
-    },
   },
   computed: {
     ...mapState({
@@ -421,10 +433,17 @@ export default defineComponent({
   },
   methods: {
     handlerDialogCancel() {
-      this.isVisible = false;
+      this.setIsVisible(false);
+    },
+    handlerDialogConfirmCancel() {
+      this.setIsVisibleConfirm(false);
+    },
+    handlerRemove(item: Record<string, unknown>) {
+      this.setIsVisibleConfirm(true);
+      this.selectedData = { ...item };
     },
     handlerDialogItemCancel() {
-      this.isVisibleDetail = false;
+      this.setIsVisibleDetail(false);
     },
     handlerDialogSubmit(value: any) {
       if (Object.keys(this.selectedData).length) {
@@ -433,6 +452,10 @@ export default defineComponent({
       } else {
         this.createShipping(value);
       }
+    },
+    handleConfirmRemoveItem(item: Record<string, unknown>) {
+      const id = this.selectedData.id;
+      this.deleteShipping(id);
     },
     pagePaginationChange(_val: any) {
       this.$store.commit("CACHED_PAGINATION", {
@@ -458,11 +481,11 @@ export default defineComponent({
       this.setCurrentFilterTable(_val);
     },
     handlerEdit(item: Record<string, unknown>) {
-      this.isVisible = true;
+      this.setIsVisible(true);
       this.selectedData = { ...item };
     },
     handlerViewDetail(item: Record<string, unknown>) {
-      this.isVisibleDetail = true;
+      this.setIsVisibleDetail(true);
       this.selectedData = { ...item };
     },
     bindingDefaultFilterHeader(_obj: Record<string, unknown>) {

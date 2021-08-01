@@ -22,11 +22,7 @@
         <div class="form-item mb-5">
           <span class="form-lable"> Company </span>
           <span class="form-input">
-            <input
-              type="text"
-              placeholder="Company"
-              v-model="formData.name"
-            />
+            <input type="text" placeholder="Company" v-model="formData.name" />
           </span>
         </div>
         <div class="form-item mb-5">
@@ -100,7 +96,7 @@
                     </span>
                 </div> -->
       </v-card-text>
-      <p class="text-error" style="padding: 0 24px;">{{messEror}}</p>
+      <p class="text-error" style="padding: 0 24px">{{ messEror }}</p>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
@@ -121,6 +117,7 @@
           text
           @click="btnSubmitClick"
           class="buton-primary button-size text-transform-unset font-size-18"
+          :loading="loadingBtn"
         >
           {{ Object.keys(selectedData).length ? "Update" : "Create" }}
         </v-btn>
@@ -130,7 +127,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "@vue/composition-api";
+import { defineComponent, ref, watch, toRef } from "@vue/composition-api";
 export default defineComponent({
   props: {
     isVisible: {
@@ -147,11 +144,19 @@ export default defineComponent({
     handlerSubmit: {
       type: Function,
     },
-    messEror:{
+    loadingBtn: {
+      type: Boolean,
+      default: false,
+    },
+    messEror: {
       type: String,
-    }
+    },
   },
   setup: (props, ctx) => {
+    let dataDefault: Record<string, any> | undefined = toRef(
+      props,
+      "selectedData"
+    );
     let formData = ref<Record<string, any>>({});
     const btnCancelClick = () => {
       ctx.emit("handlerCancel");
@@ -159,6 +164,9 @@ export default defineComponent({
     const btnSubmitClick = () => {
       ctx.emit("handlerSubmit", formData.value);
     };
+    watch(dataDefault, (currentValue) => {
+      formData.value = { ...currentValue };
+    });
     return {
       formData,
       btnCancelClick,

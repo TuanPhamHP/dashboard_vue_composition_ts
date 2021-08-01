@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="isVisible" persistent max-width="500px">
+  <v-dialog v-model="isVisible" persistent max-width="520px">
     <v-card>
       <v-card-title class="header py-5">
         <p class="mb-0 py-5">Do you really want to delete this {{title}}?</p>
