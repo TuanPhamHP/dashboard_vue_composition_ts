@@ -114,11 +114,18 @@ export default defineComponent({
     };
     const setSelectedData = (payload: Record<string, unknown>) => {
       selectedData.value = payload;
+    };
+    const editItem = (item: Record<string, string>) => {
+      setSelectedData(item);
       ctx.emit("handleSelectedItem", selectedData.value);
     };
-    const setSelectedDataDetail = (payload: Record<string, unknown>) => {
-      selectedDataDetail.value = payload;
-      ctx.emit("handleSelectedItemDetail", selectedDataDetail.value);
+    const detailItem = (item: Record<string, string>) => {
+      setSelectedData(item);
+      ctx.emit("handleSelectedItemDetail", selectedData.value);
+    };
+    const deleteItem = (item: Record<string, string>) => {
+      setSelectedData(item);
+      ctx.emit("handleRemoveItem", selectedData.value);
     };
     const setTableHeight = (payload: number) => {
       tableHeight.value = payload;
@@ -145,7 +152,9 @@ export default defineComponent({
       setTableHeight,
       setFiltersTable,
       setSelectedData,
-      setSelectedDataDetail,
+      editItem,
+      detailItem,
+      deleteItem
     };
   },
   data() {
@@ -185,12 +194,6 @@ export default defineComponent({
         ...valObject,
       };
       this.setFiltersTable(body);
-    },
-    editItem(item: Record<string, string>) {
-      this.setSelectedData(item);
-    },
-    detailItem(item: Record<string, string>) {
-      this.setSelectedDataDetail(item);
     },
   },
 });

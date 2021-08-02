@@ -10,18 +10,12 @@
       </v-card-title>
       <v-card-text class="form-list scrollbar-y">
         <div class="form-item mb-5">
-          <span class="form-lable"> No. </span>
-          <span class="form-input">
-            <input type="text" placeholder="No." v-model="formData.no" />
-          </span>
-        </div>
-        <div class="form-item mb-5">
           <span class="form-lable"> Company </span>
           <span class="form-input">
             <input
               type="text"
               placeholder="Company"
-              v-model="formData.company"
+              v-model="formData.name"
             />
           </span>
         </div>
@@ -31,18 +25,27 @@
             <input
               type="text"
               placeholder="Contact Person"
-              v-model="formData.bagNumber"
+              v-model="formData.contact_person"
             />
           </span>
         </div>
-
+        <div class="form-item mb-5">
+          <span class="form-lable"> Code </span>
+          <span class="form-input">
+            <input
+              type="number"
+              placeholder="Code"
+              v-model="formData.agency_code"
+            />
+          </span>
+        </div>
         <div class="form-item mb-5">
           <span class="form-lable"> Reminiscent Name </span>
           <span class="form-input">
             <input
               type="text"
               placeholder="Reminiscent Name"
-              v-model="formData.reminiscent"
+              v-model="formData.contact_person"
             />
           </span>
         </div>
@@ -88,20 +91,20 @@
             <input
               type="number"
               placeholder="Phone Number"
-              v-model="formData.phone_number"
+              v-model="formData.phone"
             />
           </span>
         </div>
         <div class="form-item mb-5">
           <span class="form-lable"> Email </span>
           <span class="form-input">
-            <input type="text" placeholder="Email" v-model="formData.emai" />
+            <input type="text" placeholder="Email" v-model="formData.email" />
           </span>
         </div>
         <div class="form-item mb-5">
           <span class="form-lable"> VAT </span>
           <span class="form-input">
-            <input type="text" placeholder="VAT" v-model="formData.vat" />
+            <input type="text" placeholder="VAT" v-model="formData.tax_code" />
           </span>
         </div>
         <!-- <div class="form-item ">
@@ -113,6 +116,7 @@
                     </span>
                 </div> -->
       </v-card-text>
+      <p class="text-error" style="padding: 0 24px">{{ messEror }}</p>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
@@ -132,6 +136,7 @@
           text
           @click="btnSubmitClick"
           class="buton-primary button-size text-transform-unset"
+          :loading="loadingBtn"
         >
           {{ Object.keys(selectedData).length ? "Update" : "Create" }}
         </v-btn>
@@ -141,7 +146,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "@vue/composition-api";
+import { defineComponent, ref, watch, toRef } from "@vue/composition-api";
 export default defineComponent({
   props: {
     isVisible: {
@@ -158,8 +163,19 @@ export default defineComponent({
     handlerSubmit: {
       type: Function,
     },
+    loadingBtn: {
+      type: Boolean,
+      default: false,
+    },
+    messEror: {
+      type: String,
+    },
   },
   setup: (props, ctx) => {
+    let dataDefault: Record<string, any> | undefined = toRef(
+      props,
+      "selectedData"
+    );
     let formData = ref<Record<string, any>>({});
     const btnCancelClick = () => {
       ctx.emit("handlerCancel");
@@ -167,6 +183,9 @@ export default defineComponent({
     const btnSubmitClick = () => {
       ctx.emit("handlerSubmit", formData.value);
     };
+    watch(dataDefault, (currentValue) => {
+      formData.value = { ...currentValue };
+    });
     return {
       formData,
       btnCancelClick,
