@@ -302,7 +302,6 @@ export default defineComponent({
   watch: {
     selectedData() {
       this.formData = this.selectedData;
-      console.log(this.selectedData);
     },
     isVisible(_newVal) {
       if (_newVal) {

@@ -2,11 +2,13 @@
   <v-dialog v-model="isVisible" persistent max-width="750">
     <v-card class="dialog-agency">
       <v-card-title class="text-h5">
-        {{
-          Object.keys(selectedData).length
-            ? "Update Agency Infomation"
-            : "Create new Agency"
-        }}
+        <span v-if="Object.keys(selectedData).length">
+          Update Agency Infomation:
+          <span class="text-uppercase text-primary-color">{{
+            selectedData.contact_person ? selectedData.contact_person : ""
+          }}</span>
+        </span>
+        <span v-else> Create new Agency </span>
       </v-card-title>
       <v-card-text class="form-list scrollbar-y">
         <div class="form-item mb-5">

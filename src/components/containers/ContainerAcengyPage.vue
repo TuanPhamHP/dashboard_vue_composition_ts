@@ -445,6 +445,10 @@ export default defineComponent({
     handlerDialogItemCancel() {
       this.setIsVisibleDetail(false);
     },
+    handlerViewDetail(item: Record<string, unknown>) {
+      this.setIsVisibleDetail(true);
+      this.selectedData = { ...item };
+    },
     handlerDialogSubmit(value: any) {
       if (Object.keys(this.selectedData).length) {
         const id = this.selectedData.id;
@@ -482,10 +486,6 @@ export default defineComponent({
     },
     handlerEdit(item: Record<string, unknown>) {
       this.isVisible = true;
-      this.selectedData = { ...item };
-    },
-    handlerViewDetail(item: Record<string, unknown>) {
-      this.isVisibleDetail = true;
       this.selectedData = { ...item };
     },
     bindingDefaultFilterHeader(_obj: Record<string, unknown>) {
