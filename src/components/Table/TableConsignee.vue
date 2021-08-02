@@ -52,7 +52,7 @@
   </template> -->
       <template v-slot:item.actions="{ item }">
         <div class="w-max-content">
-          <v-tooltip bottom content-class="top text-white">
+          <v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
               <img
                 v-on="on"
@@ -65,7 +65,7 @@
             </template>
             <span>Edit</span>
           </v-tooltip>
-          <v-tooltip bottom content-class="top text-white">
+          <v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
               <img
                 v-on="on"
@@ -78,11 +78,16 @@
             </template>
             <span>Delete</span>
           </v-tooltip>
-          <v-tooltip bottom content-class="top text-white">
+          <v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
-              <v-icon v-bind="attrs" v-on="on" small @click="detailItem(item)">
-                mdi-eye
-              </v-icon>
+              <img
+                v-bind="attrs"
+                v-on="on"
+                @click="detailItem(item)"
+                class="pointer mr-2"
+                src="@/assets/images/icon-detail.svg"
+                alt=""
+              />
             </template>
             <span>View Detail</span>
           </v-tooltip>
@@ -94,7 +99,7 @@
       :logout-is-open="logoutIsOpen"
       :cancel="cancel"
       :delete-item="deleteItem"
-      :loading-btn="loadingBtn" 
+      :loading-btn="loadingBtn"
     ></ConfirmDelete>
   </div>
 </template>
@@ -205,7 +210,7 @@ export default defineComponent({
       setFiltersTable,
       setSelectedData,
       setSelectedDataDetail,
-      setSelectedDataDelete
+      setSelectedDataDelete,
     };
   },
   data() {
