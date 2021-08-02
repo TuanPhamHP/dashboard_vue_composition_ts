@@ -422,8 +422,9 @@ body {
 /* width */
 .scrollbar-y {
  &::-webkit-scrollbar {
-  width: 5px;
+  width: 4px;
   height: 6px;
+  opacity: 0;
  }
 
  &::-webkit-scrollbar-track {
@@ -433,8 +434,13 @@ body {
 
  &::-webkit-scrollbar-thumb {
   border-radius: 10px;
-  background: rgba(0, 0, 0, 0.48);
+
  }
+    &:hover{
+        &::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.15);
+        }
+    }
 }
 .input-disabled{
     &:disabled {

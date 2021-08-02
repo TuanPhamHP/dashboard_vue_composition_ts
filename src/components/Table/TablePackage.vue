@@ -38,6 +38,14 @@
     </v-tooltip>
    </div>
   </template>
+  <template v-slot:item.status="{ item }">
+    <v-chip
+    color="red"
+    dark
+    >
+    {{item.status}}
+    </v-chip>
+</template>
  </v-data-table>
 </template>
 
