@@ -25,7 +25,12 @@
    <div class="pt-1">
     <SharedPagination :pagination-sync="pagination" @handlePageSizeChange="pagePaginationChange" @handlePageChange="pagePaginationChange" />
    </div>
-   <DialogUser :is-visible="isVisible"              :selected-data="selectedData"     @handlerCancel="handlerDialogCancel"  @handlerSubmit="handlerDialogSubmit" 
+   <DialogUser 
+    :is-visible="isVisible"   
+    v-if="isVisible"           
+    :selected-data="selectedData"     
+    @handlerCancel="handlerDialogCancel"  
+    @handlerSubmit="handlerDialogSubmit" 
     :loading-btn="loadingBtn" 
     :mess-eror="messageErr" 
    />
@@ -389,8 +394,6 @@ import ConfirmRemove from "@/components/popup/ConfirmRemove.vue";
    }),
   },
   created() {
-   console.log("container-create", this.queryRoute);
-
    if (this.previousPagination) {
     const body = {
      ...this.previousPagination,

@@ -200,21 +200,21 @@ export default defineComponent({
       }
     
     };
-    const getAllCompany = async () => {
-      const res = await api.agency.getAll();
-      if (!res) {
-        return;
-      }
-      try {
-        if(res.status > 199 && res.status < 399 ){
-          setlistCompanyData(res.data.data.company);
-        }
+    // const getAllCompany = async () => {
+    //   const res = await api.agency.getAll();
+    //   if (!res) {
+    //     return;
+    //   }
+    //   try {
+    //     if(res.status > 199 && res.status < 399 ){
+    //       setlistCompanyData(res.data.data.company);
+    //     }
       
-      } catch (error) {
-      console.log(error);
-      }
+    //   } catch (error) {
+    //   console.log(error);
+    //   }
     
-    };
+    // };
     onMounted(getAllAgency)
     return {
       formData,
@@ -229,6 +229,7 @@ export default defineComponent({
   methods: {
     
   },
+ 
 });
 </script>
 

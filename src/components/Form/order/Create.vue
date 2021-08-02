@@ -11,7 +11,7 @@
         <span class="col-xxl-3"> Creator </span>
         <span class="col-xxl-9 form-input">
           <input type="text" placeholder="Creator" class="max-width-74" v-model="formData.status" />
-        </span>
+        </span> 
       </div>
       <div class="row my-0 display-flex detail-data align-center">
         <span class="col-xxl-3"> Order Date </span>

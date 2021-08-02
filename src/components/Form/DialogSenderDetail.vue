@@ -251,7 +251,7 @@ export default defineComponent({
     const setLoadingTable = (payload: boolean) => {
       loadingTable.value = payload;
     };
-    const getDetail = async (query: Record<string, unknown>) => {
+    const getDetail = async () => {
       const _id:number  =  dataDefault.value.id
       if(_id){
         const res = await api.senders.getDetail(_id);
@@ -273,7 +273,11 @@ export default defineComponent({
         }
       }   
     };
-    onMounted(getDetail)
+    watch(dataDefault,currentvalue=>{
+      if(Object.keys(currentvalue).length){
+        getDetail()
+      }
+    })
     return {
       headers,
       loadingTable,
