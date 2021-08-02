@@ -120,8 +120,7 @@
    };
    const setSelectedData = (payload: Record<string, unknown>) => {
       selectedData.value = payload;
-   };
-  
+   }; 
    const editItem = (item:Record<string,string>)=>{
       setSelectedData(item)
        ctx.emit('handleSelectedItem',selectedData.value)

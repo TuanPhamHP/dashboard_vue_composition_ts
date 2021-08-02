@@ -242,6 +242,8 @@ export default defineComponent({
     });
 
     const getAllRoles = async (query: Record<string, unknown>) => {
+      setLoadingTable(true);
+      if (!Object.keys(query).length) return;
       const res = await api.consignee.getAllConsignee(query);
       setLoadingTable(false);
       if (!res) {

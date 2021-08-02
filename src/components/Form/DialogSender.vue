@@ -3,17 +3,22 @@
     <v-card class="dialog-bag">
       <v-card-title class="text-h5">
         <span v-if="Object.keys(selectedData).length">
-          Update Sender Information: <span class="text-uppercase text-primary-color">{{selectedData.tax_code?selectedData.tax_code:''}}</span>
+          Update Sender Information:
+          <span class="text-uppercase text-primary-color">{{
+            selectedData.tax_code ? selectedData.tax_code : ""
+          }}</span>
         </span>
-        <span v-else>
-          Create new Sender
-        </span>
+        <span v-else> Create new Sender </span>
       </v-card-title>
       <v-card-text class="form-list scrollbar-y">
         <div class="form-item mb-5">
           <span class="form-lable"> Company </span>
           <span class="form-input">
-            <input type="text" placeholder="Company" v-model="formData.company" />
+            <input
+              type="text"
+              placeholder="Company"
+              v-model="formData.company"
+            />
           </span>
         </div>
         <div class="form-item mb-5">
@@ -35,8 +40,12 @@
             placeholder="Reminiscent Name"
             class="form-input"
             outlined
-            @change="(val)=>{handerSelecChange(val,'reminiscent-name')}"
-        ></v-select>
+            @change="
+              (val) => {
+                handerSelecChange(val, 'reminiscent-name');
+              }
+            "
+          ></v-select>
         </div>
         <div class="form-item mb-5">
           <span class="form-lable"> Address </span>
@@ -70,7 +79,11 @@
             placeholder="Country"
             class="form-input"
             outlined
-            @change="(val)=>{handerSelecChange(val,'country')}"
+            @change="
+              (val) => {
+                handerSelecChange(val, 'country');
+              }
+            "
           ></v-select>
         </div>
         <div class="form-item mb-5">
@@ -114,7 +127,7 @@
                     </span>
                 </div> -->
       </v-card-text>
-      <p class="text-error" style="padding: 0 24px;">{{messEror}}</p>
+      <p class="text-error" style="padding: 0 24px">{{ messEror }}</p>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
@@ -145,7 +158,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, isRef, ref,toRef, watch } from "@vue/composition-api";
+import {
+  defineComponent,
+  isRef,
+  ref,
+  toRef,
+  watch,
+} from "@vue/composition-api";
 export default defineComponent({
   props: {
     isVisible: {
@@ -162,40 +181,42 @@ export default defineComponent({
     handlerSubmit: {
       type: Function,
     },
-    loadingBtn:{
+    loadingBtn: {
       type: Boolean,
-      default:false,
+      default: false,
     },
-    messEror:{
+    messEror: {
       type: String,
-    }
+    },
   },
   setup: (props, ctx) => {
-    let dataDefault: Record<string, any> | undefined = toRef(props, "selectedData");
+    let dataDefault: Record<string, any> | undefined = toRef(
+      props,
+      "selectedData"
+    );
     let formData = ref<Record<string, any>>({});
-    let listCountry = ref<Record<string,string>[]>([])
-    let listReminiscentName = ref<Record<string,string>[]>([])
-    const setDataFormValue = (payload: Record<string,any>) => {
+    let listCountry = ref<Record<string, string>[]>([]);
+    let listReminiscentName = ref<Record<string, string>[]>([]);
+    const setDataFormValue = (payload: Record<string, any>) => {
       formData.value = {
         ...formData.value,
-        ...payload
+        ...payload,
       };
     };
-    watch(dataDefault,currentValue=>{
-        formData.value = {...currentValue};
-    })
+    watch(dataDefault, (currentValue) => {
+      formData.value = { ...currentValue };
+    });
     const btnCancelClick = () => {
       ctx.emit("handlerCancel");
     };
     const btnSubmitClick = () => {
       ctx.emit("handlerSubmit", formData.value);
     };
-    const handerSelecChange = (val:any,feild:string)=>{
-     let _obj:Record<string, unknown> = {}
-     _obj[`${feild}`] = val
-     setDataFormValue(_obj)
-     
-    }
+    const handerSelecChange = (val: any, feild: string) => {
+      let _obj: Record<string, unknown> = {};
+      _obj[`${feild}`] = val;
+      setDataFormValue(_obj);
+    };
     return {
       formData,
       listCountry,
@@ -237,7 +258,7 @@ export default defineComponent({
       }
       .form-input {
         width: 65%;
-        &>input {
+        & > input {
           width: 100%;
           background: #ffffff;
           border: 0.6px solid #d5d5d5;
@@ -254,35 +275,36 @@ export default defineComponent({
           }
         }
         &.v-select {
-            border: 0.6px solid #d5d5d5;
-            .v-input__slot{
-              margin-bottom: 0;
-              min-height: 52px;
-              input {
-                width: 100%;
-                box-sizing: border-box;
-                border-radius: 4px;
-                height: 52px;
-                font-size: 16px;
-                font-weight: 400;
+          border: 0.6px solid #d5d5d5;
+          .v-input__slot {
+            margin-bottom: 0;
+            min-height: 52px;
+            input {
+              width: 100%;
+              box-sizing: border-box;
+              border-radius: 4px;
+              height: 52px;
+              font-size: 16px;
+              font-weight: 400;
+              color: $GPEinputText;
+              outline: unset;
+              padding: 0 3px;
+              &::placeholder {
                 color: $GPEinputText;
-                outline: unset;
-                padding: 0 3px;
-                &::placeholder {
-                  color: $GPEinputText;
-                  font-size: 16px;
-                }
+                font-size: 16px;
               }
-            }
-            .v-select__slot{
-              .v-input__append-inner{
-                margin-top: 15px;
-              }
-            }
-            fieldset,.v-text-field__details{
-              display: none;
             }
           }
+          .v-select__slot {
+            .v-input__append-inner {
+              margin-top: 15px;
+            }
+          }
+          fieldset,
+          .v-text-field__details {
+            display: none;
+          }
+        }
       }
       &:last-child {
         margin-bottom: 0 !important;
