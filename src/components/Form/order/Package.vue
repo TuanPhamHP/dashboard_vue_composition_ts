@@ -47,7 +47,10 @@
    let selectedData = reactive<Record<string, unknown>>({});
    const loadingTable = ref<boolean>(false);
    const currentRouteQuery = ref<string>(stringQueryRender);
-   let tableData = reactive<Record<string, unknown>>({ value: [] });
+   let tableData = reactive<Record<string, unknown>>({ value: [{
+      status:'aaaaaaaaa',
+      mawb:1111111111111
+   }] });
    let filterTable = ref({});
    let pagination = ref<NormalPagination>({
     total: 1,
@@ -61,7 +64,7 @@
      text: "Status",
      align: "start",
      sortable: false,
-     value: "mawb",
+     value: "status",
      type: "string",
      filters: {},
     },
