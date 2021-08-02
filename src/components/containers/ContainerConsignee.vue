@@ -250,14 +250,14 @@ export default defineComponent({
         return;
       }
       try {
-        // const pagination = res.data.meta.pagination;
+        const pagination = res.data.data.meta.pagination;
         setTableData(res.data.data.consignees);
-        //  setPagination({
-        //   total: pagination.total,
-        //   total_pages: pagination.total_pages,
-        //   per_page: pagination.per_page,
-        //   current_page: pagination.current_page,
-        //  });
+         setPagination({
+          total: pagination.total,
+          total_pages: pagination.total_pages,
+          per_page: pagination.per_page,
+          current_page: pagination.current_page,
+         });
       } catch (error) {
         console.log(error);
       }
