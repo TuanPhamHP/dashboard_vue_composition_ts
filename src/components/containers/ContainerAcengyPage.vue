@@ -22,6 +22,7 @@
         :headers="headers"
         @handleFilterChange="filterTableChange"
         @handleSelectedItem="handlerEdit"
+        @handleRemoveItem="handlerRemove"
         :current-binding-url="queryRoute"
         @handleSelectedItemDetail="handlerViewDetail"
       />
@@ -37,13 +38,22 @@
         :selected-data="selectedData"
         @handlerCancel="handlerDialogCancel"
         @handlerSubmit="handlerDialogSubmit"
+        :loading-btn="loadingBtn"
+        :mess-eror="messageErr"
       />
       <DialogAgencyDetail
         :is-visible="isVisibleDetail"
         :selected-data="selectedData"
         @handlerCancel="handlerDialogItemCancel"
-        @handlerSubmit="handlerDialogSubmit"
       />
+      <ConfirmRemove
+        :is-visible="isVisibleConfirm"
+        :handlerCancel="handlerDialogConfirmCancel"
+        :handlerConfirm="handleConfirmRemoveItem"
+        :loading-btn="loadingBtn"
+        title="Agency"
+      >
+      </ConfirmRemove>
     </div>
   </div>
 </template>
@@ -54,6 +64,7 @@ import api from "@/services";
 import TableAgency from "@/components/Table/TableAgency.vue";
 import DialogCUAgency from "@/components/Form/DialogCUAgency.vue";
 import DialogAgencyDetail from "@/components/Form/DialogAgencyDetail.vue";
+import ConfirmRemove from "@/components/popup/ConfirmRemove.vue";
 import { SharedPagination } from "@/components/Shared";
 import { NormalPagination } from "@/InterfaceModel/Pagination";
 import { NormalHeaderItem } from "@/InterfaceModel/Header";
@@ -67,16 +78,16 @@ export default defineComponent({
     SharedPagination,
     DialogAgencyDetail,
     DialogCUAgency,
+    ConfirmRemove,
   },
-  data() {
-    return {
-      isVisible: false,
-      isVisibleDetail: false,
-    };
-  },
-  setup: (props) => {
+  setup: (props, ctx) => {
     const { queryRoute, stringQueryRender, getQueryRoute } = useRouteQuery();
-    let selectedData = reactive<Record<string, unknown>>({});
+    const selectedData = ref<Record<string, unknown>>({});
+    const loadingBtn = ref<boolean>(false);
+    const isVisible = ref<boolean>(false);
+    const messageErr = ref<string>("");
+    const isVisibleConfirm = ref<boolean>(false);
+    const isVisibleDetail = ref<boolean>(false);
     const loadingTable = ref<boolean>(true);
     const currentRouteQuery = ref<string>(stringQueryRender);
     let tableData = reactive<Record<string, unknown>>({ value: [] });
@@ -93,7 +104,7 @@ export default defineComponent({
         text: "No.",
         align: "start",
         sortable: false,
-        value: "mawb",
+        value: "id",
         type: "string",
         filters: {},
       },
@@ -101,7 +112,15 @@ export default defineComponent({
         text: "Company",
         align: "start",
         sortable: false,
-        value: "v-value",
+        value: "name",
+        type: "string",
+        filters: {},
+      },
+      {
+        text: "Code",
+        align: "start",
+        sortable: false,
+        value: "agency_code",
         type: "string",
         filters: {},
       },
@@ -109,7 +128,7 @@ export default defineComponent({
         text: "Contact Person",
         align: "start",
         sortable: false,
-        value: "v-value",
+        value: "contact_person",
         type: "string",
         filters: {},
       },
@@ -117,7 +136,7 @@ export default defineComponent({
         text: "Reminiscent Name",
         align: "start",
         sortable: false,
-        value: "v-value",
+        value: "contact_person",
         type: "string",
         filters: {},
       },
@@ -125,15 +144,7 @@ export default defineComponent({
         text: "Address",
         align: "start",
         sortable: false,
-        value: "v-value",
-        type: "string",
-        filters: {},
-      },
-      {
-        text: "State",
-        align: "start",
-        sortable: false,
-        value: "v-value",
+        value: "address",
         type: "string",
         filters: {},
       },
@@ -141,7 +152,15 @@ export default defineComponent({
         text: "Country",
         align: "start",
         sortable: false,
-        value: "v-value",
+        value: "country",
+        type: "string",
+        filters: {},
+      },
+      {
+        text: "Post Code",
+        align: "start",
+        sortable: false,
+        value: "post_code",
         type: "string",
         filters: {},
       },
@@ -149,7 +168,7 @@ export default defineComponent({
         text: "Phone Number",
         align: "start",
         sortable: false,
-        value: "v-value",
+        value: "phone",
         type: "string",
         filters: {},
       },
@@ -157,7 +176,7 @@ export default defineComponent({
         text: "Email",
         align: "start",
         sortable: false,
-        value: "v-value",
+        value: "email",
         type: "string",
         filters: {},
       },
@@ -165,7 +184,7 @@ export default defineComponent({
         text: "VAT",
         align: "start",
         sortable: false,
-        value: "v-value",
+        value: "tax_code",
         type: "string",
         filters: {},
       },
@@ -174,6 +193,9 @@ export default defineComponent({
     Object.freeze(headers);
     const setTableData = (payload: Record<string, unknown>[]) => {
       tableData.value = payload;
+    };
+    const setMessErr = (payload: string) => {
+      messageErr.value = payload;
     };
     const setPagination = (payload: NormalPagination) => {
       pagination.value = { ...payload };
@@ -189,6 +211,18 @@ export default defineComponent({
     };
     const setLoadingTable = (payload: boolean) => {
       loadingTable.value = payload;
+    };
+    const setLoadingBtn = (payload: boolean) => {
+      loadingBtn.value = payload;
+    };
+    const setIsVisible = (payload: boolean) => {
+      isVisible.value = payload;
+    };
+    const setIsVisibleDetail = (payload: boolean) => {
+      isVisibleDetail.value = payload;
+    };
+    const setIsVisibleConfirm = (payload: boolean) => {
+      isVisibleConfirm.value = payload;
     };
 
     watch(currentRouteQuery, (currentValue) => {
@@ -211,18 +245,28 @@ export default defineComponent({
         ...currentValue,
       });
     });
+    watch(isVisible, (currentValue) => {
+      if (!currentValue) {
+        selectedData.value = {};
+      }
+    });
+    watch(isVisibleDetail, (currentValue) => {
+      if (!currentValue) {
+        selectedData.value = {};
+      }
+    });
 
     const getAllRoles = async (query: Record<string, unknown>) => {
       setLoadingTable(true);
       if (!Object.keys(query).length) return;
-      const res = await api.roles.getAll(query);
+      const res = await api.agency.getAll(query);
       setLoadingTable(false);
       if (!res) {
         return;
       }
       try {
-        const pagination = res.data.meta.pagination;
-        setTableData(res.data.data);
+        const pagination = res.data.data.meta.pagination;
+        setTableData(res.data.data.agencies);
         setPagination({
           total: pagination.total,
           total_pages: pagination.total_pages,
@@ -233,34 +277,133 @@ export default defineComponent({
         console.log(error);
       }
     };
+    const createAgency = async (params: Record<string, unknown>) => {
+      messageErr.value = "";
+      setLoadingBtn(true);
+      const res = await api.agency.create(params);
+      setLoadingBtn(false);
+      if (!res) {
+        ctx.root.$store.commit("SET_SNACKBAR", {
+          type: "error",
+          title: "",
+          content: "Update error",
+        });
+        return;
+      }
+      try {
+        if (res.status > 199 && res.status < 399) {
+          setIsVisible(false);
+          ctx.root.$store.commit("SET_SNACKBAR", {
+            type: "success",
+            title: "",
+            content: "Create success",
+          });
+        } else {
+          messageErr.value = res.data.data.error || res.data.message;
+          ctx.root.$store.commit("SET_SNACKBAR", {
+            type: "error",
+            title: "",
+            content: "Create error",
+          });
+        }
+      } catch (error) {
+        messageErr.value = error;
+        ctx.root.$store.commit("SET_SNACKBAR", {
+          type: "error",
+          title: "",
+          content: "Create error",
+        });
+      }
+    };
+    const updateAgency = async (params: Record<string, unknown>, _id: any) => {
+      messageErr.value = "";
+      setLoadingBtn(true);
+      const res = await api.agency.update(params, _id);
+      setLoadingBtn(false);
+      if (!res) {
+        ctx.root.$store.commit("SET_SNACKBAR", {
+          type: "error",
+          title: "",
+          content: "Update error",
+        });
+        return;
+      }
+      try {
+        if (res.status > 199 && res.status < 399) {
+          setIsVisible(false);
+          ctx.root.$store.commit("SET_SNACKBAR", {
+            type: "success",
+            title: "",
+            content: "Update success",
+          });
+        } else {
+          messageErr.value = res.data.data.error;
+          ctx.root.$store.commit("SET_SNACKBAR", {
+            type: "error",
+            title: "",
+            content: "Update error",
+          });
+        }
+      } catch (error) {
+        messageErr.value = error;
+        ctx.root.$store.commit("SET_SNACKBAR", {
+          type: "error",
+          title: "",
+          content: "Update error",
+        });
+      }
+    };
+    const deleteAgency = async (_id: any) => {
+      setLoadingBtn(true);
+      const res = await api.agency.delete(_id);
+      setLoadingBtn(false);
+      if (!res) {
+        return;
+      }
+      try {
+        if (res.status > 199 && res.status < 399) {
+          setIsVisibleConfirm(false);
+          // this.$store.commit("SET_SNACKBAR", {
+          //     type: "",
+          //     title: "",
+          //     content: "",
+          // });
+        } else {
+          messageErr.value = res.data.data.error;
+        }
+      } catch (error) {
+        messageErr.value = error;
+      }
+    };
     return {
       headers,
       pagination,
       loadingTable,
       tableData,
       queryRoute,
+      loadingBtn,
+      messageErr,
       filterTable,
+      isVisible,
+      isVisibleDetail,
+      isVisibleConfirm,
       selectedData,
       setTableData,
       setLoadingTable,
       setCurrentRouteQuery,
       setPagination,
+      setMessErr,
+      setLoadingBtn,
+      createAgency,
+      setIsVisible,
+      setIsVisibleDetail,
+      updateAgency,
+      setIsVisibleConfirm,
+      deleteAgency,
       getAllRoles,
       setCurrentFilterTable,
       currentRouteQuery,
     };
-  },
-  watch: {
-    isVisible(_newVal) {
-      if (!_newVal) {
-        this.selectedData = {};
-      }
-    },
-    isVisibleDetail(_newVal) {
-      if (!_newVal) {
-        this.selectedData = {};
-      }
-    },
   },
   computed: {
     ...mapState({
@@ -294,13 +437,34 @@ export default defineComponent({
   },
   methods: {
     handlerDialogCancel() {
-      this.isVisible = false;
+      this.setIsVisible(false);
+      this.setMessErr("");
+    },
+    handlerDialogConfirmCancel() {
+      this.setIsVisibleConfirm(false);
+    },
+    handlerRemove(item: Record<string, unknown>) {
+      this.setIsVisibleConfirm(true);
+      this.selectedData = { ...item };
     },
     handlerDialogItemCancel() {
-      this.isVisibleDetail = false;
+      this.setIsVisibleDetail(false);
+    },
+    handlerViewDetail(item: Record<string, unknown>) {
+      this.setIsVisibleDetail(true);
+      this.selectedData = { ...item };
     },
     handlerDialogSubmit(value: any) {
-      console.log(value);
+      if (Object.keys(this.selectedData).length) {
+        const id = this.selectedData.id;
+        this.updateAgency(value, id);
+      } else {
+        this.createAgency(value);
+      }
+    },
+    handleConfirmRemoveItem(item: Record<string, unknown>) {
+      const id = this.selectedData.id;
+      this.deleteAgency(id);
     },
     pagePaginationChange(_val: any) {
       this.$store.commit("CACHED_PAGINATION", {
@@ -327,10 +491,6 @@ export default defineComponent({
     },
     handlerEdit(item: Record<string, unknown>) {
       this.isVisible = true;
-      this.selectedData = { ...item };
-    },
-    handlerViewDetail(item: Record<string, unknown>) {
-      this.isVisibleDetail = true;
       this.selectedData = { ...item };
     },
     bindingDefaultFilterHeader(_obj: Record<string, unknown>) {

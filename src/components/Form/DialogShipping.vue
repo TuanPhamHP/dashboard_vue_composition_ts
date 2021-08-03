@@ -1,12 +1,14 @@
 <template>
-  <v-dialog v-model="isVisible" persistent max-width="750">
+  <v-dialog v-model="isVisible" persistent max-width="800">
     <v-card class="dialog-shipping">
       <v-card-title class="text-h5">
-        {{
-          Object.keys(selectedData).length
-            ? "Update Shipping Partner Information"
-            : "Create new Shipping Partner"
-        }}
+        <span v-if="Object.keys(selectedData).length">
+          Update Shipping Partner Information:
+          <span class="text-uppercase text-primary-color">{{
+            selectedData.contact_person ? selectedData.contact_person : ""
+          }}</span>
+        </span>
+        <span v-else> Create new Shipping Partner </span>
       </v-card-title>
       <v-card-text class="form-list scrollbar-y">
         <div class="form-item mb-5">

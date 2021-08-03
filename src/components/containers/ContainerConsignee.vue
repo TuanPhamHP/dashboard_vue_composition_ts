@@ -47,7 +47,8 @@
         @handlerCancel="handlerDialogCancel"
         @handlerSubmit="handlerDialogSubmit"
         @handlerUpdate="handlerDialogUpdate"
-        :loading-btn="loadingBtn" 
+        :loading-btn="loadingBtn"
+        :mess-eror="messageErr" 
       />
       <DialogConsigneeDetail
         :is-visible="isVisibleDetail"
@@ -90,6 +91,7 @@ export default defineComponent({
     let selectedData = reactive<Record<string, unknown>>({});
     const loadingTable = ref<boolean>(true);
     const loadingBtn = ref<boolean>(false);
+    const messageErr = ref<string>("");
     const currentRouteQuery = ref<string>(stringQueryRender);
     let tableData = reactive<Record<string, unknown>>({ value: [] });
     let filterTable = ref({});
@@ -212,6 +214,9 @@ export default defineComponent({
       });
       currentRouteQuery.value = getQueryRoute(pairO.identifySelf());
     };
+    const setMessErr = (payload: string) => {
+      messageErr.value = payload;
+    };
     const setCurrentFilterTable = (payload: Record<string, unknown>): any => {
       filterTable.value = { ...payload };
     };
@@ -250,14 +255,14 @@ export default defineComponent({
         return;
       }
       try {
-        // const pagination = res.data.meta.pagination;
+        const pagination = res.data.data.meta.pagination;
         setTableData(res.data.data.consignees);
-        //  setPagination({
-        //   total: pagination.total,
-        //   total_pages: pagination.total_pages,
-        //   per_page: pagination.per_page,
-        //   current_page: pagination.current_page,
-        //  });
+         setPagination({
+          total: pagination.total,
+          total_pages: pagination.total_pages,
+          per_page: pagination.per_page,
+          current_page: pagination.current_page,
+         });
       } catch (error) {
         console.log(error);
       }
@@ -267,12 +272,14 @@ export default defineComponent({
       pagination,
       loadingTable,
       loadingBtn,
+      messageErr,
       tableData,
       queryRoute,
       filterTable,
       selectedData,
       setTableData,
       setLoadingTable,
+      setMessErr,
       setCurrentRouteQuery,
       setPagination,
       setLoadingBtn,
@@ -325,11 +332,13 @@ export default defineComponent({
   methods: {
     handlerDialogCancel() {
       this.isVisible = false;
+      this.setMessErr("");
     },
     handlerDialogItemCancel() {
       this.isVisibleDetail = false;
     },
     async handlerDialogSubmit(value: any) {
+      this.setMessErr("");
       this.setLoadingBtn(true);
       const res = await api.consignee.createConsignee(value);
       this.setLoadingTable(false);
@@ -351,6 +360,7 @@ export default defineComponent({
             content: "Create success",
           });
         } else {
+          this.setMessErr(res.data.data.error || res.data.message);
           this.ctx.root.$store.commit("SET_SNACKBAR", {
             type: "error",
             title: "",
@@ -364,7 +374,7 @@ export default defineComponent({
         //   current_page: pagination.current_page,
         //  });
       } catch (error) {
-        console.log(error);
+        this.setMessErr(error);
         this.ctx.root.$store.commit("SET_SNACKBAR", {
           type: "error",
           title: "",
@@ -373,6 +383,7 @@ export default defineComponent({
       }
     },
     async handlerDialogUpdate(value: any) {
+      this.setMessErr("");
       this.setLoadingBtn(true);
       const res = await api.consignee.updateConsignee(
         this.selectedData.id,
@@ -397,6 +408,7 @@ export default defineComponent({
             content: "Update success",
           });
         } else {
+          this.setMessErr(res.data.data.error || res.data.message);
           this.ctx.root.$store.commit("SET_SNACKBAR", {
             type: "error",
             title: "",
@@ -410,7 +422,7 @@ export default defineComponent({
         //   current_page: pagination.current_page,
         //  });
       } catch (error) {
-        console.log(error);
+        this.setMessErr(error);
         this.ctx.root.$store.commit("SET_SNACKBAR", {
           type: "error",
           title: "",

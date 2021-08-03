@@ -1,31 +1,23 @@
 <template>
   <v-dialog v-model="isVisible" persistent max-width="80vw">
     <v-card class="dialog-shipping-detail">
-      <v-card-title class="text-h5"> Packages of Shipping Partner </v-card-title>
+      <v-card-title class="text-h5">
+        Packages of Shipping Partner:
+        <span class="text-primary-color"> {{ formData.name }}</span>
+      </v-card-title>
       <v-card-text class="">
         <div class="box-top mb-4 col-xxl-12">
           <div class="row my-0">
             <div class="col-xxl-6 mb-3">
               <div class="row my-0 detail-data display-flex align-center">
-                <span class="col-xxl-5"> No . </span>
-                <span class="col-xxl-7">
-                  <input type="text" class="w-100" />
-                </span>
-              </div>
-            </div>
-            <div class="col-xxl-6 mb-3">
-              <div class="row my-0 detail-data display-flex align-center">
-                <span class="col-xxl-5"> Address </span>
-                <span class="col-xxl-7">
-                  <input type="text" disabled class="w-100" />
-                </span>
-              </div>
-            </div>
-            <div class="col-xxl-6 mb-3">
-              <div class="row my-0 detail-data display-flex align-center">
                 <span class="col-xxl-5"> Company </span>
                 <span class="col-xxl-7">
-                  <input type="text" disabled class="w-100" />
+                  <input
+                    v-model="formData.name"
+                    type="text"
+                    disabled
+                    class="w-100"
+                  />
                 </span>
               </div>
             </div>
@@ -33,7 +25,12 @@
               <div class="row my-0 detail-data display-flex align-center">
                 <span class="col-xxl-5"> Phone Number </span>
                 <span class="col-xxl-7">
-                  <input type="text" disabled class="w-100" />
+                  <input
+                    v-model="formData.phone"
+                    type="text"
+                    disabled
+                    class="w-100"
+                  />
                 </span>
               </div>
             </div>
@@ -41,7 +38,12 @@
               <div class="row my-0 detail-data display-flex align-center">
                 <span class="col-xxl-5"> Contact Person </span>
                 <span class="col-xxl-7">
-                  <input type="text" disabled class="w-100" />
+                  <input
+                    v-model="formData.contact_person"
+                    type="text"
+                    disabled
+                    class="w-100"
+                  />
                 </span>
               </div>
             </div>
@@ -49,7 +51,12 @@
               <div class="row my-0 detail-data display-flex align-center">
                 <span class="col-xxl-5"> Email </span>
                 <span class="col-xxl-7">
-                  <input type="text" disabled class="w-100" />
+                  <input
+                    v-model="formData.email"
+                    type="text"
+                    disabled
+                    class="w-100"
+                  />
                 </span>
               </div>
             </div>
@@ -262,15 +269,16 @@ export default defineComponent({
     const setLoadingTable = (payload: boolean) => {
       loadingTable.value = payload;
     };
+    let formData = ref<Record<string, any>>({});
     const getAllData = async (query: Record<string, unknown>) => {
-      const res = await api.roles.getAll(query);
+      const res = await api.shipping.getDetail(query);
       setLoadingTable(false);
       if (!res) {
         return;
       }
       try {
-        const pagination = res.data.meta.pagination;
-        setTableData(res.data.data);
+        // const pagination = res.data.meta.pagination;
+        // setTableData(res.data.data);
         //  setPagination({
         //   total: pagination.total,
         //   total_pages: pagination.total_pages,
@@ -283,6 +291,7 @@ export default defineComponent({
     };
     return {
       headers,
+      formData,
       loadingTable,
       tableData,
       btnCancelClick,
@@ -292,6 +301,9 @@ export default defineComponent({
   },
   methods: {},
   watch: {
+    selectedData() {
+      this.formData = this.selectedData;
+    },
     isVisible(_newVal) {
       if (_newVal) {
         if (this.selectedData.id) {
@@ -324,10 +336,10 @@ export default defineComponent({
         box-sizing: border-box;
         border-radius: 4px;
         font-size: 14px;
-        color: $GPEdetailData;
         height: 32px;
         outline: none;
         padding: 0 15px;
+        color: #a6a6a6;
         &::placeholder {
           font-size: 14px;
           color: $GPEdetailData;

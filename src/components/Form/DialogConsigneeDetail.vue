@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="isVisible" persistent max-width="80vw">
     <v-card class="dialog-consignee-detail">
-      <v-card-title class="text-h5"> Packages of Consignee </v-card-title>
+      <v-card-title class="text-h5"> Packages of Consignee: <span class="text-primary-color"> {{formData.company}}</span> </v-card-title>
       <v-card-text class="">
         <div class="box-top mb-4 col-xxl-12">
           <div class="row my-0">
@@ -9,7 +9,12 @@
               <div class="row my-0 detail-data display-flex align-center">
                 <span class="col-xxl-5"> Company </span>
                 <span class="col-xxl-7">
-                  <input type="text" v-model="formData.company" disabled class="w-100" />
+                  <input
+                    type="text"
+                    v-model="formData.company"
+                    disabled
+                    class="w-100"
+                  />
                 </span>
               </div>
             </div>
@@ -17,7 +22,12 @@
               <div class="row my-0 detail-data display-flex align-center">
                 <span class="col-xxl-5"> Phone Number </span>
                 <span class="col-xxl-7">
-                  <input type="text" v-model="formData.phone" disabled class="w-100" />
+                  <input
+                    type="text"
+                    v-model="formData.phone"
+                    disabled
+                    class="w-100"
+                  />
                 </span>
               </div>
             </div>
@@ -25,7 +35,12 @@
               <div class="row my-0 detail-data display-flex align-center">
                 <span class="col-xxl-5"> Contact Person </span>
                 <span class="col-xxl-7">
-                  <input type="text" v-model="formData.name" disabled class="w-100" />
+                  <input
+                    type="text"
+                    v-model="formData.name"
+                    disabled
+                    class="w-100"
+                  />
                 </span>
               </div>
             </div>
@@ -33,7 +48,12 @@
               <div class="row my-0 detail-data display-flex align-center">
                 <span class="col-xxl-5"> Email </span>
                 <span class="col-xxl-7">
-                  <input type="text" v-model="formData.email" disabled class="w-100" />
+                  <input
+                    type="text"
+                    v-model="formData.email"
+                    disabled
+                    class="w-100"
+                  />
                 </span>
               </div>
             </div>
@@ -90,7 +110,7 @@ export default defineComponent({
     },
     handlerCancel: {
       type: Function,
-    }
+    },
   },
   components: {
     TableConsigneeDetail,
@@ -249,9 +269,8 @@ export default defineComponent({
   },
   methods: {},
   watch: {
-    selectedData(){
+    selectedData() {
       this.formData = this.selectedData;
-      console.log(this.formData)
     },
     isVisible(_newVal) {
       if (_newVal) {
@@ -285,10 +304,10 @@ export default defineComponent({
         box-sizing: border-box;
         border-radius: 4px;
         font-size: 14px;
-        color: $GPEdetailData;
         height: 32px;
         outline: none;
         padding: 0 15px;
+        color: #a6a6a6;
         &::placeholder {
           font-size: 14px;
           color: $GPEdetailData;
