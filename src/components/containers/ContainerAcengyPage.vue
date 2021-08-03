@@ -121,7 +121,7 @@ export default defineComponent({
         type: "string",
         filters: {
           type: "string",
-          key: "company",
+          key: "name",
           placeholder: "Company",
           defaultValue: "",
         },
