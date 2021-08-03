@@ -109,7 +109,12 @@ export default defineComponent({
         sortable: false,
         value: "id",
         type: "string",
-        filters: {},
+        filters: {
+          type: "string",
+          key: "id",
+          placeholder: "No.",
+          defaultValue: "",
+        },
       },
       {
         text: "Company",
@@ -117,7 +122,12 @@ export default defineComponent({
         sortable: false,
         value: "company",
         type: "string",
-        filters: {},
+        filters: {
+          type: "string",
+          key: "company",
+          placeholder: "Company",
+          defaultValue: "",
+        },
       },
       {
         text: "Contact Person",
@@ -125,7 +135,12 @@ export default defineComponent({
         sortable: false,
         value: "name",
         type: "string",
-        filters: {},
+        filters: {
+          type: "string",
+          key: "contact_person",
+          placeholder: "Contact Person",
+          defaultValue: "",
+        },
       },
       {
         text: "Reminiscent Name",
@@ -133,7 +148,12 @@ export default defineComponent({
         sortable: false,
         value: "name",
         type: "string",
-        filters: {},
+        filters: {
+          type: "string",
+          key: "name",
+          placeholder: "Reminiscent Name",
+          defaultValue: "",
+        },
       },
       {
         text: "ID No.",
@@ -149,7 +169,12 @@ export default defineComponent({
         sortable: false,
         value: "address",
         type: "string",
-        filters: {},
+        filters: {
+          type: "string",
+          key: "address",
+          placeholder: "Address",
+          defaultValue: "",
+        },
       },
       {
         text: "State",
@@ -157,7 +182,12 @@ export default defineComponent({
         sortable: false,
         value: "state",
         type: "string",
-        filters: {},
+        filters: {
+          type: "string",
+          key: "state",
+          placeholder: "State",
+          defaultValue: "",
+        },
       },
       {
         text: "Country",
@@ -181,7 +211,12 @@ export default defineComponent({
         sortable: false,
         value: "phone",
         type: "string",
-        filters: {},
+        filters: {
+          type: "string",
+          key: "phone",
+          placeholder: "Phone Number",
+          defaultValue: "",
+        },
       },
       {
         text: "Email",
@@ -189,7 +224,12 @@ export default defineComponent({
         sortable: false,
         value: "email",
         type: "string",
-        filters: {},
+        filters: {
+          type: "string",
+          key: "email",
+          placeholder: "Email",
+          defaultValue: "",
+        },
       },
       {
         text: "VAT",

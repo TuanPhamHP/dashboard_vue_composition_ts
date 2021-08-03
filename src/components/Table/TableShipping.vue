@@ -18,37 +18,45 @@
     loading-text="Loading... Please wait"
     :class="tableLoading ? 'table-on-loading' : ''"
   >
-    <!-- <template v-slot:body.prepend="{ headers }">
-   <tr class="filter-prepend-body" :style="`top:${endedThead}px;position:sticky;z-index:3`">
-    <td v-for="header in headers" :key="header.text" class="pointer" :class="header.type === 'date' ? 'date-header' : ''">
-     <div>
-      <TableFiltersInput
-       v-if="header.filters && header.filters.type === 'string'"
-       :own-header="header"
-       :listen-change="listenChange"
-       :default-value="header.filters.defaultValue"
-      />
-      <TableFiltersSelect
-       v-if="header.filters && header.filters.type === 'select'"
-       :own-header="header"
-       :listen-change="listenChange"
-       :default-value="header.filters.defaultValue"
-      />
-      <TableFiltersDateRange
-       v-if="header.filters && header.filters.type === 'daterange'"
-       :own-header="header"
-       :listen-change="listenDateChange"
-       :default-value="header.filters.defaultValue"
-      />
-     </div>
-    </td>
-   </tr>
-  </template> -->
-    <!-- <template v-if="tableLoading" v-slot:item>
-   <tr>
-    <td colspan="999">i'm loading</td>
-   </tr>
-  </template> -->
+    <template v-slot:body.prepend="{ headers }">
+      <tr
+        class="filter-prepend-body"
+        :style="`top:${endedThead}px;position:sticky;z-index:3`"
+      >
+        <td
+          v-for="header in headers"
+          :key="header.text"
+          class="pointer"
+          :class="header.type === 'date' ? 'date-header' : ''"
+        >
+          <div>
+            <TableFiltersInput
+              v-if="header.filters && header.filters.type === 'string'"
+              :own-header="header"
+              :listen-change="listenChange"
+              :default-value="header.filters.defaultValue"
+            />
+            <TableFiltersSelect
+              v-if="header.filters && header.filters.type === 'select'"
+              :own-header="header"
+              :listen-change="listenChange"
+              :default-value="header.filters.defaultValue"
+            />
+            <TableFiltersDateRange
+              v-if="header.filters && header.filters.type === 'daterange'"
+              :own-header="header"
+              :listen-change="listenDateChange"
+              :default-value="header.filters.defaultValue"
+            />
+          </div>
+        </td>
+      </tr>
+    </template>
+    <template v-if="tableLoading" v-slot:item>
+      <tr>
+        <td colspan="999">i'm loading</td>
+      </tr>
+    </template>
     <template v-slot:item.actions="{ item }">
       <div class="w-max-content">
         <v-tooltip bottom>

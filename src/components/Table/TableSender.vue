@@ -45,7 +45,7 @@
    <tr>
     <td colspan="999">i'm loading</td>
    </tr>
-  </template> -->
+  </template>
   <template v-slot:item.actions="{ item }">
     <div class="w-max-content"> 
       <v-tooltip bottom>

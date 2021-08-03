@@ -124,9 +124,9 @@ export default defineComponent({
         type: "string",
         filters: {
           type: "string",
-          key: "no",
-          placeholder: "No",
-          hasKey: true,
+          key: "id",
+          placeholder: "No.",
+          defaultValue: "",
         },
       },
       {
@@ -139,7 +139,7 @@ export default defineComponent({
           type: "string",
           key: "company",
           placeholder: "Company",
-          hasKey: true,
+          defaultValue: "",
         },
       },
       {
@@ -150,9 +150,9 @@ export default defineComponent({
         type: "string",
         filters: {
           type: "string",
-          key: "name",
+          key: "contact_person",
           placeholder: "Contact Person",
-          hasKey: true,
+          defaultValue: "",
         },
       },
       {
@@ -161,7 +161,12 @@ export default defineComponent({
         sortable: false,
         value: "name",
         type: "string",
-        filters: {},
+        filters: {
+          type: "string",
+          key: "name",
+          placeholder: "Reminiscent Name",
+          defaultValue: "",
+        },
       },
       {
         text: "Address",
@@ -173,7 +178,7 @@ export default defineComponent({
           type: "string",
           key: "address",
           placeholder: "Address",
-          hasKey: true,
+          defaultValue: "",
         },
       },
       {
@@ -183,10 +188,10 @@ export default defineComponent({
         value: "state",
         type: "string",
         filters: {
-          type: "string",
-          key: "state",
-          placeholder: "State",
-          hasKey: true,
+          // type: "string",
+          // key: "state",
+          // placeholder: "State",
+          // defaultValue: "",
         },
       },
       {
@@ -196,10 +201,10 @@ export default defineComponent({
         value: "country",
         type: "string",
         filters: {
-          type: "country",
-          key: "no",
+          type: "string",
+          key: "country",
           placeholder: "Country",
-          hasKey: true,
+          defaultValue: "",
         },
       },
       {
@@ -234,7 +239,12 @@ export default defineComponent({
         sortable: false,
         value: "vat",
         type: "string",
-        filters: {},
+        filters: {
+          // type: "string",
+          // key: "tax_code",
+          // placeholder: "VAT",
+          // defaultValue: "",
+        },
       },
       { text: "Actions", value: "actions", sortable: false, filters: {} },
     ];
