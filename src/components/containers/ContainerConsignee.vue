@@ -161,12 +161,7 @@ export default defineComponent({
         sortable: false,
         value: "identity_code",
         type: "string",
-        filters: {
-          type: "string",
-          key: "identity_code",
-          placeholder: "ID No.",
-          defaultValue: "",
-        },
+        filters: {},
       },
       {
         text: "Address",
@@ -200,12 +195,7 @@ export default defineComponent({
         sortable: false,
         value: "country",
         type: "string",
-        filters: {
-          type: "string",
-          key: "country",
-          placeholder: "Country",
-          defaultValue: "",
-        },
+        filters: {},
       },
       {
         text: "Post Code",
@@ -213,12 +203,7 @@ export default defineComponent({
         sortable: false,
         value: "post_code",
         type: "string",
-        filters: {
-          type: "string",
-          key: "post_code",
-          placeholder: "Post Code",
-          defaultValue: "",
-        },
+        filters: {},
       },
       {
         text: "Phone Number",
@@ -252,12 +237,7 @@ export default defineComponent({
         sortable: false,
         value: "tax_code",
         type: "string",
-        filters: {
-          type: "string",
-          key: "tax_code",
-          placeholder: "VAT",
-          defaultValue: "",
-        },
+        filters: {},
       },
       { text: "Actions", value: "actions", sortable: false, filters: {} },
     ];
