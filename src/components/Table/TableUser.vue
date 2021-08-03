@@ -52,11 +52,11 @@
         </td>
       </tr>
     </template>
-    <template v-if="tableLoading" v-slot:item>
+    <!-- <template v-if="tableLoading" v-slot:item>
       <tr>
         <td colspan="999">i'm loading</td>
       </tr>
-    </template>
+    </template> -->
     <template v-slot:item.actions="{ item }">
       <div class="w-max-content">
         <v-tooltip bottom>

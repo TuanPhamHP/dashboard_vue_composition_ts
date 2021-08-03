@@ -49,7 +49,7 @@
    SharedPagination,
    DialogPackage,
   },
-  setup: props => {
+  setup: (props,ctx) => {
    const { queryRoute, stringQueryRender, getQueryRoute,currentParram } = useRouteQuery();
    const currentID:number = currentParram;
    let selectedData = reactive<Record<string, unknown>>({});
@@ -256,6 +256,122 @@
     // }
    };
    onMounted(getOrderPackage)
+   const createSender = async (parrams: Record<string, unknown>) => {
+      messageErr.value = "";
+      setLoadingBtn(true);
+      const res = await api.senders.create(parrams);
+      setLoadingBtn(false);
+      if (!res) {
+        ctx.root.$store.commit("SET_SNACKBAR", {
+          type: "error",
+          title: "",
+          content: "Update error",
+        });
+        return;
+      }
+      try {
+        if (res.status > 199 && res.status < 399) {
+          let _data = res.data.data.sender;
+
+          setIsVisible(false);
+          ctx.root.$store.commit("SET_SNACKBAR", {
+            type: "success",
+            title: "",
+            content: "Create success",
+          });
+        } else {
+          messageErr.value = res.data.data.error || res.data.message;
+          ctx.root.$store.commit("SET_SNACKBAR", {
+            type: "error",
+            title: "",
+            content: "Create error",
+          });
+        }
+      } catch (error) {
+        messageErr.value = error;
+        ctx.root.$store.commit("SET_SNACKBAR", {
+          type: "error",
+          title: "",
+          content: "Create error",
+        });
+      }
+    };
+    const updateSender = async (parrams: Record<string, unknown>, _id: any) => {
+      messageErr.value = "";
+      setLoadingBtn(true);
+      const res = await api.senders.update(parrams, _id);
+      setLoadingBtn(false);
+      if (!res) {
+        ctx.root.$store.commit("SET_SNACKBAR", {
+          type: "error",
+          title: "",
+          content: "Update error",
+        });
+        return;
+      }
+      try {
+        if (res.status > 199 && res.status < 399) {
+          setIsVisible(false);
+          ctx.root.$store.commit("SET_SNACKBAR", {
+            type: "success",
+            title: "",
+            content: "Update success",
+          });
+        } else {
+          messageErr.value = res.data.data.error;
+          ctx.root.$store.commit("SET_SNACKBAR", {
+            type: "error",
+            title: "",
+            content: "Update error",
+          });
+        }
+      } catch (error) {
+        messageErr.value = error;
+        ctx.root.$store.commit("SET_SNACKBAR", {
+          type: "error",
+          title: "",
+          content: "Update error",
+        });
+      }
+    };
+    const deleteSender = async (_id: any) => {
+      setLoadingBtn(true);
+      const res = await api.senders.delete(_id);
+      setLoadingBtn(false);
+      if (!res) {
+        ctx.root.$store.commit("SET_SNACKBAR", {
+          type: "error",
+          title: "",
+          content: "Delete error",
+        });
+      return;
+      }
+      try {
+        if(res.status > 199 && res.status < 399 ){
+          setIsVisibleConfirm(false)
+          ctx.root.$store.commit("SET_SNACKBAR", {
+              type: "success",
+              title: "",
+              content: "Delete success",
+          });
+        }
+        else{
+          messageErr.value = res.data.data.error||res.data.message
+          ctx.root.$store.commit("SET_SNACKBAR", {
+            type: "error",
+            title: "",
+            content: "Delete error",
+          });
+        }
+      } catch (error) {
+        messageErr.value = error
+        ctx.root.$store.commit("SET_SNACKBAR", {
+          type: "error",
+          title: "",
+          content: "Delete error",
+        });
+      }
+    };
    return {
     headers,
     isVisible,
@@ -276,6 +392,9 @@
     setPagination,
     getOrderPackage,
     setCurrentFilterTable,
+    createSender,
+    updateSender,
+    deleteSender,
     currentRouteQuery,
    };
   },

@@ -45,6 +45,7 @@
    >
    </ConfirmRemove>
   </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -215,6 +216,12 @@ export default defineComponent({
     const setLoadingBtn = (payload: boolean) => {
       loadingBtn.value = payload;
     };
+    const setlistProfileData = (payload:Record<string,unknown>[])=>{
+      listProfile.value = payload
+    }
+    const setlistCompanyData = (payload:Record<string,unknown>[])=>{
+      listCompany.value = payload
+    }
     watch(currentRouteQuery, (currentValue) => {
       route.push(`${currentValue}`);
     });
@@ -409,6 +416,37 @@ export default defineComponent({
         });
       }
     };
+        const getAllAgency = async () => {
+      const res = await api.agency.getAll();
+      if (!res) {
+        return;
+      }
+      try {
+        if(res.status > 199 && res.status < 399 ){
+          setlistProfileData(res.data.data.agencies);
+        }
+      
+      } catch (error) {
+      console.log(error);
+      }
+    
+    };
+    // const getAllCompany = async () => {
+    //   const res = await api.agency.getAll();
+    //   if (!res) {
+    //     return;
+    //   }
+    //   try {
+    //     if(res.status > 199 && res.status < 399 ){
+    //       setlistCompanyData(res.data.data.company);
+    //     }
+      
+    //   } catch (error) {
+    //   console.log(error);
+    //   }
+    
+    // };
+    onMounted(getAllAgency)
     return {
       headers,
       pagination,
@@ -422,6 +460,7 @@ export default defineComponent({
       isVisibleDetail,
       isVisibleConfirm,
       messageErr,
+      listProfile,
       setTableData,
       setLoadingTable,
       setIsVisible,
