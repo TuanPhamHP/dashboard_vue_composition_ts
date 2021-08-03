@@ -211,6 +211,9 @@ export default defineComponent({
     const setLoadingTable = (payload: boolean) => {
       loadingTable.value = payload;
     };
+    const setMessErr = (payload: string) => {
+      messageErr.value = payload;
+    };
     const setLoadingBtn = (payload: boolean) => {
       loadingBtn.value = payload;
     };
@@ -393,6 +396,7 @@ export default defineComponent({
       setLoadingTable,
       setCurrentRouteQuery,
       setPagination,
+      setMessErr,
       setLoadingBtn,
       createShipping,
       setIsVisible,
@@ -436,6 +440,7 @@ export default defineComponent({
   methods: {
     handlerDialogCancel() {
       this.setIsVisible(false);
+      this.setMessErr("");
     },
     handlerDialogConfirmCancel() {
       this.setIsVisibleConfirm(false);

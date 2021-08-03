@@ -194,6 +194,9 @@ export default defineComponent({
     const setTableData = (payload: Record<string, unknown>[]) => {
       tableData.value = payload;
     };
+    const setMessErr = (payload: string) => {
+      messageErr.value = payload;
+    };
     const setPagination = (payload: NormalPagination) => {
       pagination.value = { ...payload };
     };
@@ -389,6 +392,7 @@ export default defineComponent({
       setLoadingTable,
       setCurrentRouteQuery,
       setPagination,
+      setMessErr,
       setLoadingBtn,
       createAgency,
       setIsVisible,
@@ -434,6 +438,7 @@ export default defineComponent({
   methods: {
     handlerDialogCancel() {
       this.setIsVisible(false);
+      this.setMessErr("");
     },
     handlerDialogConfirmCancel() {
       this.setIsVisibleConfirm(false);

@@ -112,6 +112,7 @@
                     </span>
                 </div> -->
       </v-card-text>
+      <p class="text-error" style="padding: 0 24px">{{ messEror }}</p>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
@@ -165,6 +166,9 @@ export default defineComponent({
     },
     handlerUpdate: {
       type: Function,
+    },
+    messEror: {
+      type: String,
     },
   },
   setup: (props, ctx) => {
