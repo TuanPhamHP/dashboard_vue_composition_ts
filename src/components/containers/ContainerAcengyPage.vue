@@ -112,7 +112,7 @@ export default defineComponent({
         text: "Company",
         align: "start",
         sortable: false,
-        value: "company",
+        value: "name",
         type: "string",
         filters: {},
       },
