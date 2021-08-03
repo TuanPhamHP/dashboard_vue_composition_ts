@@ -38,7 +38,9 @@
       :is-visible="isVisibleConfirm"
       :handlerCancel="handlerDialogConfirmCancel"
       :handlerConfirm="handleConfirmRemoveItem"
-      :loading-btn="loadingBtn" 
+      :loading-btn="loadingBtn"
+      :messErr="messageErr"
+      title="User"
    >
    </ConfirmRemove>
   </div>
@@ -205,6 +207,16 @@ import ConfirmRemove from "@/components/popup/ConfirmRemove.vue";
      ...currentValue,
     });
    });
+   watch(isVisibleConfirm, currentValue => {
+    if(!currentValue){
+      messageErr.value = ""
+    }
+   });
+    watch(isVisible, currentValue => {
+      if(!currentValue){
+        messageErr.value = ""
+      }
+    });
 
    const getAllUser = async (query: Record<string, unknown>) => {
     setLoadingTable(true);
@@ -328,24 +340,37 @@ import ConfirmRemove from "@/components/popup/ConfirmRemove.vue";
     const res = await api.users.delete(_id);
     setLoadingBtn(false);
     if (!res) {
+      ctx.root.$store.commit("SET_SNACKBAR", {
+        type: "error",
+        title: "",
+        content: "Delete error",
+      });
      return;
     }
     try {
       if(res.status > 199 && res.status < 399 ){
         setIsVisibleConfirm(false)
-        // this.$store.commit("SET_SNACKBAR", {
-        //     type: "",
-        //     title: "",
-        //     content: "",
-        // });
-          
-        
+         ctx.root.$store.commit("SET_SNACKBAR", {
+            type: "success",
+            title: "",
+            content: "Delete success",
+        });
       }
       else{
-        messageErr.value = res.data.data.error
+        messageErr.value = res.data.data.error||res.data.message
+        ctx.root.$store.commit("SET_SNACKBAR", {
+          type: "error",
+          title: "",
+          content: "Delete error",
+        });
       }
     } catch (error) {
       messageErr.value = error
+      ctx.root.$store.commit("SET_SNACKBAR", {
+        type: "error",
+        title: "",
+        content: "Delete error",
+      });
     }
    };
    return {

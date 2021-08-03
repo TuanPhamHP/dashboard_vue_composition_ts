@@ -117,8 +117,10 @@ import { returnFilterObject } from "@/utils/TableFilters";
 export default defineComponent({
   props: {
     tableData: {
-      type: Object,
-      default: {},
+      type: Array,
+      default:()=>{
+        return[]
+      },
     },
     tableLoading: {
       type: Boolean,

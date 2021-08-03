@@ -2,8 +2,11 @@
   <v-dialog v-model="isVisible" persistent max-width="520px">
     <v-card>
       <v-card-title class="header py-5">
-        <p class="mb-0 py-5">Do you really want to delete this {{title}}?</p>
+        <p class="mb-0">Do you really want to delete this {{title}}?</p>
       </v-card-title>
+      <v-card-text>
+        <p class="mb-0 text-error">{{messErr}}</p>
+      </v-card-text>
       <v-card-actions class="p-4 pt-0">
         <v-spacer></v-spacer>
         <v-btn text @click="cancel" class="cancel" > Cancel </v-btn>
@@ -34,6 +37,9 @@ export default defineComponent({
       default:false
     },
     title:{
+      type:String,
+    },
+    messErr:{
       type:String,
     }
   },

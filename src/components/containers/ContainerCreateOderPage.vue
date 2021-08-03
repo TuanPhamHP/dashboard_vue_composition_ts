@@ -27,7 +27,12 @@
         </span>
       </div>
       <div class="row my-0 display-flex detail-data align-center">
-        <span class=" mb-4 text-decoration-underline add-package display-flex justify-flex-end pr-87px pointer"> Add a new Sender </span>
+        <span class=" mb-4 text-decoration-underline add-package display-flex justify-flex-end pr-87px" >
+           
+           <span class="pointer"  @click="isVisibleSender = true">
+             Add a new Sender 
+           </span>
+        </span>
         <span class="col-xxl-3"> Sender </span>
         <span class="col-xxl-9 form-input display-flex align-center">
           <!-- <v-select
@@ -53,7 +58,11 @@
         
       </div>
       <div class="row my-0 display-flex detail-data align-center">
-        <span class=" mb-4 text-decoration-underline add-package display-flex justify-flex-end pr-87px pointer"> Add a new Consignee </span>
+        <span class=" mb-4 text-decoration-underline add-package display-flex justify-flex-end pr-87px ">
+           <span class="pointer"  @click="isVisibleConsignee = true">
+             Add a new Consignee 
+           </span>
+        </span>
         <span class="col-xxl-3"> Consignee </span>
         <span class="col-xxl-9 form-input display-flex align-center">
           <!-- <v-select
@@ -88,16 +97,35 @@
       </v-btn>
     </div>
   </div>
+  <DialogSender
+    :is-visible="isVisibleSender"
+    @handlerCancel="handlerDialogCancel"
+    @handlerSubmit="createSender"
+    :loading-btn="loadingBtnDialog"
+    :mess-eror="messageErrDialog"
+  />
+  <DialogConsignee
+    :is-visible="isVisibleConsignee"
+    @handlerCancel="handlerDialogCancel"
+    @handlerSubmit="createConsignee"
+    :loading-btn="loadingBtnDialog"
+    :mess-eror="messageErrDialog" 
+
+  />
  </div>
 </template>
 
 <script lang="ts">
  import { defineComponent, onMounted, reactive, ref, watch } from "@vue/composition-api";
  import api from "@/services";
+ import DialogSender from "@/components/Form/DialogSender.vue";
+ import DialogConsignee from "@/components/Form/DialogConsignee.vue";
  import route from "@/router/index";
  import { mapState } from "vuex";
  export default defineComponent({
   components: {
+    DialogSender,
+    DialogConsignee
   },
   setup: (props,ctx) => {
    let formData  = ref<Record<string,any>>({}) 
@@ -106,9 +134,22 @@
    let listSender  = ref<Record<string,string>[]>([])
    let listConsignee  = ref<Record<string,string>[]>([])
    const loadingBtn = ref<boolean>(false);
+   const loadingBtnDialog = ref<boolean>(false);
+   const isVisibleSender = ref<boolean>(false);
+   const isVisibleConsignee = ref<boolean>(false);
    const messageErr = ref<string>('');
+   const messageErrDialog = ref<string>('');
    const setLoadingBtn = (payload: boolean) => {
     loadingBtn.value = payload;
+   };
+  const setLoadingBtnDialog = (payload: boolean) => {
+    loadingBtnDialog.value = payload;
+   };
+  const setIsVisibleSender = (payload: boolean) => {
+      isVisibleSender.value = payload;
+   };
+   const setIsVisibleConsignee = (payload: boolean) => {
+      isVisibleConsignee.value = payload;
    };
   const setDataFormValue = (payload: Record<string,any>) => {
     formData.value = {
@@ -117,8 +158,8 @@
     };
    };
 
-   const getAllSender = async (query: Record<string, unknown>) => {
-    const res = await api.senders.getAll(query);
+   const getAllSender = async () => {
+    const res = await api.senders.getAll();
     if (!res) {
      return;
     }
@@ -131,8 +172,8 @@
     }
    };
    onMounted(getAllSender);
-   const getAllConsignee = async (query: Record<string, unknown>) => {
-    const res = await api.consignee.getAllConsignee(query);
+   const getAllConsignee = async () => {
+    const res = await api.consignee.getAllConsignee();
     if (!res) {
      return;
     }
@@ -146,67 +187,178 @@
    };
    onMounted(getAllConsignee);
 
-   const createOrder = async () => {
-    messageErr.value= ""
-    let body = {
-      ...formData.value,
-    }
-    setLoadingBtn(true);
-    const res = await api.order.create(body);
-    setLoadingBtn(false);
-    if (!res) {
-      ctx.root.$store.commit("SET_SNACKBAR", {
-          type: "error",
-          title: "",
-          content: "Update error",
-      });
-      return;
-    }
-    try {
-      if(res.status > 199 && res.status < 399 ){
-        let _data =  res.data.data.order
-        ctx.root.$store.commit("SET_SNACKBAR", {
-            type: "success",
-            title: "",
-            content: "Create success",
-        });
-        ctx.root.$router.push(`/order/${res.data.data.order.id}`)
+    const createOrder = async () => {
+      messageErr.value= ""
+      let body = {
+        ...formData.value,
       }
-      else{
-        messageErr.value = res.data.data.error||res.data.message
+      setLoadingBtn(true);
+      const res = await api.order.create(body);
+      setLoadingBtn(false);
+      if (!res) {
+        ctx.root.$store.commit("SET_SNACKBAR", {
+            type: "error",
+            title: "",
+            content: "Update error",
+        });
+        return;
+      }
+      try {
+        if(res.status > 199 && res.status < 399 ){
+          let _data =  res.data.data.order
+          ctx.root.$store.commit("SET_SNACKBAR", {
+              type: "success",
+              title: "",
+              content: "Create success",
+          });
+          ctx.root.$router.push(`/order/${res.data.data.order.id}`)
+        }
+        else{
+          messageErr.value = res.data.data.error||res.data.message
+          ctx.root.$store.commit("SET_SNACKBAR", {
+              type: "error",
+              title: "",
+              content: "Create error",
+          });
+        }
+      } catch (error) {
+        messageErr.value = error
         ctx.root.$store.commit("SET_SNACKBAR", {
             type: "error",
             title: "",
             content: "Create error",
         });
       }
-    } catch (error) {
-      messageErr.value = error
-      ctx.root.$store.commit("SET_SNACKBAR", {
+    };
+    const handerSelecChange = (val:any,feild:string)=>{
+      let _obj:Record<string, unknown> = {}
+      _obj[`${feild}`] = val
+      setDataFormValue(_obj)
+      
+    }
+    const createSender = async (parrams: Record<string, unknown>) => {
+      messageErrDialog.value = "";
+      setLoadingBtnDialog(true);
+      const res = await api.senders.create(parrams);
+      setLoadingBtnDialog(false);
+      if (!res) {
+        ctx.root.$store.commit("SET_SNACKBAR", {
           type: "error",
           title: "",
           content: "Create error",
-      });
-    }
-   };
-   const handerSelecChange = (val:any,feild:string)=>{
-     let _obj:Record<string, unknown> = {}
-     _obj[`${feild}`] = val
-     setDataFormValue(_obj)
-     
-   }
+        });
+        return;
+      }
+      try {
+        if (res.status > 199 && res.status < 399) {
+          let _data = res.data.data.sender;
+
+          setIsVisibleSender(false);
+          ctx.root.$store.commit("SET_SNACKBAR", {
+            type: "success",
+            title: "",
+            content: "Create success",
+          });
+          getAllSender();
+        } else {
+          messageErrDialog.value = res.data.data.error || res.data.message;
+          ctx.root.$store.commit("SET_SNACKBAR", {
+            type: "error",
+            title: "",
+            content: "Create error",
+          });
+        }
+      } catch (error) {
+        messageErrDialog.value = error;
+        ctx.root.$store.commit("SET_SNACKBAR", {
+          type: "error",
+          title: "",
+          content: "Create error",
+        });
+      }
+    };
+    const createConsignee = async (parrams: Record<string, unknown>) => {
+      messageErrDialog.value = "";
+      setLoadingBtnDialog(true);
+      const res = await api.consignee.createConsignee(parrams);
+      setLoadingBtnDialog(false);
+      if (!res) {
+        ctx.root.$store.commit("SET_SNACKBAR", {
+          type: "error",
+          title: "",
+          content: "Create error",
+        });
+        return;
+      }
+      try {
+        if (res.status > 199 && res.status < 399) {
+          let _data = res.data.data.sender;
+
+          setIsVisibleSender(false);
+          ctx.root.$store.commit("SET_SNACKBAR", {
+            type: "success",
+            title: "",
+            content: "Create success",
+          });
+          getAllConsignee();
+        } else {
+          messageErrDialog.value = res.data.data.error || res.data.message;
+          ctx.root.$store.commit("SET_SNACKBAR", {
+            type: "error",
+            title: "",
+            content: "Create error",
+          });
+        }
+      } catch (error) {
+        messageErrDialog.value = error;
+        ctx.root.$store.commit("SET_SNACKBAR", {
+          type: "error",
+          title: "",
+          content: "Create error",
+        });
+      }
+    };
+    watch(isVisibleSender,crt=>{
+      if(!crt){
+        messageErrDialog.value = ""
+      }
+    })
+    watch(isVisibleConsignee,crt=>{
+      if(!crt){
+        messageErrDialog.value = ""
+      }
+    })
    return {
       loadingBtn,
+      loadingBtnDialog,
       formData,
       listSender,
       defaultSender,
       listConsignee,
       defaultConsignee,
+      isVisibleSender,
+      isVisibleConsignee,
       messageErr,
+      messageErrDialog,
       createOrder,
-      handerSelecChange
+      createSender,
+      createConsignee,
+      handerSelecChange,
+      setIsVisibleSender,
+      setIsVisibleConsignee
    };
   },
+  methods:{
+    handlerDialogCancel(){
+      console.log('aaaaaaaaaaa');
+      if(this.isVisibleSender){
+        this.setIsVisibleSender(false);
+      }
+      else if(this.isVisibleConsignee){
+        this.setIsVisibleConsignee(false);
+      }
+    }
+  }
  });
 </script>
 

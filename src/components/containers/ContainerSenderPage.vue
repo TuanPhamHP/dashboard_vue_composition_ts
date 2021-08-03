@@ -61,7 +61,9 @@
         :handlerCancel="handlerDialogConfirmCancel"
         :handlerConfirm="handleConfirmRemoveItem"
         :loading-btn="loadingBtn"
+        :messErr="messageErr"
         title="Sender"
+
       >
       </ConfirmRemove>
     </div>
@@ -251,11 +253,13 @@ export default defineComponent({
     watch(isVisible, (currentValue) => {
       if (!currentValue) {
         selectedData.value = {};
+         messageErr.value = ""
       }
     });
     watch(isVisibleDetail, (currentValue) => {
       if (!currentValue) {
         selectedData.value = {};
+         messageErr.value = ""
       }
     });
 
@@ -370,21 +374,37 @@ export default defineComponent({
       const res = await api.senders.delete(_id);
       setLoadingBtn(false);
       if (!res) {
-        return;
+        ctx.root.$store.commit("SET_SNACKBAR", {
+          type: "error",
+          title: "",
+          content: "Delete error",
+        });
+      return;
       }
       try {
-        if (res.status > 199 && res.status < 399) {
-          setIsVisibleConfirm(false);
-          // this.$store.commit("SET_SNACKBAR", {
-          //     type: "",
-          //     title: "",
-          //     content: "",
-          // });
-        } else {
-          messageErr.value = res.data.data.error;
+        if(res.status > 199 && res.status < 399 ){
+          setIsVisibleConfirm(false)
+          ctx.root.$store.commit("SET_SNACKBAR", {
+              type: "success",
+              title: "",
+              content: "Delete success",
+          });
+        }
+        else{
+          messageErr.value = res.data.data.error||res.data.message
+          ctx.root.$store.commit("SET_SNACKBAR", {
+            type: "error",
+            title: "",
+            content: "Delete error",
+          });
         }
       } catch (error) {
-        messageErr.value = error;
+        messageErr.value = error
+        ctx.root.$store.commit("SET_SNACKBAR", {
+          type: "error",
+          title: "",
+          content: "Delete error",
+        });
       }
     };
     return {

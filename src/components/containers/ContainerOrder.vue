@@ -264,6 +264,16 @@ export default defineComponent({
         ...currentValue,
       });
     });
+    watch(isVisibleConfirm, currentValue => {
+    if(!currentValue){
+      messageErr.value = ""
+    }
+   });
+    watch(isVisible, currentValue => {
+      if(!currentValue){
+        messageErr.value = ""
+      }
+    });
 
     const getAllOrder = async (query: Record<string, unknown>) => {
     setLoadingTable(true);
@@ -300,24 +310,39 @@ export default defineComponent({
       const res = await api.senders.delete(_id);
       setLoadingBtn(false);
       if (!res) {
+        ctx.root.$store.commit("SET_SNACKBAR", {
+              type: "error",
+              title: "",
+              content: "Update error",
+        });
       return;
       }
       try {
         if(res.status > 199 && res.status < 399 ){
-          setIsVisibleConfirm(false)
-          // this.$store.commit("SET_SNACKBAR", {
-          //     type: "",
-          //     title: "",
-          //     content: "",
-          // });
+          setIsVisible(false)
+          ctx.root.$store.commit("SET_SNACKBAR", {
+              type: "success",
+              title: "",
+              content: "Update success",
+          });
             
           
         }
         else{
           messageErr.value = res.data.data.error
+          ctx.root.$store.commit("SET_SNACKBAR", {
+              type: "error",
+              title: "",
+              content: "Update error",
+          });
         }
       } catch (error) {
         messageErr.value = error
+        ctx.root.$store.commit("SET_SNACKBAR", {
+              type: "error",
+              title: "",
+              content: "Update error",
+          });
       }
     };
     return {

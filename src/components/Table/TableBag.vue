@@ -99,6 +99,9 @@
    handleSelectedItem: {
     type: Function,
    },
+   handleRemoveItem:{
+     type:Function
+   },
   },
   components: { TableFiltersInput, TableFiltersSelect, TableFiltersDateRange },
   setup: (props, ctx) => {
@@ -112,8 +115,15 @@
    };
    const setSelectedData = (payload: Record<string, unknown>) => {
     selectedData.value = payload;
-    ctx.emit("handleSelectedItem", selectedData.value);
    };
+   const editItem = (item:Record<string,string>)=>{
+      setSelectedData(item)
+       ctx.emit('handleSelectedItem',selectedData.value)
+   };
+   const deleteItem = (item:Record<string,string>)=>{
+     setSelectedData(item)
+      ctx.emit('handleRemoveItem',selectedData.value)
+   }
    const setTableHeight = (payload: number) => {
     tableHeight.value = payload;
    };
@@ -136,6 +146,8 @@
     setTableHeight,
     setFiltersTable,
     setSelectedData,
+    editItem,
+    deleteItem
    };
   },
   data() {
@@ -175,9 +187,6 @@
      ...valObject,
     };
     this.setFiltersTable(body);
-   },
-   editItem(item: Record<string, string>) {
-    this.setSelectedData(item);
    },
    detailItem(item: Record<string, string>) {
     const currentRoute = this.$route.fullPath;

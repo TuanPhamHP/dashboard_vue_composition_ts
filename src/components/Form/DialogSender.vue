@@ -5,7 +5,7 @@
         <span v-if="Object.keys(selectedData).length">
           Update Sender Information:
           <span class="text-uppercase text-primary-color">{{
-            selectedData.tax_code ? selectedData.tax_code : ""
+            selectedData.name ? selectedData.name : ""
           }}</span>
         </span>
         <span v-else> Create new Sender </span>
@@ -27,11 +27,11 @@
             <input
               type="text"
               placeholder="Contact Person"
-              v-model="formData.tax_code"
+              v-model="formData.name"
             />
           </span>
         </div>
-        <div class="form-item mb-5">
+        <!-- <div class="form-item mb-5">
           <span class="form-lable"> Reminiscent Name </span>
           <v-select
             :items="listReminiscentName"
@@ -46,7 +46,7 @@
               }
             "
           ></v-select>
-        </div>
+        </div> -->
         <div class="form-item mb-5">
           <span class="form-lable"> Address </span>
           <span class="form-input">
@@ -115,7 +115,7 @@
         <div class="form-item mb-5">
           <span class="form-lable"> VAT </span>
           <span class="form-input">
-            <input type="text" placeholder="VAT" v-model="formData.vat" />
+            <input type="text" placeholder="VAT" v-model="formData.tax_code" />
           </span>
         </div>
         <!-- <div class="form-item ">
@@ -173,7 +173,9 @@ export default defineComponent({
     },
     selectedData: {
       type: Object,
-      default: {},
+      default:()=>{
+        return{}
+      },
     },
     handlerCancel: {
       type: Function,

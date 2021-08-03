@@ -6,7 +6,7 @@ const bagRepo = (axios: any) => {
     // include: filterOptions.include ? `${filterOptions.include},parts,parts.warehouse,parts.warehouse_off_airport_terminal` : "parts",
    };
    return axios
-    .get(`/api/merchandises`, {
+    .get(`/api/senders`, {
      params: body,
     })
     .then((res: any) => {

@@ -151,7 +151,9 @@ export default defineComponent({
     },
     selectedData: {
       type: Object,
-      default: {},
+      default:()=>{
+        return{}
+      },
     },
     handlerCancel: {
       type: Function,
