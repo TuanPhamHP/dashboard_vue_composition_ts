@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="isVisible" persistent max-width="80vw">
     <v-card class="dialog-consignee-detail">
-      <v-card-title class="text-h5"> Packages of Consignee </v-card-title>
+      <v-card-title class="text-h5"> Packages of Consignee: <span class="text-primary-color"> {{formData.company}}</span> </v-card-title>
       <v-card-text class="">
         <div class="box-top mb-4 col-xxl-12">
           <div class="row my-0">

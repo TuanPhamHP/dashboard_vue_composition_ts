@@ -2,7 +2,8 @@
   <v-dialog v-model="isVisible" persistent max-width="80vw">
     <v-card class="dialog-shipping-detail">
       <v-card-title class="text-h5">
-        Packages of Shipping Partner
+        Packages of Shipping Partner:
+        <span class="text-primary-color"> {{ formData.name }}</span>
       </v-card-title>
       <v-card-text class="">
         <div class="box-top mb-4 col-xxl-12">

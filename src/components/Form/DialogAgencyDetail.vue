@@ -1,32 +1,57 @@
 <template>
   <v-dialog v-model="isVisible" persistent max-width="80vw">
     <v-card class="dialog-agency-detail">
-      <v-card-title class="text-h5"> Packages of Agency </v-card-title>
+      <v-card-title class="text-h5">
+        Packages of Agency:
+        <span class="text-primary-color">
+          {{ formData.name }}</span
+        ></v-card-title
+      >
       <v-card-text class="">
         <div class="box-top mb-4 col-xxl-12">
           <div class="row my-0 justify-content-between">
             <div class="col-xxl-6 mb-3 agency-row-info">
               <span class="agency-info-txt"> Company </span>
               <span class="agency-info-input">
-                <input disabled v-model="formData.name" type="text" class="w-100" />
+                <input
+                  disabled
+                  v-model="formData.name"
+                  type="text"
+                  class="w-100"
+                />
               </span>
             </div>
             <div class="col-xxl-6 mb-3 agency-row-info">
               <span class="agency-info-txt"> Phone Number </span>
               <span class="agency-info-input">
-                <input disabled v-model="formData.phone" type="text" class="w-100" />
+                <input
+                  disabled
+                  v-model="formData.phone"
+                  type="text"
+                  class="w-100"
+                />
               </span>
             </div>
             <div class="col-xxl-6 mb-3 agency-row-info">
               <span class="agency-info-txt"> Contact Person </span>
               <span class="agency-info-input">
-                <input disabled v-model="formData.contact_person" type="text" class="w-100" />
+                <input
+                  disabled
+                  v-model="formData.contact_person"
+                  type="text"
+                  class="w-100"
+                />
               </span>
             </div>
             <div class="col-xxl-6 mb-3 agency-row-info">
               <span class="agency-info-txt"> Email </span>
               <span class="agency-info-input">
-                <input disabled v-model="formData.email" type="text" class="w-100" />
+                <input
+                  disabled
+                  v-model="formData.email"
+                  type="text"
+                  class="w-100"
+                />
               </span>
             </div>
           </div>
