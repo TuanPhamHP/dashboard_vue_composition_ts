@@ -153,11 +153,11 @@ export default defineComponent({
         text: "Reminiscent Name",
         align: "start",
         sortable: false,
-        value: "contact_person",
+        value: "reminiscent",
         type: "string",
         filters: {
           type: "string",
-          key: "name",
+          key: "reminiscent",
           placeholder: "Reminiscent Name",
           defaultValue: "",
         },

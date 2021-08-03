@@ -133,7 +133,7 @@ export default defineComponent({
         text: "Contact Person",
         align: "start",
         sortable: false,
-        value: "name",
+        value: "contact_person",
         type: "string",
         filters: {
           type: "string",
