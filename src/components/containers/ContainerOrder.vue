@@ -105,19 +105,19 @@ export default defineComponent({
           defaultValue: "",
         },
       },
-      {
-        text: "MAWB",
-        align: "start",
-        sortable: false,
-        value: "mawb",
-        type: "string",
-        filters: {
-          type: "string",
-          key: "mawb",
-          placeholder: "MAWB",
-          defaultValue: "",
-        },
-      },
+      // {
+      //   text: "MAWB",
+      //   align: "start",
+      //   sortable: false,
+      //   value: "mawb",
+      //   type: "string",
+      //   filters: {
+      //     type: "string",
+      //     key: "mawb",
+      //     placeholder: "MAWB",
+      //     defaultValue: "",
+      //   },
+      // },
       {
         text: "Sender",
         align: "start",

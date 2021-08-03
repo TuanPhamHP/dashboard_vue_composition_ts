@@ -33,6 +33,7 @@
     @handlerSubmit="handlerDialogSubmit" 
     :loading-btn="loadingBtn" 
     :mess-eror="messageErr" 
+    :list-profile="listProfile"
    />
    <ConfirmRemove
       :is-visible="isVisibleConfirm"
@@ -48,7 +49,7 @@
 </template>
 
 <script lang="ts">
- import { defineComponent, reactive, ref, watch } from "@vue/composition-api";
+ import { defineComponent, reactive, ref, watch,onMounted } from "@vue/composition-api";
  import api from "@/services";
  import TableUser from "@/components/Table/TableUser.vue";
  import DialogUser from "@/components/Form/DialogUser.vue";
@@ -80,6 +81,8 @@ import ConfirmRemove from "@/components/popup/ConfirmRemove.vue";
    const isVisibleDetail = ref<boolean>(false);
    let filterTable = ref({});
    const messageErr = ref<string>("");
+    let listProfile = ref<Record<string,unknown>[]>([]);
+    let listCompany = ref<Record<string,unknown>[]>([]);
    let pagination = ref<NormalPagination>({
     total: 1,
     per_page: 15,
@@ -277,6 +280,7 @@ import ConfirmRemove from "@/components/popup/ConfirmRemove.vue";
             title: "",
             content: "Create success",
         });
+        getAllUser({ ...queryRoute });
       }
       else{
         messageErr.value = res.data.data.error||res.data.message
@@ -315,11 +319,10 @@ import ConfirmRemove from "@/components/popup/ConfirmRemove.vue";
             title: "",
             content: "Update success",
         });
-          
-        
+        getAllUser({ ...queryRoute });
       }
       else{
-        messageErr.value = res.data.data.error
+        messageErr.value = res.data.data.error||res.data.message
         ctx.root.$store.commit("SET_SNACKBAR", {
             type: "error",
             title: "",
@@ -373,6 +376,41 @@ import ConfirmRemove from "@/components/popup/ConfirmRemove.vue";
       });
     }
    };
+   
+    const setlistProfileData = (payload:Record<string,unknown>[])=>{
+      listProfile.value = payload
+    }
+   const getAllAgency = async () => {
+      const res = await api.agency.getAll();
+      if (!res) {
+        return;
+      }
+      try {
+        if(res.status > 199 && res.status < 399 ){
+          setlistProfileData(res.data.data.agencies);
+        }
+      
+      } catch (error) {
+      console.log(error);
+      }
+    
+    };
+    // const getAllCompany = async () => {
+    //   const res = await api.agency.getAll();
+    //   if (!res) {
+    //     return;
+    //   }
+    //   try {
+    //     if(res.status > 199 && res.status < 399 ){
+    //       setlistCompanyData(res.data.data.company);
+    //     }
+      
+    //   } catch (error) {
+    //   console.log(error);
+    //   }
+    
+    // };
+    onMounted(getAllAgency)
    return {
     headers,
     pagination,
@@ -386,6 +424,7 @@ import ConfirmRemove from "@/components/popup/ConfirmRemove.vue";
     isVisibleDetail,
     isVisibleConfirm,
     messageErr,
+    listProfile,
     setTableData,
     setLoadingTable,
     setIsVisible,

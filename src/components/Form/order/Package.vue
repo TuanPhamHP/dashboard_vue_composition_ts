@@ -19,6 +19,14 @@
     @handleSelectedItem="handlerEdit"
     :current-binding-url="queryRoute"
    />
+   <DialogPackage
+    :is-visible="isVisible"
+    :selected-data="selectedData"
+    @handlerCancel="handlerDialogCancel"
+    @handlerSubmit="handlerDialogSubmit"
+    :loading-btn="loadingBtn"
+    :mess-eror="messageErr"
+  />
   </div>
 </template>
 
@@ -26,7 +34,7 @@
  import { defineComponent, onMounted, reactive, ref, watch } from "@vue/composition-api";
  import api from "@/services";
  import TablePackage from "@/components/Table/TablePackage.vue";
- import DialogBag from "@/components/Form/DialogBag.vue";
+ import DialogPackage from "@/components/Form/order/DialogPackage.vue";
  import { SharedPagination } from "@/components/Shared";
  import { NormalPagination } from "@/InterfaceModel/Pagination";
  import { NormalHeaderItem } from "@/InterfaceModel/Header";
@@ -39,14 +47,19 @@
   components: {
    TablePackage,
    SharedPagination,
-   DialogBag,
+   DialogPackage,
   },
   setup: props => {
    const { queryRoute, stringQueryRender, getQueryRoute,currentParram } = useRouteQuery();
    const currentID:number = currentParram;
    let selectedData = reactive<Record<string, unknown>>({});
    const loadingTable = ref<boolean>(false);
+   const loadingBtn = ref<boolean>(false);
+   const isVisible = ref<boolean>(false);
+   const isVisibleDetail = ref<boolean>(false);
+   const isVisibleConfirm = ref<boolean>(false);
    const currentRouteQuery = ref<string>(stringQueryRender);
+   const messageErr = ref<string>("");
    let tableData = reactive<Record<string, unknown>>({ value: [{
       status:'aaaaaaaaa',
       mawb:1111111111111
@@ -177,7 +190,18 @@
    const setLoadingTable = (payload: boolean) => {
     loadingTable.value = payload;
    };
-
+    const setLoadingBtn = (payload: boolean) => {
+    loadingBtn.value = payload;
+   };
+    const setIsVisible = (payload: boolean) => {
+      isVisible.value = payload;
+    };
+    const setIsVisibleDetail = (payload: boolean) => {
+      isVisibleDetail.value = payload;
+    };
+    const setIsVisibleConfirm = (payload: boolean) => {
+      isVisibleConfirm.value = payload;
+    };
    watch(currentRouteQuery, currentValue => {
     route.push(`${currentValue}`);
    });
@@ -196,6 +220,18 @@
      ...currentValue,
     });
    });
+   watch(isVisible, (currentValue) => {
+      if (!currentValue) {
+        selectedData.value = {};
+         messageErr.value = ""
+      }
+    });
+    watch(isVisibleDetail, (currentValue) => {
+      if (!currentValue) {
+        selectedData.value = {};
+         messageErr.value = ""
+      }
+    });
 
    const getOrderPackage = async () => {
      console.log('getOrderPackage');
@@ -222,13 +258,19 @@
    onMounted(getOrderPackage)
    return {
     headers,
+    isVisible,
     pagination,
     loadingTable,
     tableData,
     queryRoute,
     filterTable,
     selectedData,
+    messageErr,
+    loadingBtn,
     setTableData,
+    setIsVisible,
+    setIsVisibleConfirm,
+    setIsVisibleDetail,
     setLoadingTable,
     setCurrentRouteQuery,
     setPagination,
@@ -250,12 +292,27 @@
    }),
   },
   methods: {
-   handlerDialogCancel() {
-    this.isVisible = false;
-   },
-   handlerDialogSubmit(value: any) {
-    console.log(value);
-   },
+    handlerDialogCancel() {
+      this.setIsVisible(false);
+    },
+    handlerDialogItemCancel() {
+      this.setIsVisibleDetail(false);
+    },
+    handlerDialogConfirmCancel() {
+      this.setIsVisibleConfirm(false);
+    },
+    handleConfirmRemoveItem(item: Record<string, unknown>) {
+      const id = this.selectedData.id;
+      this.deleteSender(id);
+    },
+    handlerDialogSubmit(value: any) {
+      if (Object.keys(this.selectedData).length) {
+        const id = this.selectedData.id;
+        this.updateSender(value, id);
+      } else {
+        this.createSender(value);
+      }
+    },
    pagePaginationChange(_val: any) {
     this.$store.commit("CACHED_PAGINATION", {
      total: this.pagination.total,
